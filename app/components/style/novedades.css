@@ -1,0 +1,56 @@
+/* ===== ESTILOS DEL COMPONENTE NOVEDADES ===== */
+
+/* Contenedor principal de la sección novedades */
+.novedades-container {
+    min-height: 600px; /* Altura mínima para dar espacio suficiente */
+    position: relative; /* Posicionamiento relativo */
+    background: #f8f9fa; /* Fondo gris claro para contrastar con el hero */
+    padding: 4rem 2rem 2rem; /* Padding: superior, horizontal, inferior */
+}
+
+/* Título principal de la sección */
+.novedades-title {
+    text-align: center; /* Centrado horizontal */
+    font-size: clamp(2.5rem, 5vw, 4rem); /* Tamaño responsive: mínimo 2.5rem, máximo 4rem */
+    font-weight: bold; /* Peso de fuente */
+    color: #333; /* Color de texto oscuro */
+    margin-bottom: 3rem; /* Espaciado inferior */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 2px; /* Espaciado entre letras */
+}
+
+/* Contenedor del menú interactivo */
+.flowing-menu-wrapper {
+    height: 500px; /* Altura fija para el menú */
+    position: relative; /* Posicionamiento relativo */
+    max-width: 1200px; /* Ancho máximo para pantallas grandes */
+    margin: 0 auto; /* Centrado horizontal */
+}
+
+/* ===== DISEÑO RESPONSIVE ===== */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 768px) {
+    .novedades-container {
+        padding: 3rem 1rem 1rem; /* Padding reducido */
+    }
+    
+    .novedades-title {
+        margin-bottom: 2rem; /* Menos espaciado inferior */
+    }
+    
+    .flowing-menu-wrapper {
+        height: 400px; /* Altura reducida */
+    }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    .novedades-container {
+        padding: 2rem 0.5rem 0.5rem; /* Padding mínimo */
+    }
+    
+    .flowing-menu-wrapper {
+        height: 350px; /* Altura mínima */
+    }
+}

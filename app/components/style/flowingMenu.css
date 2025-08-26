@@ -1,0 +1,145 @@
+/* ===== ESTILOS DEL COMPONENTE FLOWING MENU ===== */
+
+/* Contenedor principal del menú */
+.menu-wrap {
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Altura completa */
+    overflow: hidden; /* Oculta el contenido que se desborda */
+  }
+  
+  /* Navegación que contiene todos los elementos del menú */
+  .menu {
+    display: flex; /* Flexbox para organización vertical */
+    flex-direction: column; /* Elementos apilados verticalmente */
+    height: 100%; /* Altura completa */
+    margin: 0; /* Sin márgenes */
+    padding: 0; /* Sin padding */
+  }
+  
+  /* Elemento individual del menú */
+  .menu__item {
+    flex: 1; /* Distribuye el espacio equitativamente */
+    position: relative; /* Posicionamiento relativo para elementos absolutos internos */
+    overflow: hidden; /* Oculta el contenido que se desborda */
+    text-align: center; /* Texto centrado */
+    box-shadow: 0 -1px rgba(0, 0, 0, 0.1); /* Sombra sutil en la parte superior */
+    transition: all 0.3s ease; /* Transición suave para todos los cambios */
+  }
+  
+  /* Efecto hover del elemento del menú */
+  .menu__item:hover {
+    transform: scale(1.02); /* Escala ligeramente el elemento */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+  }
+  
+  /* Enlace principal del elemento del menú */
+  .menu__item-link {
+    display: flex; /* Flexbox para centrado */
+    align-items: center; /* Centrado vertical */
+    justify-content: center; /* Centrado horizontal */
+    height: 100%; /* Altura completa */
+    position: relative; /* Posicionamiento relativo */
+    cursor: pointer; /* Cursor de puntero */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    text-decoration: none; /* Sin subrayado */
+    white-space: nowrap; /* No permite saltos de línea */
+    font-weight: 600; /* Peso de fuente */
+    color: #333; /* Color de texto oscuro */
+    font-size: 4vh; /* Tamaño de fuente responsive */
+    transition: all 0.3s ease; /* Transición suave */
+  }
+  
+  /* Efecto hover del enlace */
+  .menu__item-link:hover {
+    color: #1800ad; /* Color azul en hover */
+    transform: translateY(-2px); /* Movimiento hacia arriba */
+  }
+  
+  /* Estado de foco (accesibilidad) */
+  .menu__item-link:focus:not(:focus-visible) {
+    color: #333; /* Mantiene el color original */
+  }
+  
+  /* ===== EFECTO MARQUEE (DESLIZANTE) ===== */
+  
+  /* Contenedor del efecto marquee */
+  .marquee {
+    position: absolute; /* Posicionamiento absoluto */
+    top: 0; /* Desde la parte superior */
+    left: 0; /* Desde la parte izquierda */
+    overflow: hidden; /* Oculta el contenido que se desborda */
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Altura completa */
+    pointer-events: none; /* No interfiere con interacciones del usuario */
+    background: linear-gradient(135deg, #1800ad 0%, #0d7bff 100%); /* Fondo con gradiente azul */
+    transform: translate3d(0, 101%, 0); /* Posición inicial oculta */
+    transition: transform 0.6s ease-expo; /* Transición suave */
+  }
+  
+  /* Contenedor interno del marquee */
+  .marquee__inner-wrap {
+    height: 100%; /* Altura completa */
+    width: 200%; /* Ancho doble para el efecto de repetición */
+    display: flex; /* Flexbox */
+    transform: translateX(0); /* Posición inicial */
+  }
+  
+  /* Contenido interno del marquee */
+  .marquee__inner {
+    display: flex; /* Flexbox */
+    align-items: center; /* Centrado vertical */
+    position: relative; /* Posicionamiento relativo */
+    height: 100%; /* Altura completa */
+    width: 200%; /* Ancho doble */
+    will-change: transform; /* Optimización para animaciones */
+    animation: marquee 15s linear infinite; /* Animación continua */
+  }
+  
+  /* Texto dentro del marquee */
+  .marquee span {
+    color: #fff; /* Color de texto blanco */
+    white-space: nowrap; /* No permite saltos de línea */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    font-weight: 600; /* Peso de fuente */
+    font-size: 4vh; /* Tamaño de fuente responsive */
+    line-height: 1.2; /* Altura de línea */
+    padding: 1vh 1vw 0; /* Padding */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para legibilidad */
+  }
+  
+  /* Imagen dentro del marquee */
+  .marquee__img {
+    width: 200px; /* Ancho fijo */
+    height: 7vh; /* Altura responsive */
+    margin: 2em 2vw; /* Márgenes */
+    padding: 1em 0; /* Padding vertical */
+    border-radius: 50px; /* Bordes redondeados */
+    background-size: cover; /* La imagen cubre todo el espacio */
+    background-position: 50% 50%; /* Centrado de la imagen */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+    transition: all 0.3s ease; /* Transición suave */
+  }
+  
+  /* Efecto hover de la imagen */
+  .marquee:hover .marquee__img {
+    transform: scale(1.05); /* Escala ligeramente la imagen */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+  }
+  
+  /* Activación del marquee al hacer hover en el enlace */
+  .menu__item-link:hover+.marquee {
+    transform: translate3d(0, 0%, 0); /* Muestra el marquee */
+  }
+  
+  /* ===== ANIMACIÓN MARQUEE ===== */
+  
+  /* Animación de desplazamiento continuo */
+  @keyframes marquee {
+    from {
+      transform: translateX(0); /* Posición inicial */
+    }
+  
+    to {
+      transform: translateX(-50%); /* Desplazamiento hacia la izquierda */
+    }
+  }

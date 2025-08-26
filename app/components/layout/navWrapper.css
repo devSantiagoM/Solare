@@ -1,0 +1,171 @@
+/* ===== ESTILOS DEL COMPONENTE NAV WRAPPER ===== */
+
+/* Espacio para compensar el navbar fijo */
+body {
+  padding-top: 50px; /* Ajusta según la altura del navbar para evitar que el contenido se oculte */
+}
+
+/* Contenedor principal del navbar */
+.nav-wrapper-container {
+  position: fixed; /* Posicionamiento fijo en la parte superior */
+  top: 0; /* Desde la parte superior */
+  left: 0; /* Desde la parte izquierda */
+  right: 0; /* Hasta la parte derecha */
+  display: flex; /* Flexbox para organización horizontal */
+  align-items: center; /* Centrado vertical */
+  justify-content: space-between; /* Distribución del espacio entre elementos */
+  width: 100%; /* Ancho completo */
+  max-width: 1200px; /* Ancho máximo para pantallas grandes */
+  margin: 0 auto; /* Centrado horizontal */
+  padding: 2.6rem 20px; /* Padding interno */
+  z-index: 1000; /* Z-index alto para estar por encima de otros elementos */
+  gap: 20px; /* Espaciado entre elementos */
+  background: transparent; /* Fondo transparente por defecto */
+}
+
+
+/* Contenedor de botones laterales */
+.nav-side-button {
+  position: relative; /* Posicionamiento relativo */
+  z-index: 1001; /* Z-index más alto que el contenedor principal */
+  flex-shrink: 0; /* No permite que se encoja */
+}
+
+/* Estilos de los botones de navegación */
+.nav-button {
+  display: flex; /* Flexbox para alinear icono y texto */
+  align-items: center; /* Centrado vertical */
+  gap: 8px; /* Espaciado entre icono y texto */
+  padding: 12px 20px; /* Padding interno */
+  background-color: #111; /* Color de fondo oscuro */
+  color: #fff; /* Color del texto blanco */
+  border: none; /* Sin borde */
+  border-radius: 8px; /* Bordes redondeados */
+  font-size: 14px; /* Tamaño de fuente */
+  font-weight: 500; /* Peso de fuente */
+  text-decoration: none; /* Sin subrayado */
+  cursor: pointer; /* Cursor de puntero */
+  transition: all 0.3s ease; /* Transición suave */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+/* Efecto hover de los botones */
+.nav-button:hover {
+  background-color: #333; /* Color de fondo más claro en hover */
+  transform: translateY(-1px); /* Movimiento hacia arriba */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+}
+
+/* Efecto active de los botones */
+.nav-button:active {
+  transform: translateY(0); /* Vuelve a la posición original */
+}
+
+/* Estilos del texto dentro de los botones */
+.nav-button span {
+  font-family: inherit; /* Hereda la fuente del elemento padre */
+}
+
+/* Contenedor central de navegación */
+.nav-center {
+  flex: 1; /* Toma el espacio restante */
+  display: flex; /* Flexbox */
+  justify-content: center; /* Centrado horizontal */
+  min-width: 0; /* Permite que se encoja si es necesario */
+  position: relative; /* Posicionamiento relativo */
+}
+
+/* ===== DISEÑO RESPONSIVE ===== */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 1024px) {
+  body {
+    padding-top: 100px; /* Más espacio para el navbar */
+  }
+  
+  .nav-wrapper-container {
+    padding: 2rem 15px; /* Padding reducido */
+    gap: 15px; /* Menos espaciado */
+  }
+  
+  .nav-button {
+    padding: 10px 16px; /* Padding reducido */
+    font-size: 13px; /* Tamaño de fuente más pequeño */
+  }
+}
+
+/* Tablets pequeñas */
+@media (max-width: 768px) {
+  body {
+    padding-top: 90px; /* Espacio ajustado */
+  }
+  
+  .nav-wrapper-container {
+    padding: 1.5rem 10px; /* Padding mínimo */
+    gap: 10px; /* Espaciado mínimo */
+    align-items: center; /* Centrado vertical */
+  }
+  
+  .nav-button {
+    padding: 8px 12px; /* Padding mínimo */
+    font-size: 12px; /* Tamaño de fuente mínimo */
+  }
+  
+  /* Ocultar texto en botones en pantallas pequeñas */
+  .nav-button span {
+    display: none; /* Solo muestra los iconos */
+  }
+  
+  .nav-button svg {
+    margin: 0; /* Sin márgenes en los iconos */
+  }
+  
+  .nav-center {
+    flex: 1; /* Toma el espacio restante */
+    display: flex; /* Flexbox */
+    justify-content: center; /* Centrado horizontal */
+  }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+  body {
+    padding-top: 80px; /* Espacio mínimo */
+  }
+  
+  .nav-wrapper-container {
+    padding: 1rem 5px; /* Padding mínimo */
+    gap: 8px; /* Espaciado mínimo */
+  }
+  
+  .nav-button {
+    padding: 6px 10px; /* Padding mínimo */
+    font-size: 11px; /* Tamaño de fuente mínimo */
+  }
+  
+  .nav-button svg {
+    width: 16px; /* Tamaño de icono reducido */
+    height: 16px; /* Tamaño de icono reducido */
+  }
+}
+
+/* Móviles muy pequeños */
+@media (max-width: 360px) {
+  body {
+    padding-top: 70px; /* Espacio mínimo */
+  }
+  
+  .nav-wrapper-container {
+    padding: 0.8rem 3px; /* Padding mínimo */
+    gap: 5px; /* Espaciado mínimo */
+  }
+  
+  .nav-button {
+    padding: 5px 8px; /* Padding mínimo */
+  }
+  
+  .nav-button svg {
+    width: 14px; /* Tamaño de icono mínimo */
+    height: 14px; /* Tamaño de icono mínimo */
+  }
+}

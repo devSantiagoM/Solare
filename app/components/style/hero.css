@@ -1,0 +1,137 @@
+/* ===== ESTILOS DEL COMPONENTE HERO ===== */
+
+/* Contenedor principal del hero */
+.hero-container {
+    position: relative; /* Posicionamiento relativo para elementos absolutos internos */
+    width: 100%; /* Ancho completo */
+    min-height: 100vh; /* Altura mínima de toda la pantalla */
+    display: flex; /* Flexbox para centrado */
+    align-items: center; /* Centrado vertical */
+    justify-content: center; /* Centrado horizontal */
+}
+
+/* Fondo con gradiente que cubre desde el top hasta el final del hero */
+.hero-gradient-bg {
+    position: absolute; /* Posicionamiento absoluto para cubrir todo el contenedor */
+    top: -50px; /* Extender hacia arriba para cubrir el navWrapper */
+    left: 0;
+    width: 100%;
+    height: calc(100% + 50px); /* Altura extendida para compensar el top negativo */
+    background: linear-gradient(135deg, #1800ad 0%, #0d7bff 100%); /* Gradiente azul */
+    z-index: -2; /* Detrás del contenido pero delante del fondo base */
+    pointer-events: none; /* No interfiere con interacciones del usuario */
+}
+
+/* Asegurar que la aurora esté por encima del gradiente pero debajo del contenido */
+.aurora-container {
+  z-index: -1 !important; /* Por encima del gradiente pero debajo del contenido */
+}
+
+/* ===== CONTENIDO CENTRADO ===== */
+
+/* Contenedor del contenido principal */
+.hero-content {
+  position: relative; /* Posicionamiento relativo */
+  z-index: 10; /* Por encima de todos los elementos de fondo */
+  text-align: center; /* Texto centrado */
+  color: white; /* Color del texto */
+  display: flex; /* Flexbox para organización vertical */
+  flex-direction: column; /* Elementos apilados verticalmente */
+  align-items: center; /* Centrado horizontal de elementos */
+  gap: 1rem; /* Espaciado entre elementos */
+  padding: 0 1rem; /* Padding horizontal */
+}
+
+/* Título principal de la marca */
+.hero-title {
+  font-size: clamp(3rem, 8vw, 8rem); /* Tamaño responsive: mínimo 3rem, máximo 8rem */
+  font-weight: bold; /* Peso de fuente */
+  color: #fdd67a; /* Color dorado */
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra para legibilidad */
+  margin: 0; /* Sin márgenes */
+  line-height: 1.1; /* Altura de línea compacta */
+}
+
+/* Subtítulo descriptivo */
+.hero-subtitle {
+  font-size: clamp(1.125rem, 3vw, 3rem); /* Tamaño responsive */
+  color: #f5f5f4; /* Color gris claro */
+  margin: 0; /* Sin márgenes */
+  font-weight: 500; /* Peso de fuente medio */
+}
+
+/* Botón de llamada a la acción */
+.hero-button {
+  display: flex; /* Flexbox para alinear icono y texto */
+  align-items: center; /* Centrado vertical */
+  gap: 0.5rem; /* Espaciado entre elementos */
+  background-color: #1800ad; /* Color de fondo azul */
+  color: white; /* Color del texto */
+  font-weight: bold; /* Peso de fuente */
+  padding: 0.75rem 1.5rem; /* Padding interno */
+  border-radius: 0.375rem; /* Bordes redondeados */
+  text-decoration: none; /* Sin subrayado */
+  transition: all 0.3s ease; /* Transición suave */
+  margin-top: 1.5rem; /* Margen superior */
+  font-size: clamp(0.875rem, 2vw, 1rem); /* Tamaño responsive */
+}
+
+/* Efecto hover del botón */
+.hero-button:hover {
+  background-color: #0d7bff; /* Color de fondo más claro en hover */
+  transform: translateY(-2px); /* Movimiento hacia arriba */
+  box-shadow: 0 4px 12px rgba(13, 123, 255, 0.3); /* Sombra con color */
+}
+
+/* ===== DISEÑO RESPONSIVE ===== */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 1024px) {
+  .hero-gradient-bg {
+    top: -100px; /* Mayor extensión hacia arriba */
+    height: calc(100% + 100px);
+  }
+}
+
+/* Tablets pequeñas */
+@media (max-width: 768px) {
+  .hero-gradient-bg {
+    top: -90px;
+    height: calc(100% + 90px);
+  }
+  
+  .hero-content {
+    gap: 0.75rem; /* Menos espaciado */
+    padding: 0 0.5rem; /* Menos padding */
+  }
+  
+  .hero-button {
+    padding: 0.625rem 1.25rem; /* Padding reducido */
+    margin-top: 1rem; /* Menos margen */
+  }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+  .hero-gradient-bg {
+    top: -80px;
+    height: calc(100% + 80px);
+  }
+  
+  .hero-content {
+    gap: 0.5rem; /* Espaciado mínimo */
+  }
+  
+  .hero-button {
+    padding: 0.5rem 1rem; /* Padding mínimo */
+    margin-top: 0.75rem; /* Margen mínimo */
+  }
+}
+
+/* Móviles muy pequeños */
+@media (max-width: 360px) {
+  .hero-gradient-bg {
+    top: -70px;
+    height: calc(100% + 70px);
+  }
+}

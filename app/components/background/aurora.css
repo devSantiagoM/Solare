@@ -1,0 +1,19 @@
+/* ===== ESTILOS DEL COMPONENTE AURORA ===== */
+
+/* Contenedor del efecto aurora */
+.aurora-container {
+  position: absolute; /* Posicionamiento absoluto */
+  top: 0; /* Desde la parte superior */
+  left: 0; /* Desde la parte izquierda */
+  width: 100%; /* Ancho completo */
+  height: 100%; /* Altura completa */
+  z-index: -1; /* Detrás del contenido pero delante del fondo */
+  pointer-events: none; /* No interfiere con interacciones del usuario */
+}
+  
+  .aurora-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    transform: scaleY(-1);
+  }
