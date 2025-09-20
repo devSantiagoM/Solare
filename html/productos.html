@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Solare - Productos" />
+    <title>Solare | Productos</title>
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link rel="stylesheet" href="../css/productos.css" />
+    <script src="../js/layout.js" defer></script>
+    <script type="module" src="../js/supabase.js"></script>
+    <script src="../js/productos.js" defer></script>
+  </head>
+  <body class="productos">
+    <header id="navbar" role="banner"></header>
+    <main id="main-content" class="productos-main" tabindex="-1">
+      <section class="productos-hero" aria-label="Cabecera de productos">
+        <div class="container">
+          <h1 class="titulo">Productos</h1>
+          <p class="subtitulo">Explora nuestra selección curada para esta temporada.</p>
+        </div>
+      </section>
+
+      <!-- Sidebar de filtros estilo VW -->
+      <aside class="productos-sidebar open" aria-label="Filtros de productos">
+        <button class="sidebar-toggle" aria-label="Alternar filtros">
+          <span class="toggle-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </span>
+          <span class="toggle-text">Filtros</span>
+        </button>
+        <div class="sidebar-content">
+            <div class="filter-group">
+              <h3 class="filter-title">Buscar</h3>
+              <input id="search" type="search" class="search-input" placeholder="Buscar productos" />
+            </div>
+
+            <div class="filter-group">
+              <h3 class="filter-title">Colecciones</h3>
+              <nav class="collection-nav" aria-label="Colecciones">
+                <a href="#nuevos-llegados" class="collection-link" data-tab="nuevos-llegados">Nuevos Llegados</a>
+                <a href="#invierno-otono" class="collection-link" data-tab="invierno-otono">Invierno-Otoño</a>
+                <a href="#primavera-verano" class="collection-link" data-tab="primavera-verano">Primavera-Verano</a>
+                <a href="#otros" class="collection-link" data-tab="otros">Otros</a>
+              </nav>
+            </div>
+
+            <div class="filter-group">
+              <h3 class="filter-title">Color</h3>
+              <div class="color-filters">
+                <label class="color-option">
+                  <input type="checkbox" value="negro" name="color">
+                  <span class="color-swatch" style="background: #000"></span>
+                  <span class="color-name">Negro <span class="count">27</span></span>
+                </label>
+                <label class="color-option">
+                  <input type="checkbox" value="blanco" name="color">
+                  <span class="color-swatch" style="background: #fff; border: 1px solid #ddd"></span>
+                  <span class="color-name">Blanco <span class="count">17</span></span>
+                </label>
+                <label class="color-option">
+                  <input type="checkbox" value="azul" name="color">
+                  <span class="color-swatch" style="background: #2563eb"></span>
+                  <span class="color-name">Azul <span class="count">22</span></span>
+                </label>
+                <label class="color-option">
+                  <input type="checkbox" value="rojo" name="color">
+                  <span class="color-swatch" style="background: #dc2626"></span>
+                  <span class="color-name">Rojo <span class="count">17</span></span>
+                </label>
+                <label class="color-option">
+                  <input type="checkbox" value="multicolor" name="color">
+                  <span class="color-swatch multicolor"></span>
+                  <span class="color-name">Multicolor <span class="count">11</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <h3 class="filter-title">Categoría</h3>
+              <div class="category-filters">
+                <label class="category-option">
+                  <input type="radio" value="" name="categoria" checked>
+                  <span class="category-name">Todas las categorías</span>
+                </label>
+                <label class="category-option">
+                  <input type="radio" value="mujer" name="categoria">
+                  <span class="category-name">Mujer <span class="count">105</span></span>
+                </label>
+                <label class="category-option">
+                  <input type="radio" value="hombre" name="categoria">
+                  <span class="category-name">Hombre <span class="count">87</span></span>
+                </label>
+                <label class="category-option">
+                  <input type="radio" value="accesorios" name="categoria">
+                  <span class="category-name">Accesorios <span class="count">42</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <h3 class="filter-title">Ordenar por</h3>
+              <select id="orden" class="sort-select">
+                <option value="relevancia">Relevancia</option>
+                <option value="precio-asc">Precio: menor a mayor</option>
+                <option value="precio-desc">Precio: mayor a menor</option>
+                <option value="nombre-asc">Nombre A-Z</option>
+                <option value="nombre-desc">Nombre Z-A</option>
+              </select>
+            </div>
+        </div>
+      </aside>
+
+      <div class="productos-layout">
+        <!-- Contenido principal -->
+        <main class="productos-main-content">
+
+      <!-- Sección: Nuevos Llegados -->
+      <section id="nuevos-llegados" class="productos-section" aria-labelledby="title-nuevos">
+        <div class="section-header container">
+          <h2 id="title-nuevos" class="section-title">Nuevos Llegados</h2>
+          <p class="section-subtitle">Selección recién llegada a la casa Solare</p>
+        </div>
+        <div class="section-divider" aria-hidden="true"></div>
+        <div class="container">
+          <div id="grid-nuevos-llegados" class="grid"></div>
+          <div id="empty-nuevos-llegados" class="grid-empty" hidden>
+            <p>No hay productos disponibles en esta colección.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección: Invierno - Otoño -->
+      <section id="invierno-otono" class="productos-section" aria-labelledby="title-invierno">
+        <div class="section-header container">
+          <h2 id="title-invierno" class="section-title">Invierno — Otoño</h2>
+          <p class="section-subtitle">Texturas nobles y abrigo elevado</p>
+        </div>
+        <div class="section-divider" aria-hidden="true"></div>
+        <div class="container">
+          <div id="grid-invierno-otono" class="grid"></div>
+          <div id="empty-invierno-otono" class="grid-empty" hidden>
+            <p>No hay productos disponibles en esta colección.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección: Primavera - Verano -->
+      <section id="primavera-verano" class="productos-section" aria-labelledby="title-primavera">
+        <div class="section-header container">
+          <h2 id="title-primavera" class="section-title">Primavera — Verano</h2>
+          <p class="section-subtitle">Ligereza y sastrería relajada</p>
+        </div>
+        <div class="section-divider" aria-hidden="true"></div>
+        <div class="container">
+          <div id="grid-primavera-verano" class="grid"></div>
+          <div id="empty-primavera-verano" class="grid-empty" hidden>
+            <p>No hay productos disponibles en esta colección.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección: Otros -->
+      <section id="otros" class="productos-section" aria-labelledby="title-otros">
+        <div class="section-header container">
+          <h2 id="title-otros" class="section-title">Otros Productos</h2>
+          <p class="section-subtitle">Esenciales permanentes y ediciones especiales</p>
+        </div>
+        <div class="section-divider" aria-hidden="true"></div>
+        <div class="container">
+          <div id="grid-otros" class="grid"></div>
+          <div id="empty-otros" class="grid-empty" hidden>
+            <p>No hay productos disponibles en esta colección.</p>
+          </div>
+        </div>
+      </section>
+        </main>
+      </div>
+    </main>
+    <footer id="footer"></footer>
+  </body>
+ </html>

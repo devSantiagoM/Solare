@@ -6,7 +6,7 @@
   right: 0;
   background: #ffffff;
   border-bottom: 1px solid #e5e5e5;
-  z-index: 1000;
+  z-index: 1200;
   font-family: 'Arial', sans-serif;
 }
 
@@ -23,6 +23,7 @@
 /* Brand/Logo */
 .navbar-brand {
   flex-shrink: 0;
+  transition: transform 0.3s ease, margin-left 0.3s ease;
 }
 
 .brand-link {
@@ -35,6 +36,21 @@
   font-weight: bold;
   letter-spacing: 2px;
   color: #000;
+}
+
+/* Logo animation when sidebar is open */
+body.productos .navbar-brand.sidebar-open {
+  transform: translateX(220px);
+}
+
+/* Adjust navbar container when sidebar is open */
+body.productos .navbar-container {
+  transition: padding-left 0.3s ease;
+  padding-left: 80px; /* 60px sidebar closed + 20px spacing */
+}
+
+body.productos .navbar-container.sidebar-open {
+  padding-left: 300px; /* 280px sidebar + 20px extra spacing */
 }
 
 /* Desktop Navigation */
@@ -123,10 +139,40 @@
   color: #000;
   text-decoration: none;
   transition: color 0.3s ease;
+  position: relative;
 }
 
 .icon-link:hover {
   color: #666;
+}
+
+/* Cart counter */
+.cart-icon {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.cart-count.show {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* Hamburger Menu */
@@ -313,6 +359,15 @@
   .mobile-menu-content {
     width: 100%;
     max-width: 100%;
+  }
+  
+  /* Disable logo animation on mobile */
+  body.productos .navbar-brand.sidebar-open {
+    transform: none;
+  }
+  
+  body.productos .navbar-container.sidebar-open {
+    padding-left: 15px;
   }
 }
 

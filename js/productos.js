@@ -1,0 +1,347 @@
+// Productos con Supabase: colecciones, filtros, orden, búsqueda
+(function(){
+  const el = (sel, ctx=document) => ctx.querySelector(sel);
+  const els = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+  const COLLECTION_SLUGS = {
+    NUEVOS: 'nuevos-llegados',
+    INVIERNO: 'invierno-otono',
+    PRIMAVERA: 'primavera-verano',
+    OTROS: 'otros',
+  };
+
+  // Dataset de respaldo por si falla Supabase (distribuido por colecciones)
+  function mockFor(slug){
+    const NUEVOS = [
+      { id: 'n1', name: 'Blazer Estructurado', category_slug: 'mujer', price: 120.00, badge: 'Nuevo', image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=800&auto=format&fit=crop', colors: ['negro'] },
+      { id: 'n2', name: 'Camisa Oxford', category_slug: 'hombre', price: 65.00, badge: 'Nuevo', image: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=800&auto=format&fit=crop', colors: ['blanco'] },
+      { id: 'n3', name: 'Bandolera Minimal', category_slug: 'accesorios', price: 85.00, image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop', colors: ['negro'] },
+      { id: 'n4', name: 'Vestido Seda', category_slug: 'mujer', price: 160.00, image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop', colors: ['azul'] },
+      { id: 'n5', name: 'Zapatillas Urbanas', category_slug: 'hombre', price: 140.00, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop', colors: ['blanco'] },
+    ];
+    const INVIERNO = [
+      { id: 'w1', name: 'Abrigo Lana', category_slug: 'mujer', price: 220.00, image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800&auto=format&fit=crop', colors: ['negro'] },
+      { id: 'w2', name: 'Campera de Cuero', category_slug: 'hombre', price: 290.00, badge: 'Ed. Limitada', image: 'https://images.unsplash.com/photo-1546146830-2cca9512c68e?q=80&w=800&auto=format&fit=crop', colors: ['negro'] },
+      { id: 'w3', name: 'Bufanda de Cashmere', category_slug: 'accesorios', price: 70.00, image: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?q=80&w=800&auto=format&fit=crop', colors: ['multicolor'] },
+      { id: 'w4', name: 'Botas Explorador', category_slug: 'hombre', price: 180.00, image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800&auto=format&fit=crop', colors: ['negro'] },
+    ];
+    const PRIMAVERA = [
+      { id: 's1', name: 'Vestido Midi Floral', category_slug: 'mujer', price: 135.00, image: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=800&auto=format&fit=crop', colors: ['multicolor'] },
+      { id: 's2', name: 'Camisa Lino', category_slug: 'hombre', price: 85.00, image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=800&auto=format&fit=crop', colors: ['blanco'] },
+      { id: 's3', name: 'Gafas Retro', category_slug: 'accesorios', price: 55.00, image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=800&auto=format&fit=crop', colors: ['negro'] },
+      { id: 's4', name: 'Mocasines Piel', category_slug: 'hombre', price: 150.00, image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=800&auto=format&fit=crop', colors: ['negro'] },
+    ];
+    const OTROS = [
+      { id: 'o1', name: 'Cinturón Cuero', category_slug: 'accesorios', price: 45.00, image: 'https://images.unsplash.com/photo-1582582429416-1bff1d50e414?q=80&w=800&auto=format&fit=crop', colors: ['negro'] },
+      { id: 'o2', name: 'Pantalón Sastrero', category_slug: 'hombre', price: 90.00, image: 'https://images.unsplash.com/photo-1520974681267-5f57a9b0d69f?q=80&w=800&auto=format&fit=crop', colors: ['azul'] },
+      { id: 'o3', name: 'Blusa Seda', category_slug: 'mujer', price: 130.00, image: 'https://images.unsplash.com/photo-1520975771659-058ddf660a55?q=80&w=800&auto=format&fit=crop', colors: ['rojo'] },
+      { id: 'o4', name: 'Bandolera Urbana', category_slug: 'accesorios', price: 75.00, image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=800&auto=format&fit=crop', colors: ['negro'] },
+    ];
+    switch(slug){
+      case COLLECTION_SLUGS.NUEVOS: return NUEVOS;
+      case COLLECTION_SLUGS.INVIERNO: return INVIERNO;
+      case COLLECTION_SLUGS.PRIMAVERA: return PRIMAVERA;
+      default: return OTROS;
+    }
+  }
+
+  let currentCollection = COLLECTION_SLUGS.NUEVOS;
+  // Map de datos por sección: slug -> productos originales
+  const sectionData = new Map();
+
+  function setActiveTab(slug){
+    els('.collection-link').forEach(a => a.classList.toggle('active', a.dataset.tab === slug));
+  }
+
+  function renderGridInto(containerId, emptyId, list){
+    const grid = el(`#${containerId}`);
+    const empty = el(`#${emptyId}`);
+    if (!grid || !empty) return;
+    grid.innerHTML = '';
+    if (!list.length){ empty.hidden = false; return; }
+    empty.hidden = true;
+    const frag = document.createDocumentFragment();
+    list.forEach(p => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      const imgUrl = p.primary_image || p.image || 'https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?q=80&w=800&auto=format&fit=crop';
+      const rating = Math.random() * 2 + 3; // 3-5 rating
+      const ratingCount = Math.floor(Math.random() * 50) + 1;
+      card.innerHTML = `
+        <div class="card-media">
+          <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop'" />
+          ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">${p.name}</h3>
+          <div class="card-rating">
+            <span class="rating-stars">(${rating.toFixed(1)})</span>
+            <span class="rating-count">(${ratingCount})</span>
+          </div>
+          <div class="card-price">$${Number(p.price || 0).toFixed(2)}</div>
+        </div>`;
+      frag.appendChild(card);
+    });
+    grid.appendChild(frag);
+  }
+
+  function applyFilters(){
+    const q = (el('#search')?.value || '').trim().toLowerCase();
+    const catRadio = el('input[name="categoria"]:checked');
+    const cat = catRadio ? catRadio.value : '';
+    const selectedColors = Array.from(els('input[name="color"]:checked')).map(cb => cb.value);
+    const order = el('#orden')?.value || 'relevancia';
+
+    const applyTo = (list) => {
+      let filtered = list.filter(p => {
+        const name = (p.name || '').toLowerCase();
+        const categorySlug = (p.category_slug || p.category || '').toLowerCase();
+        const tags = Array.isArray(p.tags) ? p.tags.map(t => String(t).toLowerCase()) : [];
+        const colors = Array.isArray(p.colors) ? p.colors : [];
+        
+        const matchesQ = !q || name.includes(q);
+        const matchesCat = !cat || categorySlug === cat || tags.includes(cat);
+        const matchesColor = selectedColors.length === 0 || selectedColors.some(color => 
+          colors.includes(color) || name.includes(color) || tags.includes(color)
+        );
+        return matchesQ && matchesCat && matchesColor;
+      });
+      switch(order){
+        case 'precio-asc': filtered.sort((a,b)=>Number(a.price||0)-Number(b.price||0)); break;
+        case 'precio-desc': filtered.sort((a,b)=>Number(b.price||0)-Number(a.price||0)); break;
+        case 'nombre-asc': filtered.sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''))); break;
+        case 'nombre-desc': filtered.sort((a,b)=>String(b.name||'').localeCompare(String(a.name||''))); break;
+        default: break;
+      }
+      return filtered;
+    };
+
+    // Render por sección
+    const map = new Map([
+      [COLLECTION_SLUGS.NUEVOS, { grid: 'grid-nuevos-llegados', empty: 'empty-nuevos-llegados' }],
+      [COLLECTION_SLUGS.INVIERNO, { grid: 'grid-invierno-otono', empty: 'empty-invierno-otono' }],
+      [COLLECTION_SLUGS.PRIMAVERA, { grid: 'grid-primavera-verano', empty: 'empty-primavera-verano' }],
+      [COLLECTION_SLUGS.OTROS, { grid: 'grid-otros', empty: 'empty-otros' }],
+    ]);
+    map.forEach((targets, slug) => {
+      const original = sectionData.get(slug) || [];
+      const filtered = applyTo(original);
+      renderGridInto(targets.grid, targets.empty, filtered);
+    });
+  }
+
+  async function fetchProductsByCollectionSlug(slug){
+    const supabase = window.supabase;
+    if (!supabase){
+      console.warn('Supabase no disponible, usando datos mock');
+      return mockFor(slug);
+    }
+    try {
+      // Para colecciones definidas
+      if (slug !== COLLECTION_SLUGS.OTROS){
+        const { data, error } = await supabase
+          .from('collection_products')
+          .select('products(*, tags), collections!inner(slug)')
+          .eq('collections.slug', slug)
+          .limit(60);
+        if (error) throw error;
+        // Normalizar a productos
+        const products = (data || []).map(r => r.products).filter(Boolean);
+        // Agregar imagen primaria desde vista si existe
+        const { data: withImages, error: err2 } = await supabase
+          .from('products_full')
+          .select('*')
+          .in('id', products.map(p => p.id));
+        if (!err2 && Array.isArray(withImages) && withImages.length){
+          return withImages;
+        }
+        // Si la colección está vacía, usar mock
+        return products.length ? products : mockFor(slug);
+      }
+
+      // OTROS: todo lo activo menos las 3 colecciones conocidas
+      const { data: allActive, error: eAll } = await supabase
+        .from('products_full')
+        .select('*')
+        .eq('is_active', true)
+        .limit(100);
+      if (eAll) throw eAll;
+      const { data: inKnown, error: eKnown } = await supabase
+        .from('collection_products')
+        .select('product_id, collections!inner(slug)')
+        .in('collections.slug', [COLLECTION_SLUGS.NUEVOS, COLLECTION_SLUGS.INVIERNO, COLLECTION_SLUGS.PRIMAVERA]);
+      if (eKnown) throw eKnown;
+      const excludeIds = new Set((inKnown||[]).map(r => r.product_id));
+      const others = (allActive||[]).filter(p => !excludeIds.has(p.id));
+      return others.length ? others : mockFor(slug);
+    } catch(err){
+      console.error('Error obteniendo productos de Supabase:', err);
+      return mockFor(slug);
+    }
+  }
+
+  async function loadCollection(slug){
+    currentCollection = slug;
+    setActiveTab(slug);
+    const list = await fetchProductsByCollectionSlug(slug);
+    sectionData.set(slug, list || []);
+    applyFilters();
+  }
+
+  async function loadAllSections(initial){
+    // Cargamos todas las secciones en paralelo
+    const slugs = [COLLECTION_SLUGS.NUEVOS, COLLECTION_SLUGS.INVIERNO, COLLECTION_SLUGS.PRIMAVERA, COLLECTION_SLUGS.OTROS];
+    await Promise.all(slugs.map(loadCollection));
+    // Activar la tab inicial
+    setActiveTab(initial);
+    // Actualizar contadores de filtros
+    updateFilterCounts();
+  }
+
+  function initTabs(){
+    els('.collection-link').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        const slug = tab.dataset.tab;
+        history.replaceState(null, '', `#${slug}`);
+        const target = document.getElementById(slug);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveTab(slug);
+      });
+    });
+    // Cargar desde el hash si existe
+    const hash = (location.hash || '').replace('#','');
+    const initial = [COLLECTION_SLUGS.NUEVOS, COLLECTION_SLUGS.INVIERNO, COLLECTION_SLUGS.PRIMAVERA, COLLECTION_SLUGS.OTROS].includes(hash) ? hash : COLLECTION_SLUGS.NUEVOS;
+    // Preseleccionar categoría desde parámetros
+    const params = new URLSearchParams(location.search);
+    const preCat = params.get('cat');
+    const catRadio = el(`input[name="categoria"][value="${preCat}"]`);
+    if (preCat && catRadio) {
+      catRadio.checked = true;
+    }
+    loadAllSections(initial).then(() => { if (preCat) applyFilters(); });
+
+    // Observador para activar tab según scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          setActiveTab(id);
+          history.replaceState(null, '', `#${id}`);
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px', threshold: 0.01 });
+
+    ['nuevos-llegados','invierno-otono','primavera-verano','otros'].forEach(id => {
+      const sec = document.getElementById(id);
+      if (sec) observer.observe(sec);
+    });
+  }
+
+  function updateFilterCounts() {
+    // Obtener todos los productos de todas las secciones
+    const allProducts = [];
+    sectionData.forEach(products => allProducts.push(...products));
+    
+    // Actualizar contadores de categorías
+    const categoryCounts = {
+      mujer: allProducts.filter(p => (p.category_slug || '').toLowerCase() === 'mujer').length,
+      hombre: allProducts.filter(p => (p.category_slug || '').toLowerCase() === 'hombre').length,
+      accesorios: allProducts.filter(p => (p.category_slug || '').toLowerCase() === 'accesorios').length
+    };
+    
+    // Actualizar contadores de colores
+    const colorCounts = {
+      negro: allProducts.filter(p => (p.colors || []).includes('negro')).length,
+      blanco: allProducts.filter(p => (p.colors || []).includes('blanco')).length,
+      azul: allProducts.filter(p => (p.colors || []).includes('azul')).length,
+      rojo: allProducts.filter(p => (p.colors || []).includes('rojo')).length,
+      multicolor: allProducts.filter(p => (p.colors || []).includes('multicolor')).length
+    };
+    
+    // Actualizar DOM
+    Object.entries(categoryCounts).forEach(([cat, count]) => {
+      const countEl = el(`.category-option input[value="${cat}"] + .category-name .count`);
+      if (countEl) countEl.textContent = count;
+    });
+    
+    Object.entries(colorCounts).forEach(([color, count]) => {
+      const countEl = el(`.color-option input[value="${color}"] + .color-swatch + .color-name .count`);
+      if (countEl) countEl.textContent = count;
+    });
+  }
+
+  function initSidebarToggle() {
+    const sidebar = el('.productos-sidebar');
+    const toggleBtn = el('.sidebar-toggle');
+    const navbarBrand = document.querySelector('.navbar-brand');
+    const navbarContainer = document.querySelector('.navbar-container');
+    
+    if (!sidebar || !toggleBtn) return;
+    
+    function updateLogoPosition(isOpen) {
+      if (navbarBrand) {
+        if (isOpen) {
+          navbarBrand.classList.add('sidebar-open');
+        } else {
+          navbarBrand.classList.remove('sidebar-open');
+        }
+      }
+      
+      if (navbarContainer) {
+        if (isOpen) {
+          navbarContainer.classList.add('sidebar-open');
+        } else {
+          navbarContainer.classList.remove('sidebar-open');
+        }
+      }
+    }
+    
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      
+      // Guardar estado en localStorage
+      const isOpen = sidebar.classList.contains('open');
+      localStorage.setItem('solare-sidebar-open', isOpen);
+      
+      // Actualizar posición del logo
+      updateLogoPosition(isOpen);
+    });
+    
+    // Restaurar estado del sidebar
+    const savedState = localStorage.getItem('solare-sidebar-open');
+    if (savedState === 'false') {
+      sidebar.classList.remove('open');
+      updateLogoPosition(false);
+    } else {
+      // Por defecto está abierto
+      updateLogoPosition(true);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Eventos filtros
+    const searchInput = el('#search');
+    if (searchInput) {
+      searchInput.addEventListener('input', applyFilters);
+    }
+    
+    const sortSelect = el('#orden');
+    if (sortSelect) {
+      sortSelect.addEventListener('change', applyFilters);
+    }
+    
+    // Filtros de categoría (radio buttons)
+    els('input[name="categoria"]').forEach(radio => {
+      radio.addEventListener('change', applyFilters);
+    });
+    
+    // Filtros de color (checkboxes)
+    els('input[name="color"]').forEach(checkbox => {
+      checkbox.addEventListener('change', applyFilters);
+    });
+    
+    initSidebarToggle();
+    initTabs();
+  });
+})();

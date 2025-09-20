@@ -11,30 +11,34 @@
     <div class="navbar-menu">
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link">MUJER</a>
+          <a href="productos.html?cat=mujer" class="nav-link">MUJER</a>
           <div class="dropdown-content">
-            <a href="#">Ropa</a>
-            <a href="#">Accesorios</a>
-            <a href="#">Zapatos</a>
-            <a href="#">Bolsos</a>
+            <a href="productos.html?cat=mujer#nuevos-llegados">Nuevos Llegados</a>
+            <a href="productos.html?cat=mujer#invierno-otono">Invierno-Otoño</a>
+            <a href="productos.html?cat=mujer#primavera-verano">Primavera-Verano</a>
+            <a href="productos.html?cat=mujer">Ver Todo</a>
           </div>
         </li>
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link">HOMBRE</a>
+          <a href="productos.html?cat=hombre" class="nav-link">HOMBRE</a>
           <div class="dropdown-content">
-            <a href="#">Ropa</a>
-            <a href="#">Accesorios</a>
-            <a href="#">Zapatos</a>
-            <a href="#">Bolsos</a>
+            <a href="productos.html?cat=hombre#nuevos-llegados">Nuevos Llegados</a>
+            <a href="productos.html?cat=hombre#invierno-otono">Invierno-Otoño</a>
+            <a href="productos.html?cat=hombre#primavera-verano">Primavera-Verano</a>
+            <a href="productos.html?cat=hombre">Ver Todo</a>
           </div>
         </li>
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link">COLECCIONES</a>
+          <a href="productos.html" class="nav-link">COLECCIONES</a>
           <div class="dropdown-content">
-            <a href="#">Nuevos Llegados</a>
-            <a href="#">Invierno-Otoño</a>
-            <a href="#">Primavera-Verano</a>
+            <a href="productos.html#nuevos-llegados">Nuevos Llegados</a>
+            <a href="productos.html#invierno-otono">Invierno-Otoño</a>
+            <a href="productos.html#primavera-verano">Primavera-Verano</a>
+            <a href="productos.html#otros">Otros</a>
           </div>
+        </li>
+        <li class="nav-item">
+          <a href="productos.html" class="nav-link">PRODUCTOS</a>
         </li>
         <li class="nav-item">
           <a href="nosotros.html" class="nav-link">NOSOTROS</a>
@@ -47,24 +51,34 @@
 
     <!-- Right side icons -->
     <div class="navbar-icons">
-      <a href="#" class="icon-link">
+      <a href="#" class="icon-link" title="Favoritos">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z"></path>
         </svg>
       </a>      
-      <a href="login.html" class="icon-link">
+      <a href="login.html" class="icon-link" title="Mi Cuenta">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
           <circle cx="12" cy="7" r="4"></circle>
         </svg>
       </a>
-      <a href="#" class="icon-link">
+      <a href="#" class="icon-link cart-icon" title="Carrito">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <path d="M16 10a4 4 0 0 1-8 0"></path>
         </svg>
+        <span class="cart-count" id="cartCount">0</span>
       </a>
+    </div>
+
+    <!-- Hamburger Menu Button -->
+    <div class="hamburger-menu">
+      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
     </div>
 
    
@@ -84,40 +98,45 @@
       
       <nav class="mobile-nav">
         <div class="mobile-nav-item">
-          <a href="#" class="mobile-nav-link main-link">WOMEN</a>
+          <a href="productos.html?cat=mujer" class="mobile-nav-link main-link">MUJER</a>
           <div class="mobile-submenu">
-            <a href="#" class="mobile-submenu-link">Clothing</a>
-            <a href="#" class="mobile-submenu-link">Accessories</a>
-            <a href="#" class="mobile-submenu-link">Shoes</a>
-            <a href="#" class="mobile-submenu-link">Bags</a>
+            <a href="productos.html?cat=mujer#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a>
+            <a href="productos.html?cat=mujer#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a>
+            <a href="productos.html?cat=mujer#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a>
+            <a href="productos.html?cat=mujer" class="mobile-submenu-link">Ver Todo</a>
           </div>
         </div>
         
         <div class="mobile-nav-item">
-          <a href="#" class="mobile-nav-link main-link">MEN</a>
+          <a href="productos.html?cat=hombre" class="mobile-nav-link main-link">HOMBRE</a>
           <div class="mobile-submenu">
-            <a href="#" class="mobile-submenu-link">Clothing</a>
-            <a href="#" class="mobile-submenu-link">Accessories</a>
-            <a href="#" class="mobile-submenu-link">Shoes</a>
-            <a href="#" class="mobile-submenu-link">Bags</a>
+            <a href="productos.html?cat=hombre#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a>
+            <a href="productos.html?cat=hombre#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a>
+            <a href="productos.html?cat=hombre#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a>
+            <a href="productos.html?cat=hombre" class="mobile-submenu-link">Ver Todo</a>
           </div>
         </div>
         
         <div class="mobile-nav-item">
-          <a href="#" class="mobile-nav-link main-link">COLLECTIONS</a>
+          <a href="productos.html" class="mobile-nav-link main-link">COLECCIONES</a>
           <div class="mobile-submenu">
-            <a href="#" class="mobile-submenu-link">New Arrivals</a>
-            <a href="#" class="mobile-submenu-link">Autumn-Winter</a>
-            <a href="#" class="mobile-submenu-link">Spring-Summer</a>
+            <a href="productos.html#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a>
+            <a href="productos.html#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a>
+            <a href="productos.html#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a>
+            <a href="productos.html#otros" class="mobile-submenu-link">Otros</a>
           </div>
         </div>
         
         <div class="mobile-nav-item">
-          <a href="#" class="mobile-nav-link">ABOUT</a>
+          <a href="productos.html" class="mobile-nav-link">PRODUCTOS</a>
         </div>
         
         <div class="mobile-nav-item">
-          <a href="#" class="mobile-nav-link">CONTACT</a>
+          <a href="nosotros.html" class="mobile-nav-link">NOSOTROS</a>
+        </div>
+        
+        <div class="mobile-nav-item">
+          <a href="#footer" class="mobile-nav-link">CONTACTO</a>
         </div>
       </nav>
       

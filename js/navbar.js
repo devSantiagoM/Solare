@@ -1,4 +1,4 @@
-// Navbar JavaScript - Hamburger Menu Functionality
+// Navbar JavaScript - Full Functionality
 document.addEventListener('DOMContentLoaded', function() {
     // Get elements
     const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeBtn = document.getElementById('closeBtn');
     const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
     const mainLinks = document.querySelectorAll('.mobile-nav-link.main-link');
+    const cartCount = document.getElementById('cartCount');
+    const cartIcon = document.querySelector('.cart-icon');
 
     // Toggle mobile menu
     function toggleMobileMenu() {
@@ -112,7 +114,59 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add scroll effect to navbar (optional)
+    // Cart functionality
+    function updateCartCount(count = 0) {
+        if (cartCount) {
+            cartCount.textContent = count;
+            if (count > 0) {
+                cartCount.classList.add('show');
+            } else {
+                cartCount.classList.remove('show');
+            }
+        }
+    }
+
+    // Initialize cart count from localStorage
+    function initCart() {
+        const savedCart = localStorage.getItem('solare-cart');
+        if (savedCart) {
+            try {
+                const cart = JSON.parse(savedCart);
+                const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+                updateCartCount(totalItems);
+            } catch (e) {
+                console.error('Error parsing cart data:', e);
+            }
+        }
+    }
+
+    // Cart click handler
+    if (cartIcon) {
+        cartIcon.addEventListener('click', function(e) {
+            e.preventDefault();
+            // TODO: Abrir modal del carrito o ir a página de carrito
+            console.log('Carrito clicked');
+            // Por ahora solo mostramos un alert
+            alert('Funcionalidad del carrito próximamente');
+        });
+    }
+
+    // Search functionality (for future implementation)
+    function initSearch() {
+        // TODO: Implementar búsqueda global
+        const searchLinks = document.querySelectorAll('.mobile-icon-link');
+        searchLinks.forEach(link => {
+            if (link.textContent.includes('Search')) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // TODO: Abrir modal de búsqueda
+                    console.log('Search clicked');
+                });
+            }
+        });
+    }
+
+    // Add scroll effect to navbar
     let lastScrollTop = 0;
     const navbar = document.querySelector('.navbar');
     
@@ -127,6 +181,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         lastScrollTop = scrollTop;
+    });
+
+    // Initialize all functionality
+    initCart();
+    initSearch();
+
+    // Listen for cart updates from other pages
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'solare-cart') {
+            initCart();
+        }
     });
 });
 
