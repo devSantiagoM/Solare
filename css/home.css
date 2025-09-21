@@ -165,6 +165,17 @@ body.home .card-nav.open {
 .tile-a::before { background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); }
 .tile-b::before { background-image: url('https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=2069&auto=format&fit=crop'); }
 .tile-c::before { background-image: url('https://images.unsplash.com/photo-1699474072277-aeccb6e17263?q=80&w=1161&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); }
+.tile-d::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* ocupa todo el card */
+  background-image: url('/assets/solare_blanco.svg');
+  background-repeat: no-repeat;      /* que no se repita */
+  background-size: 400px auto;        /* ancho fijo, alto automático */
+  background-position: center 20px;  /* centrado horizontal, 20px desde arriba */
+  margin-top: 15vh;
+  pointer-events: none;              /* que no bloquee clicks */
+}
 
 /* ===== Collections Row ===== */
 .collections {
