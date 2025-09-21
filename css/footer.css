@@ -148,8 +148,65 @@
   align-items: center; 
   justify-content: center; 
   gap: 1.5rem; 
+  margin-bottom: 2rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid #333;
 }
 
+/* Cart Button Styles */
+.cart-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #F4D03F;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border: 1px solid #F4D03F;
+  border-radius: 0.5rem;
+  background: transparent;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.cart-button:hover {
+  background: #F4D03F;
+  color: #111;
+  transform: translateY(-2px);
+}
+
+.cart-button svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+/* Social Links Styles */
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.social-link:hover {
+  color: #F4D03F;
+  border-color: #F4D03F;
+  background: rgba(244, 208, 63, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Legacy social class for compatibility */
 .social {
   display: flex;
   align-items: center;
@@ -166,13 +223,6 @@
   height: 24px;
   fill: currentColor;
 }
-
-.fb { background: #1877F2; }
-.fb:hover { background: #166FE5; }
-.ig { background: linear-gradient(45deg, #E4405F, #C13584); }
-.ig:hover { background: linear-gradient(45deg, #D63384, #B02A37); }
-.ln { background: #0A66C2; }
-.ln:hover { background: #004182; }
 
 .social:hover {
   transform: scale(1.1) rotate(5deg);
@@ -213,6 +263,30 @@
 }
 
 /* Responsive */
+@media (max-width: 767px) {
+  .footer-socials {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .cart-button {
+    order: -1;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .footer-socials {
+    justify-content: space-between;
+  }
+  
+  .cart-button {
+    margin-right: auto;
+  }
+}
+
 @media (min-width: 1024px) {
   .footer-middle {
     flex-direction: row;
@@ -221,5 +295,9 @@
   
   .footer-bottom {
     flex-direction: row;
+  }
+  
+  .footer-socials {
+    padding: 2rem 0;
   }
 }
