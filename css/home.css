@@ -1,4 +1,5 @@
 /* ===== Global reset to avoid white edges ===== */
+:root{font-family: Arial, sans-serif;}
 html, body { margin: 0; padding: 0; }
 body { background: #000; }
 
