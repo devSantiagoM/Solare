@@ -488,6 +488,27 @@ body.productos .productos-sidebar.open ~ .productos-layout {
   overflow: hidden;
 }
 
+/* Favorites toggle on product cards */
+.fav-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.95);
+  color: #e11d48;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 3;
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+.fav-toggle:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+.fav-toggle.active { border-color: #e11d48; background: #fff; }
+
 .card-media img {
   width: 100%;
   height: 100%;
@@ -590,6 +611,11 @@ body.productos .productos-sidebar.open ~ .productos-layout {
 
 .productos-section:nth-child(even) .card-media {
   background: #f8f8f8;
+}
+
+.productos-section:nth-child(even) .fav-toggle {
+  background: rgba(255,255,255,.95);
+  border-color: #ddd;
 }
 
 .productos-section:nth-child(even) .card-title {

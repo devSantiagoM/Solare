@@ -175,6 +175,28 @@ body.productos .navbar-container.sidebar-open {
   transform: scale(1);
 }
 
+/* Favorites counter */
+.fav-icon { position: relative; }
+.fav-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #e11d48; /* rose-600 */
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.fav-count.show { opacity: 1; transform: scale(1); }
+
 /* Hamburger Menu */
 .hamburger-menu {
   display: none;

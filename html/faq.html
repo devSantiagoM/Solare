@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Solare - Preguntas Frecuentes" />
+    <title>Solare | Preguntas Frecuentes</title>
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link rel="stylesheet" href="../css/faq.css" />
+    <script src="../js/layout.js" defer></script>
+    <script src="../js/faq.js" defer></script>
+  </head>
+  <body class="faq">
+    <header id="navbar" role="banner"></header>
+    <main id="main-content" class="faq-main" tabindex="-1">
+      <!-- Hero -->
+      <section class="faq-hero" aria-label="Cabecera FAQ">
+        <div class="container">
+          <h1 class="titulo">Preguntas Frecuentes</h1>
+          <p class="subtitulo">Encuentra respuestas rápidas a las dudas más comunes</p>
+          <div class="faq-search">
+            <input id="faqSearch" type="search" placeholder="Busca por palabra clave (p. ej. envío, cambios, pagos)" aria-label="Buscar en preguntas" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Category tabs -->
+      <section class="faq-tabs" aria-label="Categorías de preguntas">
+        <div class="container">
+          <nav class="tabs" role="tablist">
+            <button class="tab active" data-cat="general" role="tab" aria-selected="true">General</button>
+            <button class="tab" data-cat="envios" role="tab">Envíos</button>
+            <button class="tab" data-cat="pagos" role="tab">Pagos</button>
+            <button class="tab" data-cat="cambios" role="tab">Cambios y Devoluciones</button>
+            <button class="tab" data-cat="cuentas" role="tab">Cuentas</button>
+          </nav>
+        </div>
+      </section>
+
+      <!-- FAQ lists -->
+      <section class="faq-content" aria-label="Listado de preguntas">
+        <div class="container">
+          <div id="faqList" class="faq-list" data-cat="general"></div>
+        </div>
+      </section>
+
+      <!-- Contact CTA -->
+      <section class="faq-cta" aria-label="¿No encontraste lo que buscabas?">
+        <div class="container">
+          <div class="cta-card">
+            <h2>¿No encontraste tu respuesta?</h2>
+            <p>Escríbenos y te ayudaremos a resolverlo a la brevedad.</p>
+            <a href="contacto.html" class="btn-primary">Contactar Soporte</a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer id="footer"></footer>
+
+    <!-- Template para una pregunta -->
+    <template id="faq-item-template">
+      <details class="faq-item" data-id="">
+        <summary class="faq-question"></summary>
+        <div class="faq-answer"></div>
+      </details>
+    </template>
+  </body>
+</html>
