@@ -541,6 +541,38 @@ body.productos .productos-sidebar.open ~ .productos-layout {
   font-weight: 600;
   color: var(--text);
   letter-spacing: 0.3px;
+  margin-bottom: 16px;
+}
+
+.btn-add-to-cart {
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-add-to-cart:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-add-to-cart:active {
+  transform: translateY(0);
 }
 
 /* Cards en secciones negras */
@@ -574,6 +606,17 @@ body.productos .productos-sidebar.open ~ .productos-layout {
 
 .productos-section:nth-child(even) .rating-count {
   color: #666;
+}
+
+.productos-section:nth-child(even) .btn-add-to-cart {
+  color: #111;
+  border-color: #e5e5e5;
+}
+
+.productos-section:nth-child(even) .btn-add-to-cart:hover {
+  background: #111;
+  color: #fff;
+  border-color: #111;
 }
 
 .badge {

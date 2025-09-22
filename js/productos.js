@@ -79,7 +79,27 @@
             <span class="rating-count">(${ratingCount})</span>
           </div>
           <div class="card-price">$${Number(p.price || 0).toFixed(2)}</div>
+          <button class="btn-add-to-cart" data-product='${JSON.stringify(p)}'>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            Agregar al Carrito
+          </button>
         </div>`;
+      // Add event listener for add to cart button
+      const addToCartBtn = card.querySelector('.btn-add-to-cart');
+      if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const productData = JSON.parse(addToCartBtn.dataset.product);
+          if (window.SolareCart) {
+            window.SolareCart.addToCart(productData);
+          }
+        });
+      }
+      
       frag.appendChild(card);
     });
     grid.appendChild(frag);
