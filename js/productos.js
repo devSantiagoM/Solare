@@ -71,6 +71,7 @@
         <div class="card-media">
           <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop'" />
           ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
+          <button class="fav-toggle" aria-label="Agregar a favoritos">❤</button>
         </div>
         <div class="card-body">
           <h3 class="card-title">${p.name}</h3>
@@ -88,6 +89,20 @@
             Agregar al Carrito
           </button>
         </div>`;
+      // Favorites toggle
+      const favBtn = card.querySelector('.fav-toggle');
+      if (favBtn) {
+        // initial state
+        try { if (window.SolareFavs?.isFav(p.id)) favBtn.classList.add('active'); } catch(e){}
+        favBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (window.SolareFavs) {
+            window.SolareFavs.toggle(p);
+            favBtn.classList.toggle('active');
+          }
+        });
+      }
+
       // Add event listener for add to cart button
       const addToCartBtn = card.querySelector('.btn-add-to-cart');
       if (addToCartBtn) {

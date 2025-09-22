@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Solare - Contacto" />
+    <title>Solare | Contacto</title>
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link rel="stylesheet" href="../css/contacto.css" />
+    <!-- Better typography for Contact page -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="../js/layout.js" defer></script>
+    <script src="../js/contacto.js" defer></script>
+  </head>
+  <body class="contacto">
+    <header id="navbar" role="banner"></header>
+    <main id="main-content" class="contacto-main" tabindex="-1">
+      <!-- Hero -->
+      <section class="contacto-hero" aria-label="Cabecera de contacto">
+        <div class="container">
+          <div class="hero-inner">
+            <span class="hero-kicker">Atención personalizada</span>
+            <h1 class="hero-title">Estamos para ayudarte</h1>
+            <p class="hero-subtitle">Envíanos tu consulta y te responderemos a la brevedad</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Info + Form layout -->
+      <section class="contacto-content">
+        <div class="container">
+          <div class="contacto-grid">
+            <!-- Contact details -->
+            <aside class="contacto-info" aria-label="Información de contacto">
+              <div class="info-card">
+                <div class="info-icon" aria-hidden="true">📧</div>
+                <div class="info-text">
+                  <h3>Email</h3>
+                  <p>contacto@solare.com</p>
+                </div>
+              </div>
+              <div class="info-card">
+                <div class="info-icon" aria-hidden="true">📞</div>
+                <div class="info-text">
+                  <h3>Teléfono</h3>
+                  <p>+54 11 5555 1234</p>
+                </div>
+              </div>
+              <div class="info-card">
+                <div class="info-icon" aria-hidden="true">📍</div>
+                <div class="info-text">
+                  <h3>Dirección</h3>
+                  <p>Av. Moda 123, Palermo, CABA</p>
+                </div>
+              </div>
+              <div class="info-note">
+                Horario de atención: Lunes a Viernes de 9 a 18 hs (GMT-3)
+              </div>
+              <div class="social-links" aria-label="Redes sociales">
+                <a href="#" aria-label="Instagram">Instagram</a>
+                <a href="#" aria-label="Facebook">Facebook</a>
+                <a href="#" aria-label="Twitter">Twitter</a>
+              </div>
+            </aside>
+
+            <!-- Contact form -->
+            <section class="contacto-form-section" aria-label="Formulario de contacto">
+              <form id="contactForm" novalidate>
+                <div class="form-row">
+                  <div class="form-field">
+                    <label for="name">Nombre <span class="req" aria-hidden="true">*</span></label>
+                    <input id="name" name="name" type="text" placeholder="Tu nombre" required />
+                    <small class="error-msg" id="error-name"></small>
+                  </div>
+                  <div class="form-field">
+                    <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+                    <input id="email" name="email" type="email" placeholder="tu@email.com" required />
+                    <small class="error-msg" id="error-email"></small>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-field">
+                    <label for="topic">Motivo <span class="req" aria-hidden="true">*</span></label>
+                    <select id="topic" name="topic" required>
+                      <option value="" selected disabled>Selecciona un motivo</option>
+                      <option value="orden">Consulta sobre un pedido</option>
+                      <option value="producto">Información de producto</option>
+                      <option value="cambios">Cambios y devoluciones</option>
+                      <option value="otros">Otros</option>
+                    </select>
+                    <small class="error-msg" id="error-topic"></small>
+                  </div>
+                  <div class="form-field">
+                    <label for="order">N° de Orden (opcional)</label>
+                    <input id="order" name="order" type="text" placeholder="Ej: SO-12345" />
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-field full">
+                    <label for="message">Mensaje <span class="req" aria-hidden="true">*</span></label>
+                    <textarea id="message" name="message" rows="6" placeholder="Escribe tu mensaje" required maxlength="1000"></textarea>
+                    <span class="char-counter" id="messageCounter">0/1000</span>
+                    <small class="error-msg" id="error-message"></small>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <label class="checkbox">
+                    <input type="checkbox" id="privacy" required />
+                    <span>Acepto la política de privacidad <span class="req" aria-hidden="true">*</span></span>
+                  </label>
+                  <button type="submit" class="btn-submit">
+                    Enviar Mensaje
+                  </button>
+                </div>
+
+                <div class="form-feedback" id="formFeedback" role="status" aria-live="polite" hidden></div>
+              </form>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- Map placeholder -->
+      <section class="contacto-map" aria-label="Ubicación">
+        <div class="container">
+          <div class="map-embed" aria-hidden="true">
+            <!-- Placeholder image; replace with real map embed if desired -->
+            <img src="https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=1600&auto=format&fit=crop" alt="Mapa" />
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="contacto-faq" aria-label="Preguntas frecuentes">
+        <div class="container">
+          <h2 class="section-title">Preguntas frecuentes</h2>
+          <div class="faq-list" id="faqList">
+            <details>
+              <summary>¿Cuánto demora el envío?</summary>
+              <p>Envíos dentro de CABA entre 24 y 48 hs. Interior del país entre 3 a 7 días hábiles.</p>
+            </details>
+            <details>
+              <summary>¿Cómo realizo un cambio o devolución?</summary>
+              <p>Podés solicitarlo dentro de los 30 días de tu compra. Te enviaremos una etiqueta de envío.</p>
+            </details>
+            <details>
+              <summary>¿Qué medios de pago aceptan?</summary>
+              <p>Aceptamos tarjetas de crédito/débito, transferencia y plataformas de pago locales.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer id="footer"></footer>
+  </body>
+</html>

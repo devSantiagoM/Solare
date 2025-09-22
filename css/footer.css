@@ -11,6 +11,17 @@
   border: 0; 
 }
 
+/* Stack newsletter form on narrow screens */
+@media (max-width: 480px) {
+  .footer-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+  .footer-form input { min-width: 0; width: 100%; }
+  .footer-form button { width: 100%; }
+}
+
 .footer {
   background: #111;
   color: #e7e7e7;

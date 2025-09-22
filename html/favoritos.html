@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Solare - Favoritos" />
+    <title>Solare | Favoritos</title>
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link rel="stylesheet" href="../css/favoritos.css" />
+    <script src="../js/layout.js" defer></script>
+    <script src="../js/favoritos_api.js" defer></script>
+    <script src="../js/carrito.js" defer></script>
+    <script src="../js/favoritos.js" defer></script>
+  </head>
+  <body class="favoritos">
+    <header id="navbar" role="banner"></header>
+    <main id="main-content" class="favoritos-main" tabindex="-1">
+      <section class="favoritos-hero" aria-label="Cabecera favoritos">
+        <div class="container">
+          <h1 class="titulo">Tus Favoritos</h1>
+          <p class="subtitulo">Todos los productos que guardaste para más tarde</p>
+        </div>
+      </section>
+
+      <section class="favoritos-content">
+        <div class="container">
+          <div id="empty-favs" class="empty" hidden>
+            <div class="icon" aria-hidden="true">❤</div>
+            <h2>Sin favoritos aún</h2>
+            <p>Agrega productos a favoritos tocando el corazón en cualquier tarjeta.</p>
+            <a href="productos.html" class="btn-primary">Explorar productos</a>
+          </div>
+
+          <div id="favs-grid" class="grid"></div>
+        </div>
+      </section>
+    </main>
+    <footer id="footer"></footer>
+
+    <template id="fav-card-template">
+      <article class="card" data-id="">
+        <div class="card-media">
+          <img src="" alt="" loading="lazy" />
+          <button class="fav-btn active" aria-label="Quitar de favoritos">❤</button>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title"></h3>
+          <div class="card-price"></div>
+          <div class="card-actions">
+            <button class="btn-ghost remove-fav">Quitar</button>
+            <button class="btn-add add-cart">Agregar al carrito</button>
+          </div>
+        </div>
+      </article>
+    </template>
+  </body>
+</html>
