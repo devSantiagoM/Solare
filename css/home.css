@@ -218,3 +218,23 @@ body.home.scrolled .card-nav-cta-button {
   color: #fff; 
   border-color: #111;
 }
+
+
+/* ===== Responsive ===== */
+/*responsive para evitar que la web tenga overflow en todos los dispositivos*/
+html {
+  overflow-x: hidden;
+  font-size: 15px;
+}
+@media (min-width: 320px) {
+  .collections-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; } 
+}
+@media (min-width: 768px) {
+  .collections-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; } 
+}
+@media (min-width: 1024px) {
+  .collections-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+}
+@media (min-width: 1280px) {
+  .collections-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+}

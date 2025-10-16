@@ -1,6 +1,23 @@
 <nav class="navbar">
   <div class="navbar-container">
-    <!-- Logo/Brand -->
+    <!-- Left side: Hamburger + Login (Mobile) -->
+    <div class="navbar-left">
+      <div class="hamburger-menu">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+      <a href="login.html" class="icon-link login-icon-mobile" title="Mi Cuenta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Logo/Brand (Centered on mobile) -->
     <div class="navbar-brand">
       <a href="index.html" class="brand-link">
         <span class="brand-text">SOLARE</span>
@@ -62,12 +79,6 @@
           <path d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z"></path>
         </svg>
         <span class="fav-count" id="favCount">0</span>
-      </a>      
-      <a href="login.html" class="icon-link" title="Mi Cuenta">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
-        </svg>
       </a>
       <a href="carrito.html" class="icon-link cart-icon" title="Carrito">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -77,15 +88,12 @@
         </svg>
         <span class="cart-count" id="cartCount">0</span>
       </a>
-    </div>
-
-    <!-- Hamburger Menu Button -->
-    <div class="hamburger-menu">
-      <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
+      <a href="login.html" class="icon-link account-icon-desktop" title="Mi Cuenta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </a>
     </div>
 
    

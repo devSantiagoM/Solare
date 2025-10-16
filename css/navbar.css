@@ -1,4 +1,10 @@
 /* Navbar Styles - Inspired by Vivienne Westwood */
+
+/* Prevención de desbordamiento en navbar */
+.navbar * {
+  box-sizing: border-box;
+}
+
 .navbar {
   position: fixed;
   top: 0;
@@ -8,6 +14,9 @@
   border-bottom: 1px solid #e5e5e5;
   z-index: 1200;
   font-family: 'Arial', sans-serif;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .navbar-container {
@@ -15,9 +24,24 @@
   align-items: center;
   justify-content: space-between;
   max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   padding: 0 20px;
   height: 70px;
+  box-sizing: border-box;
+}
+
+/* Left side container (Mobile hamburger + login) */
+.navbar-left {
+  display: none; /* Hidden on desktop */
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.navbar-left .login-icon-mobile {
+  display: flex;
+  align-items: center;
 }
 
 /* Brand/Logo */
@@ -58,6 +82,8 @@ body.productos .navbar-container.sidebar-open {
   display: flex;
   flex: 1;
   justify-content: center;
+  max-width: 100%;
+  overflow: visible;
 }
 
 .navbar-nav {
@@ -66,6 +92,7 @@ body.productos .navbar-container.sidebar-open {
   margin: 0;
   padding: 0;
   gap: 40px;
+  flex-wrap: nowrap;
 }
 
 .nav-item {
@@ -97,10 +124,13 @@ body.productos .navbar-container.sidebar-open {
   border: 1px solid #e5e5e5;
   border-top: none;
   min-width: 200px;
+  max-width: 90vw;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  box-sizing: border-box;
 }
 
 .dropdown:hover .dropdown-content,
@@ -133,6 +163,13 @@ body.productos .navbar-container.sidebar-open {
   align-items: center;
   gap: 20px;
   flex-shrink: 0;
+  max-width: fit-content;
+}
+
+/* Hide account icon on mobile (show only on desktop) */
+.account-icon-desktop {
+  display: flex;
+  align-items: center;
 }
 
 .icon-link {
@@ -199,7 +236,7 @@ body.productos .navbar-container.sidebar-open {
 
 /* Hamburger Menu */
 .hamburger-menu {
-  display: none;
+  display: flex; /* Always flex, visibility controlled by parent */
   flex-shrink: 0;
 }
 
@@ -238,12 +275,14 @@ body.productos .navbar-container.sidebar-open {
   top: 0;
   left: 0;
   width: 100%;
+  max-width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.8);
   z-index: 9999;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .mobile-menu-overlay.active {
@@ -262,6 +301,8 @@ body.productos .navbar-container.sidebar-open {
   transform: translateX(100%);
   transition: transform 0.3s ease;
   overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .mobile-menu-overlay.active .mobile-menu-content {
@@ -361,17 +402,32 @@ body.productos .navbar-container.sidebar-open {
     display: none;
   }
   
+  /* Show left side (hamburger + login) on mobile */
+  .navbar-left {
+    display: flex;
+  }
+  
+  /* Keep icons visible on mobile, but hide account icon */
   .navbar-icons {
-    display: none;
+    display: flex;
+    gap: 15px;
   }
   
-  .hamburger-menu {
-    display: block;
+  .account-icon-desktop {
+    display: none; /* Hide account icon on mobile */
   }
   
+  /* Center the logo on mobile */
   .navbar-container {
     padding: 0 15px;
     height: 60px;
+    justify-content: space-between;
+  }
+  
+  .navbar-brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
   
   .brand-text {
@@ -385,7 +441,7 @@ body.productos .navbar-container.sidebar-open {
   
   /* Disable logo animation on mobile */
   body.productos .navbar-brand.sidebar-open {
-    transform: none;
+    transform: translateX(-50%);
   }
   
   body.productos .navbar-container.sidebar-open {
@@ -396,10 +452,39 @@ body.productos .navbar-container.sidebar-open {
 @media (max-width: 480px) {
   .navbar-container {
     padding: 0 10px;
+    max-width: 100%;
   }
   
   .brand-text {
     font-size: 18px;
+    letter-spacing: 1.5px;
+  }
+  
+  .navbar {
+    max-width: 100vw;
+  }
+  
+  .navbar-icons {
+    gap: 12px;
+  }
+  
+  .navbar-left {
+    gap: 10px;
+  }
+}
+
+/* Tablet range - Ajustes para pantallas medianas */
+@media (min-width: 769px) and (max-width: 1023px) {
+  .navbar-nav {
+    gap: 25px;
+  }
+  
+  .nav-link {
+    font-size: 13px;
+  }
+  
+  .navbar-container {
+    padding: 0 1.5rem;
   }
 }
 
@@ -411,5 +496,32 @@ body {
 @media (max-width: 768px) {
   body {
     padding-top: 60px;
+  }
+}
+
+/* Tablet (768px en adelante) */
+@media (min-width: 768px) {
+  .container {
+    padding-left: 1.5rem;  /* 24px */
+    padding-right: 1.5rem;
+  }
+}
+
+/* Desktop (1024px en adelante) */
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;  /* 32px */
+    padding-right: 2rem;
+  }
+}
+
+/* Desktop grande (1280px en adelante) */
+@media (min-width: 1280px) {
+  .container {
+    padding-left: 3rem;  /* 48px */
+    padding-right: 3rem;
+    max-width: 80rem;  /* 80rem = 1280px */
+    margin-left: auto;
+    margin-right: auto;
   }
 }

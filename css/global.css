@@ -1,0 +1,190 @@
+/* ===== css global responsive para todos los dispositivos ===== */
+
+/* Reset básico para evitar desbordamientos */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* HTML y Body - Base responsive */
+html {
+  overflow-x: hidden;
+  font-size: 15px;
+  scroll-behavior: smooth;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevenir desbordamiento en todos los elementos */
+img,
+video,
+iframe,
+embed,
+object {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Asegurar que las tablas sean responsive */
+table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+/* Prevenir desbordamiento de texto largo */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+div {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Prevenir desbordamiento en inputs y forms */
+input,
+textarea,
+select,
+button {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Prevenir scroll horizontal en contenedores */
+section,
+article,
+main,
+header,
+footer,
+nav {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Contenedor responsive con mobile-first approach */
+.container {
+  width: 100%;
+  max-width: 100%;
+  padding-left: 1rem;  /* 16px - móvil por defecto */
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* Tablet (768px en adelante) */
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+
+  .container {
+    padding-left: 1.5rem;  /* 24px */
+    padding-right: 1.5rem;
+  }
+}
+
+/* Desktop (1024px en adelante) */
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;  /* 32px */
+    padding-right: 2rem;
+  }
+}
+
+/* Desktop grande (1280px en adelante) */
+@media (min-width: 1280px) {
+  .container {
+    padding-left: 3rem;  /* 48px */
+    padding-right: 3rem;
+    max-width: 80rem;  /* 80rem = 1280px */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Utilidades responsive */
+.w-full {
+  width: 100%;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+/* Grid responsive */
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+/* Flex responsive */
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Imágenes responsive con aspect ratio */
+.img-responsive {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Media queries para ajustes finos */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Prevenir zoom en inputs en iOS */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
