@@ -50,7 +50,6 @@
 /* Brand/Logo */
 .navbar-brand {
   flex-shrink: 0;
-  transition: transform 0.3s ease, margin-left 0.3s ease;
 }
 
 .brand-link {
@@ -65,20 +64,6 @@
   color: #000;
 }
 
-/* Logo animation when sidebar is open */
-body.productos .navbar-brand.sidebar-open {
-  transform: translateX(220px);
-}
-
-/* Adjust navbar container when sidebar is open */
-body.productos .navbar-container {
-  transition: padding-left 0.3s ease;
-  padding-left: 80px; /* 60px sidebar closed + 20px spacing */
-}
-
-body.productos .navbar-container.sidebar-open {
-  padding-left: 300px; /* 280px sidebar + 20px extra spacing */
-}
 
 /* Desktop Navigation */
 .navbar-menu {
@@ -470,14 +455,6 @@ body.productos .navbar-container.sidebar-open {
     max-width: 100%;
   }
   
-  /* Disable logo animation on mobile */
-  body.productos .navbar-brand.sidebar-open {
-    transform: translateX(-50%);
-  }
-  
-  body.productos .navbar-container.sidebar-open {
-    padding-left: 15px;
-  }
 }
 
 @media (max-width: 480px) {

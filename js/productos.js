@@ -309,48 +309,91 @@
   function initSidebarToggle() {
     const sidebar = el('.productos-sidebar');
     const toggleBtn = el('.sidebar-toggle');
-    const navbarBrand = document.querySelector('.navbar-brand');
-    const navbarContainer = document.querySelector('.navbar-container');
+    const backdrop = el('#sidebarBackdrop');
     
     if (!sidebar || !toggleBtn) return;
     
-    function updateLogoPosition(isOpen) {
-      if (navbarBrand) {
-        if (isOpen) {
-          navbarBrand.classList.add('sidebar-open');
-        } else {
-          navbarBrand.classList.remove('sidebar-open');
-        }
+    function toggleSidebar(forceClose = false) {
+      if (forceClose) {
+        sidebar.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+      } else {
+        sidebar.classList.toggle('open');
+        if (backdrop) backdrop.classList.toggle('active');
+        document.body.classList.toggle('sidebar-open', sidebar.classList.contains('open'));
       }
-      
-      if (navbarContainer) {
-        if (isOpen) {
-          navbarContainer.classList.add('sidebar-open');
-        } else {
-          navbarContainer.classList.remove('sidebar-open');
-        }
-      }
-    }
-    
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
       
       // Guardar estado en localStorage
       const isOpen = sidebar.classList.contains('open');
       localStorage.setItem('solare-sidebar-open', isOpen);
       
-      // Actualizar posición del logo
-      updateLogoPosition(isOpen);
+      // Prevenir scroll en body cuando sidebar está abierto en mobile
+      if (window.innerWidth <= 768) {
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      }
+    }
+    
+    toggleBtn.addEventListener('click', () => toggleSidebar());
+    
+    // Cerrar sidebar al hacer click en el backdrop
+    if (backdrop) {
+      backdrop.addEventListener('click', () => toggleSidebar(true));
+    }
+    
+    // Cerrar sidebar en mobile al presionar ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && window.innerWidth <= 768 && sidebar.classList.contains('open')) {
+        toggleSidebar(true);
+      }
     });
     
-    // Restaurar estado del sidebar
-    const savedState = localStorage.getItem('solare-sidebar-open');
-    if (savedState === 'false') {
-      sidebar.classList.remove('open');
-      updateLogoPosition(false);
+    // Cerrar sidebar al cambiar a mobile y reabrir en desktop
+    let lastWidth = window.innerWidth;
+    window.addEventListener('resize', () => {
+      const currentWidth = window.innerWidth;
+      
+      // Si cambiamos de mobile a desktop o viceversa
+      if ((lastWidth <= 768 && currentWidth > 768) || (lastWidth > 768 && currentWidth <= 768)) {
+        // En desktop, restaurar estado guardado
+        if (currentWidth > 768) {
+          const savedState = localStorage.getItem('solare-sidebar-open');
+          if (savedState === 'false') {
+            sidebar.classList.remove('open');
+            document.body.classList.remove('sidebar-open');
+          } else {
+            sidebar.classList.add('open');
+            document.body.classList.add('sidebar-open');
+          }
+          if (backdrop) backdrop.classList.remove('active');
+          document.body.style.overflow = '';
+        } else {
+          // En mobile, cerrar por defecto
+          sidebar.classList.remove('open');
+          if (backdrop) backdrop.classList.remove('active');
+          document.body.classList.remove('sidebar-open');
+          document.body.style.overflow = '';
+        }
+      }
+      
+      lastWidth = currentWidth;
+    });
+    
+    // Configuración inicial
+    if (window.innerWidth > 768) {
+      const savedState = localStorage.getItem('solare-sidebar-open');
+      if (savedState === 'false') {
+        sidebar.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+      } else {
+        sidebar.classList.add('open');
+        document.body.classList.add('sidebar-open');
+      }
     } else {
-      // Por defecto está abierto
-      updateLogoPosition(true);
+      // En mobile, cerrar por defecto
+      sidebar.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('active');
+      document.body.classList.remove('sidebar-open');
     }
   }
 
