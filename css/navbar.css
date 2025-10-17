@@ -16,7 +16,8 @@
   font-family: 'Arial', sans-serif;
   width: 100%;
   max-width: 100vw;
-  overflow: hidden; /* Prevenir cualquier scroll */
+  overflow-x: hidden; /* Prevenir scroll horizontal */
+  overflow-y: visible; /* Permitir que badges se vean verticalmente */
 }
 
 .navbar-container {
@@ -29,7 +30,7 @@
   padding: 0 20px;
   height: 70px;
   box-sizing: border-box;
-  overflow: hidden; /* Prevenir scroll en el contenedor */
+  overflow: visible; /* Permitir que los badges se vean */
 }
 
 /* Left side container (Mobile hamburger + login) */
@@ -38,7 +39,7 @@
   align-items: center;
   gap: 15px;
   flex-shrink: 0;
-  overflow: hidden; /* Prevenir scroll */
+  overflow: visible; /* Permitir que los badges se vean */
 }
 
 .navbar-left .login-icon-mobile {
@@ -167,7 +168,8 @@ body.productos .navbar-container.sidebar-open {
   gap: 20px;
   flex-shrink: 0;
   max-width: fit-content;
-  overflow: hidden; /* Prevenir scroll */
+  overflow: visible; /* Permitir que los badges se muestren */
+  padding: 10px 0; /* Espacio vertical para los badges */
 }
 
 /* Hide account icon on mobile (show only on desktop) */
@@ -181,6 +183,8 @@ body.productos .navbar-container.sidebar-open {
   text-decoration: none;
   transition: color 0.3s ease;
   position: relative;
+  padding: 8px; /* Espacio para que los badges no se corten */
+  display: inline-block;
 }
 
 .icon-link:hover {
@@ -190,6 +194,7 @@ body.productos .navbar-container.sidebar-open {
 /* Cart counter */
 .cart-icon {
   position: relative;
+  display: inline-block;
 }
 
 .cart-count {
@@ -209,6 +214,8 @@ body.productos .navbar-container.sidebar-open {
   opacity: 0;
   transform: scale(0);
   transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .cart-count.show {
@@ -217,7 +224,10 @@ body.productos .navbar-container.sidebar-open {
 }
 
 /* Favorites counter */
-.fav-icon { position: relative; }
+.fav-icon { 
+  position: relative;
+  display: inline-block;
+}
 .fav-count {
   position: absolute;
   top: -8px;
@@ -235,6 +245,8 @@ body.productos .navbar-container.sidebar-open {
   opacity: 0;
   transform: scale(0);
   transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+  pointer-events: none;
 }
 .fav-count.show { opacity: 1; transform: scale(1); }
 
