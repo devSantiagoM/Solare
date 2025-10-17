@@ -34,6 +34,22 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ===== Ocultar scrollbar completamente (mantiene funcionalidad) ===== */
+/* Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* Chrome, Edge, Safari */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* IE y Edge legacy */
+* {
+  -ms-overflow-style: none;
+}
+
 /* Prevenir desbordamiento en todos los elementos */
 img,
 video,

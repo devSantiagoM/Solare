@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Cargar script del navbar y luego inicializarlo
       const ensureNavbarScript = () => new Promise((resolve, reject) => {
         if (window.initNavbar) return resolve();
-        const existing = Array.from(document.scripts).find(s => (s.src || '').includes('./navbar.js'));
+        const existing = Array.from(document.scripts).find(s => (s.src || '').includes('../js/navbar.js'));
         if (existing) {
           existing.addEventListener('load', () => resolve());
           existing.addEventListener('error', reject);
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
         const script = document.createElement('script');
-        script.src = './navbar.js';
+        script.src = '../js/navbar.js';
         script.defer = true;
         script.onload = () => { script.dataset.loaded = 'true'; resolve(); };
         script.onerror = reject;
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
         const script = document.createElement('script');
-        script.src = './favoritos_api.js';
+        script.src = '../js/favoritos_api.js';
         script.defer = true;
         script.onload = () => { script.dataset.loaded = 'true'; resolve(); };
         script.onerror = reject;

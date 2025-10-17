@@ -16,7 +16,7 @@
   font-family: 'Arial', sans-serif;
   width: 100%;
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow: hidden; /* Prevenir cualquier scroll */
 }
 
 .navbar-container {
@@ -29,6 +29,7 @@
   padding: 0 20px;
   height: 70px;
   box-sizing: border-box;
+  overflow: hidden; /* Prevenir scroll en el contenedor */
 }
 
 /* Left side container (Mobile hamburger + login) */
@@ -37,6 +38,7 @@
   align-items: center;
   gap: 15px;
   flex-shrink: 0;
+  overflow: hidden; /* Prevenir scroll */
 }
 
 .navbar-left .login-icon-mobile {
@@ -83,7 +85,7 @@ body.productos .navbar-container.sidebar-open {
   flex: 1;
   justify-content: center;
   max-width: 100%;
-  overflow: visible;
+  overflow: hidden; /* Prevenir scroll en el menú */
 }
 
 .navbar-nav {
@@ -131,6 +133,7 @@ body.productos .navbar-container.sidebar-open {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   box-sizing: border-box;
+  overflow: hidden; /* Prevenir scroll en dropdowns */
 }
 
 .dropdown:hover .dropdown-content,
@@ -164,6 +167,7 @@ body.productos .navbar-container.sidebar-open {
   gap: 20px;
   flex-shrink: 0;
   max-width: fit-content;
+  overflow: hidden; /* Prevenir scroll */
 }
 
 /* Hide account icon on mobile (show only on desktop) */
@@ -238,6 +242,7 @@ body.productos .navbar-container.sidebar-open {
 .hamburger-menu {
   display: flex; /* Always flex, visibility controlled by parent */
   flex-shrink: 0;
+  overflow: hidden; /* Prevenir scroll */
 }
 
 .hamburger-btn {
@@ -283,6 +288,13 @@ body.productos .navbar-container.sidebar-open {
   visibility: hidden;
   transition: all 0.3s ease;
   overflow: hidden;
+  /* Ocultar scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-menu-overlay::-webkit-scrollbar {
+  display: none;
 }
 
 .mobile-menu-overlay.active {
@@ -303,6 +315,13 @@ body.productos .navbar-container.sidebar-open {
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
+  /* Ocultar scrollbar pero mantener funcionalidad */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-menu-content::-webkit-scrollbar {
+  display: none;
 }
 
 .mobile-menu-overlay.active .mobile-menu-content {

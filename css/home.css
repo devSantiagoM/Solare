@@ -6,47 +6,27 @@ body { background: #000; }
 /* ===== Solare Home (inspirado en Vivienne Westwood) ===== */
 
 /* Home-specific navbar overrides (do not touch base navbar.css) */
-body.home .card-nav-container {
-  position: fixed;
-  top: 0.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(92%, 1200px);
-  z-index: 100;
+body.home .navbar {
+  background: #ffffff; /* Fondo blanco sólido */
+  border-bottom: 1px solid #e5e5e5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-body.home .card-nav {
-  background: rgba(0,0,0,0.18);
-  backdrop-filter: saturate(120%) blur(8px);
-  border: 0; /* avoid bright outline */
-  box-shadow: none; /* remove drop shadow */
-  color: #fff;
+/* Mantener el color del texto y los iconos en negro */
+body.home .navbar .brand-text,
+body.home .navbar .nav-link,
+body.home .navbar .icon-link {
+  color: #000;
 }
 
-body.home .hamburger-line { background-color: rgba(255,255,255,0.9); }
-
-/* Refined Login CTA to blend with hero */
-body.home .card-nav-cta-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 36px;
-  padding: 0 .9rem;
-  border-radius: .6rem;
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.35);
-  backdrop-filter: blur(6px);
-  transition: background .25s ease, border-color .25s ease, color .25s ease;
-}
-body.home .card-nav-cta-button:hover {
-  background: rgba(255,255,255,0.16);
-  border-color: rgba(255,255,255,0.55);
+/* Hamburger menu con líneas negras */
+body.home .hamburger-line { 
+  background-color: #000;
 }
 
-/* When nav opens, keep overlay readable */
-body.home .card-nav.open {
-  background: rgba(0,0,0,0.6);
+/* Login icon en mobile con color negro */
+body.home .login-icon-mobile {
+  color: #000;
 }
 
 /* ===== Hero ===== */
@@ -206,18 +186,8 @@ body.home .card-nav.open {
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
 .revealed { opacity: 1; transform: none; }
 
-/* ===== Navbar on scroll (home only) ===== */
-body.home.scrolled .card-nav { 
-  background: rgba(255,255,255,0.9);
-  color: #111;
-  border: 1px solid rgba(0,0,0,0.08);
-}
-body.home.scrolled .hamburger-line { background-color: #111; }
-body.home.scrolled .card-nav-cta-button { 
-  background: #111; 
-  color: #fff; 
-  border-color: #111;
-}
+/* ===== Navbar estático - sin cambios en scroll ===== */
+/* El navbar se mantiene blanco todo el tiempo */
 
 
 /* ===== Responsive ===== */
