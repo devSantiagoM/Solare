@@ -120,6 +120,23 @@
     grid.appendChild(frag);
   }
 
+  function closeSidebarOnMobile() {
+    // Cerrar sidebar en móviles después de aplicar un filtro
+    if (window.innerWidth <= 768) {
+      const sidebar = el('.productos-sidebar');
+      const backdrop = el('#sidebarBackdrop');
+      if (sidebar && sidebar.classList.contains('open')) {
+        setTimeout(() => {
+          sidebar.classList.remove('open');
+          if (backdrop) backdrop.classList.remove('active');
+          document.body.classList.remove('sidebar-open');
+          document.body.style.overflow = '';
+          localStorage.setItem('solare-sidebar-open', false);
+        }, 200); // Pequeño delay para que el usuario vea el cambio
+      }
+    }
+  }
+
   function applyFilters(){
     const q = (el('#search')?.value || '').trim().toLowerCase();
     const catRadio = el('input[name="categoria"]:checked');
@@ -242,6 +259,8 @@
         const target = document.getElementById(slug);
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         setActiveTab(slug);
+        // Cerrar sidebar en móviles después de seleccionar colección
+        closeSidebarOnMobile();
       });
     });
     // Cargar desde el hash si existe
@@ -309,6 +328,7 @@
   function initSidebarToggle() {
     const sidebar = el('.productos-sidebar');
     const toggleBtn = el('.sidebar-toggle');
+    const mobileFilterBtn = el('#mobileFilterBtn');
     const backdrop = el('#sidebarBackdrop');
     
     if (!sidebar || !toggleBtn) return;
@@ -335,6 +355,19 @@
     }
     
     toggleBtn.addEventListener('click', () => toggleSidebar());
+    
+    // Abrir sidebar desde el botón flotante móvil
+    if (mobileFilterBtn) {
+      mobileFilterBtn.addEventListener('click', () => {
+        sidebar.classList.add('open');
+        if (backdrop) backdrop.classList.add('active');
+        document.body.classList.add('sidebar-open');
+        if (window.innerWidth <= 768) {
+          document.body.style.overflow = 'hidden';
+        }
+        localStorage.setItem('solare-sidebar-open', true);
+      });
+    }
     
     // Cerrar sidebar al hacer click en el backdrop
     if (backdrop) {
@@ -401,22 +434,39 @@
     // Eventos filtros
     const searchInput = el('#search');
     if (searchInput) {
-      searchInput.addEventListener('input', applyFilters);
+      let searchTimeout;
+      searchInput.addEventListener('input', () => {
+        applyFilters();
+        // Debounce para cerrar el sidebar solo cuando el usuario termine de escribir
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          closeSidebarOnMobile();
+        }, 1200); // Esperar 1.2s después de que el usuario deje de escribir para asegurar que terminó
+      });
     }
     
     const sortSelect = el('#orden');
     if (sortSelect) {
-      sortSelect.addEventListener('change', applyFilters);
+      sortSelect.addEventListener('change', () => {
+        applyFilters();
+        closeSidebarOnMobile();
+      });
     }
     
     // Filtros de categoría (radio buttons)
     els('input[name="categoria"]').forEach(radio => {
-      radio.addEventListener('change', applyFilters);
+      radio.addEventListener('change', () => {
+        applyFilters();
+        closeSidebarOnMobile();
+      });
     });
     
     // Filtros de color (checkboxes)
     els('input[name="color"]').forEach(checkbox => {
-      checkbox.addEventListener('change', applyFilters);
+      checkbox.addEventListener('change', () => {
+        applyFilters();
+        closeSidebarOnMobile();
+      });
     });
     
     initSidebarToggle();
