@@ -10,6 +10,30 @@
     OTROS: 'otros',
   };
 
+  // Función para extraer colores del nombre o tags del producto
+  function extractColors(name, tags) {
+    const colorKeywords = {
+      'negro': ['negro', 'black', 'negra'],
+      'blanco': ['blanco', 'white', 'blanca'],
+      'azul': ['azul', 'blue'],
+      'rojo': ['rojo', 'red', 'roja'],
+      'multicolor': ['floral', 'multicolor', 'estampado']
+    };
+    
+    const colors = [];
+    const lowerName = name.toLowerCase();
+    const lowerTags = tags.map(t => String(t).toLowerCase());
+    
+    for (const [color, keywords] of Object.entries(colorKeywords)) {
+      const found = keywords.some(keyword => 
+        lowerName.includes(keyword) || lowerTags.some(tag => tag.includes(keyword))
+      );
+      if (found) colors.push(color);
+    }
+    
+    return colors.length > 0 ? colors : ['negro']; // Default negro si no se encuentra color
+  }
+
   // Dataset de respaldo por si falla Supabase (distribuido por colecciones)
   function mockFor(slug){
     const NUEVOS = [
@@ -53,6 +77,16 @@
     els('.collection-link').forEach(a => a.classList.toggle('active', a.dataset.tab === slug));
   }
 
+  // Función para determinar el badge basado en tags
+  function getBadge(tags, isFeatured) {
+    if (!Array.isArray(tags)) return '';
+    const tagStr = tags.map(t => String(t).toLowerCase()).join(' ');
+    if (tagStr.includes('nuevo')) return 'Nuevo';
+    if (tagStr.includes('edicion-limitada') || tagStr.includes('ed. limitada')) return 'Ed. Limitada';
+    if (isFeatured) return 'Destacado';
+    return '';
+  }
+
   function renderGridInto(containerId, emptyId, list){
     const grid = el(`#${containerId}`);
     const empty = el(`#${emptyId}`);
@@ -67,10 +101,12 @@
       const imgUrl = p.primary_image || p.image || 'https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?q=80&w=800&auto=format&fit=crop';
       const rating = Math.random() * 2 + 3; // 3-5 rating
       const ratingCount = Math.floor(Math.random() * 50) + 1;
+      const badge = p.badge || getBadge(p.tags, p.is_featured);
+      
       card.innerHTML = `
         <div class="card-media">
           <img src="${imgUrl}" alt="${p.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop'" />
-          ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
+          ${badge ? `<span class="badge">${badge}</span>` : ''}
           <button class="fav-toggle" aria-label="Agregar a favoritos">❤</button>
         </div>
         <div class="card-body">
@@ -191,40 +227,160 @@
     try {
       // Para colecciones definidas
       if (slug !== COLLECTION_SLUGS.OTROS){
+        // Primero obtener el ID de la colección
+        const { data: collectionData, error: collError } = await supabase
+          .from('collections')
+          .select('id')
+          .eq('slug', slug)
+          .single();
+        
+        if (collError || !collectionData) {
+          console.warn(`Collection not found: ${slug}`);
+          return mockFor(slug);
+        }
+        
+        // Obtener productos de la colección
         const { data, error } = await supabase
           .from('collection_products')
-          .select('products(*, tags), collections!inner(slug)')
-          .eq('collections.slug', slug)
-          .limit(60);
-        if (error) throw error;
-        // Normalizar a productos
-        const products = (data || []).map(r => r.products).filter(Boolean);
-        // Agregar imagen primaria desde vista si existe
-        const { data: withImages, error: err2 } = await supabase
-          .from('products_full')
-          .select('*')
-          .in('id', products.map(p => p.id));
-        if (!err2 && Array.isArray(withImages) && withImages.length){
-          return withImages;
+          .select(`
+            product_id,
+            sort_order,
+            products (
+              id,
+              name,
+              slug,
+              description,
+              price,
+              compare_price,
+              is_active,
+              is_featured,
+              tags,
+              category_id,
+              categories (
+                slug
+              )
+            )
+          `)
+          .eq('collection_id', collectionData.id)
+          .order('sort_order', { ascending: true });
+        
+        if (error) {
+          console.error('Error fetching collection products:', error);
+          throw error;
         }
-        // Si la colección está vacía, usar mock
+        
+        // Normalizar productos
+        let products = (data || [])
+          .map(item => {
+            const product = item.products;
+            if (!product) return null;
+            
+            // Extraer colores de tags o nombre del producto
+            const tags = product.tags || [];
+            const colors = extractColors(product.name, tags);
+            
+            return {
+              id: product.id,
+              name: product.name,
+              slug: product.slug,
+              description: product.description,
+              price: product.price,
+              compare_price: product.compare_price,
+              is_active: product.is_active,
+              is_featured: product.is_featured,
+              tags: tags,
+              colors: colors,
+              category_slug: product.categories?.slug || '',
+              sort_order: item.sort_order
+            };
+          })
+          .filter(Boolean);
+        
+        // Obtener imágenes para estos productos
+        if (products.length > 0) {
+          const productIds = products.map(p => p.id);
+          const { data: images, error: imgError } = await supabase
+            .from('product_images')
+            .select('product_id, url, is_primary')
+            .in('product_id', productIds)
+            .eq('is_primary', true);
+          
+          if (!imgError && images) {
+            const imageMap = new Map(images.map(img => [img.product_id, img.url]));
+            products = products.map(p => ({
+              ...p,
+              image: imageMap.get(p.id) || p.image,
+              primary_image: imageMap.get(p.id) || p.image
+            }));
+          }
+        }
+        
+        console.log(`Loaded ${products.length} products for collection: ${slug}`);
         return products.length ? products : mockFor(slug);
       }
 
       // OTROS: todo lo activo menos las 3 colecciones conocidas
       const { data: allActive, error: eAll } = await supabase
-        .from('products_full')
-        .select('*')
+        .from('products')
+        .select(`
+          id,
+          name,
+          slug,
+          description,
+          price,
+          compare_price,
+          is_active,
+          is_featured,
+          tags,
+          categories (
+            slug
+          )
+        `)
         .eq('is_active', true)
         .limit(100);
+        
       if (eAll) throw eAll;
+      
       const { data: inKnown, error: eKnown } = await supabase
         .from('collection_products')
         .select('product_id, collections!inner(slug)')
         .in('collections.slug', [COLLECTION_SLUGS.NUEVOS, COLLECTION_SLUGS.INVIERNO, COLLECTION_SLUGS.PRIMAVERA]);
+        
       if (eKnown) throw eKnown;
+      
       const excludeIds = new Set((inKnown||[]).map(r => r.product_id));
-      const others = (allActive||[]).filter(p => !excludeIds.has(p.id));
+      let others = (allActive||[])
+        .filter(p => !excludeIds.has(p.id))
+        .map(p => {
+          const tags = p.tags || [];
+          const colors = extractColors(p.name, tags);
+          return {
+            ...p,
+            colors: colors,
+            category_slug: p.categories?.slug || ''
+          };
+        });
+      
+      // Obtener imágenes
+      if (others.length > 0) {
+        const productIds = others.map(p => p.id);
+        const { data: images, error: imgError } = await supabase
+          .from('product_images')
+          .select('product_id, url, is_primary')
+          .in('product_id', productIds)
+          .eq('is_primary', true);
+        
+        if (!imgError && images) {
+          const imageMap = new Map(images.map(img => [img.product_id, img.url]));
+          others = others.map(p => ({
+            ...p,
+            image: imageMap.get(p.id) || p.image,
+            primary_image: imageMap.get(p.id) || p.image
+          }));
+        }
+      }
+      
+      console.log(`Loaded ${others.length} products for "Otros"`);
       return others.length ? others : mockFor(slug);
     } catch(err){
       console.error('Error obteniendo productos de Supabase:', err);
