@@ -73,7 +73,6 @@ body {
   .hero-about {
     height: 60vh;
     min-height: 400px;
-    margin-top: 60px;
     background-attachment: scroll;
   }
   
