@@ -1,0 +1,398 @@
+/* ===== Admin Panel Layout ===== */
+
+.admin-body {
+  min-height: 100vh;
+  background: #f5f5f5;
+  color: #111;
+}
+
+.admin-main {
+  padding-top: 6rem;
+  padding-bottom: 4rem;
+}
+
+.admin-shell {
+  max-width: 100%;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 960px) {
+  .admin-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ===== Sidebar ===== */
+
+.admin-sidebar {
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #e5e5e5;
+  padding: 1.5rem 1.4rem;
+  position: sticky;
+  top: 5.5rem;
+  align-self: flex-start;
+}
+
+.admin-kicker {
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #111;
+  margin-bottom: 0.7rem;
+}
+
+.admin-title {
+  font-size: 1.35rem;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+}
+
+.admin-subtitle {
+  font-size: 0.85rem;
+  color: #111;
+  margin-bottom: 1.5rem;
+}
+
+.admin-account {
+  margin-bottom: 1.5rem;
+}
+
+.admin-section-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+
+.admin-account-email {
+  font-size: 0.9rem;
+  color: #111;
+  margin-bottom: 0.15rem;
+}
+
+.admin-account-role {
+  font-size: 0.8rem;
+  color: #111;
+}
+
+.admin-nav {
+  margin-bottom: 1.5rem;
+}
+
+.admin-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.admin-nav-btn {
+  text-align: left;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #e5e5e5;
+  background: #f7f7f7;
+  color: #111;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-nav-btn:hover {
+  background: #ececec;
+  color: #111;
+}
+
+.admin-nav-btn-active {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+.admin-sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.6rem;
+}
+
+.admin-btn {
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.admin-btn-primary {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+.admin-btn-primary:hover {
+  background: #000;
+}
+
+.admin-btn-ghost {
+  border-color: #e5e5e5;
+  background: #f7f7f7;
+  color: #111;
+}
+
+.admin-btn-ghost:hover {
+  background: #ececec;
+}
+
+.admin-btn-inline {
+  align-self: flex-start;
+}
+
+.admin-status {
+  font-size: 0.8rem;
+  color: #111;
+  margin-top: 1rem;
+}
+
+/* ===== Main Content ===== */
+
+.admin-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.admin-section {
+  display: none;
+}
+
+.admin-section-active {
+  display: block;
+}
+
+.admin-section-header {
+  margin-bottom: 1.2rem;
+}
+
+.admin-section-kicker {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #999;
+  margin-bottom: 0.35rem;
+}
+
+.admin-section-title {
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+/* ===== Cards (Dashboard) ===== */
+
+.admin-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.admin-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #e5e5e5;
+  padding: 1.2rem 1.1rem;
+}
+
+.admin-card-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #111;
+  margin-bottom: 0.3rem;
+}
+
+.admin-card-value {
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.admin-card-help {
+  font-size: 0.8rem;
+  color: #777;
+  margin-top: 0.2rem;
+}
+
+/* ===== Two-column layout (Productos) ===== */
+
+.admin-two-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 960px) {
+  .admin-two-column {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ===== Tables ===== */
+
+.admin-table-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #e5e5e5;
+  overflow: hidden;
+}
+
+.admin-table-header {
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-table-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #999;
+}
+
+.admin-table-meta {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.admin-table-scroll {
+  max-height: 340px;
+  overflow: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.admin-table thead tr {
+  background: #fafafa;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.6rem 1.1rem;
+  border-bottom: 1px solid #f5f5f5;
+  text-align: left;
+}
+
+.admin-table th {
+  font-weight: 600;
+  color: #555;
+}
+
+.admin-th-right {
+  text-align: right;
+}
+
+.admin-table td {
+  color: #444;
+}
+
+.admin-table tbody tr:hover {
+  background: #fafafa;
+}
+
+/* ===== Form ===== */
+
+.admin-form-card {
+  background: #fafafa;
+  border-radius: 1rem;
+  border: 1px solid #e5e5e5;
+  padding: 1.25rem 1.1rem;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.admin-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+@media (max-width: 640px) {
+  .admin-form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.admin-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.admin-input,
+.admin-input-file,
+.admin-select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: 0.6rem;
+  border: 1px solid #dcdcdc;
+  background: #fff;
+}
+
+.admin-input:focus,
+.admin-select:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.admin-help-text {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 0.25rem;
+}
+
+.admin-form-message {
+  font-size: 0.8rem;
+  color: #2f855a;
+  display: none;
+  margin-top: 0.2rem;
+}
+
+/* ===== Utility ===== */
+
+.admin-table td:last-child,
+.admin-table th:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
