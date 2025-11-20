@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Solare - Panel de Administración" />
+    <title>Solare | Admin</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link rel="stylesheet" href="../css/home.css" />
+    <script type="module" src="../js/supabase.js"></script>
+    <script src="../js/navbar.js" defer></script>
+    <script src="../js/layout.js" defer></script>
+    <script src="../js/admin.js" defer></script>
+  </head>
+  <body class="home">
+    <nav class="navbar">
+      <div class="navbar-container" id="navbar-root"></div>
+    </nav>
+
+    <main id="main-content" tabindex="-1">
+      <section class="section" style="padding-top: 6rem; padding-bottom: 4rem">
+        <div class="container">
+          <header style="margin-bottom: 2rem">
+            <p
+              style="
+                letter-spacing: 0.2em;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                color: #999;
+                margin-bottom: 0.75rem;
+              "
+            >
+              Panel
+            </p>
+            <h1
+              style="
+                font-size: 2.25rem;
+                letter-spacing: 0.12em;
+                font-weight: 600;
+              "
+            >
+              Administración Solare
+            </h1>
+            <p style="max-width: 32rem; margin-top: 0.75rem; color: #555">
+              Gestiona la información clave de la tienda desde un panel simple y
+              minimalista. Esta vista solo es accesible para usuarios con rol de
+              administrador.
+            </p>
+          </header>
+
+          <div
+            class="grid"
+            style="
+              grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+              gap: 1.5rem;
+            "
+          >
+            <article
+              style="
+                border-radius: 1rem;
+                border: 1px solid #e5e5e5;
+                padding: 1.5rem;
+                background: #fff;
+              "
+            >
+              <h2
+                style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem"
+              >
+                Resumen de cuenta
+              </h2>
+              <p
+                id="admin-user-email"
+                style="font-size: 0.9rem; color: #555; margin-bottom: 0.25rem"
+              >
+                Cargando email...
+              </p>
+              <p id="admin-user-role" style="font-size: 0.85rem; color: #888">
+                Cargando rol...
+              </p>
+            </article>
+
+            <article
+              style="
+                border-radius: 1rem;
+                border: 1px solid #e5e5e5;
+                padding: 1.5rem;
+                background: #fff;
+              "
+            >
+              <h2
+                style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem"
+              >
+                Gestión básica
+              </h2>
+              <p style="font-size: 0.9rem; color: #555; margin-bottom: 0.75rem">
+                Aquí puedes ampliar con secciones para productos, pedidos,
+                usuarios, etc. Por ahora es un panel base preparado para tu
+                desarrollo.
+              </p>
+              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap">
+                <button
+                  id="btn-go-home"
+                  style="
+                    padding: 0.6rem 1.2rem;
+                    border-radius: 999px;
+                    border: 1px solid #111;
+                    background: #111;
+                    color: #fff;
+                    font-size: 0.85rem;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    cursor: pointer;
+                  "
+                >
+                  Ir a inicio
+                </button>
+                <button
+                  id="btn-logout"
+                  style="
+                    padding: 0.6rem 1.2rem;
+                    border-radius: 999px;
+                    border: 1px solid #ddd;
+                    background: #f7f7f7;
+                    color: #111;
+                    font-size: 0.85rem;
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    cursor: pointer;
+                  "
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            </article>
+
+            <article
+              style="
+                border-radius: 1rem;
+                border: 1px solid #e5e5e5;
+                padding: 1.5rem;
+                background: #fafafa;
+              "
+            >
+              <h2
+                style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem"
+              >
+                Estado
+              </h2>
+              <p id="admin-status" style="font-size: 0.9rem; color: #555">
+                Verificando permisos de administrador...
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="footer"></footer>
+  </body>
+</html>

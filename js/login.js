@@ -226,6 +226,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Redireccionar después del login
         redirectAfterLogin() {
+            if (!this.user || !this.session) return
+
+            const role =
+                this.user.user_metadata?.role ||
+                this.user.app_metadata?.role ||
+                this.user.user_metadata?.rol ||
+                this.user.app_metadata?.rol
+
+            if (role === 'admin') {
+                // Si el usuario es admin, lo llevamos al panel de administración
+                window.location.href = 'admin.html'
+                return
+            }
+
+            // Resto de usuarios van a la página de inicio
             if (window.location.pathname.includes('login.html')) {
                 window.location.href = 'index.html'
             }
@@ -348,10 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (result.success) {
                 showMessage(loginMessage, result.message, 'success');
-                // Redirect after success message
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+                // La redirección ahora la maneja redirectAfterLogin según el rol
             } else {
                 showMessage(loginMessage, result.message);
             }
@@ -378,7 +390,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const email = formData.get('email');
         const password = formData.get('password');
         const confirmPassword = formData.get('confirmPassword');
-        const termsAccepted = formData.get('terms');
         const submitButton = signupFormElement.querySelector('button[type="submit"]');
 
         // Basic validation
@@ -399,11 +410,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (password !== confirmPassword) {
             showMessage(signupMessage, 'Las contraseñas no coinciden.');
-            return;
-        }
-
-        if (!termsAccepted) {
-            showMessage(signupMessage, 'Debe aceptar los términos de servicio.');
             return;
         }
 
