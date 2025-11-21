@@ -359,25 +359,299 @@
       return;
     }
 
-    // Add loading state
-    if (elements.checkoutBtn) {
-      elements.checkoutBtn.classList.add('loading');
-      elements.checkoutBtn.disabled = true;
+    // Show checkout modal instead of alert
+    showCheckoutModal();
+  }
+
+  // Show checkout modal
+  function showCheckoutModal() {
+    const modal = el('#checkout-modal');
+    if (!modal) return;
+
+    // Update checkout summary
+    updateCheckoutSummary();
+    
+    // Show modal
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    
+    // Bind modal events
+    bindCheckoutEvents();
+  }
+
+  // Hide checkout modal
+  function hideCheckoutModal() {
+    const modal = el('#checkout-modal');
+    if (modal) {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Update checkout summary
+  function updateCheckoutSummary() {
+    const checkoutItems = el('#checkout-items');
+    const checkoutSubtotal = el('#checkout-subtotal');
+    const checkoutShipping = el('#checkout-shipping');
+    const checkoutTaxes = el('#checkout-taxes');
+    const checkoutTotal = el('#checkout-total');
+
+    if (checkoutItems) {
+      checkoutItems.innerHTML = cart.items.map(item => `
+        <div class="checkout-item">
+          <div class="checkout-item-image">
+            <img src="${item.image || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop'}" alt="${item.name}">
+          </div>
+          <div class="checkout-item-details">
+            <div class="checkout-item-name">${item.name}</div>
+            <div class="checkout-item-quantity">Cantidad: ${item.quantity}</div>
+          </div>
+          <div class="checkout-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+        </div>
+      `).join('');
     }
 
-    // Simulate checkout process
-    setTimeout(() => {
-      alert(`¡Gracias por tu compra!\n\nResumen:\n- Productos: ${cart.items.length}\n- Total: $${cart.total.toFixed(2)}\n\nSerás redirigido al proceso de pago.`);
+    if (checkoutSubtotal) checkoutSubtotal.textContent = `$${cart.subtotal.toFixed(2)}`;
+    if (checkoutShipping) checkoutShipping.textContent = cart.shipping === 0 ? 'Gratis' : `$${cart.shipping.toFixed(2)}`;
+    if (checkoutTaxes) checkoutTaxes.textContent = `$${cart.taxes.toFixed(2)}`;
+    if (checkoutTotal) checkoutTotal.textContent = `$${cart.total.toFixed(2)}`;
+  }
+
+  // Bind checkout events
+  function bindCheckoutEvents() {
+    const closeBtn = el('#close-checkout-modal');
+    const cancelBtn = el('#cancel-checkout');
+    const confirmBtn = el('#confirm-order');
+    const form = el('#checkout-form');
+
+    if (closeBtn) {
+      closeBtn.onclick = hideCheckoutModal;
+    }
+
+    if (cancelBtn) {
+      cancelBtn.onclick = hideCheckoutModal;
+    }
+
+    if (confirmBtn) {
+      confirmBtn.onclick = handleConfirmOrder;
+    }
+
+    // Close modal on outside click
+    const modal = el('#checkout-modal');
+    if (modal) {
+      modal.onclick = (e) => {
+        if (e.target === modal) {
+          hideCheckoutModal();
+        }
+      };
+    }
+  }
+
+  // Handle confirm order
+  async function handleConfirmOrder() {
+    const form = el('#checkout-form');
+    const confirmBtn = el('#confirm-order');
+    
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    // Get form data
+    const formData = new FormData(form);
+    const customerData = {
+      name: formData.get('name'),
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+      whatsapp: formData.get('whatsapp') || formData.get('phone'),
+      address: formData.get('address'),
+      city: formData.get('city'),
+      province: formData.get('province'),
+      notes: formData.get('notes') || ''
+    };
+
+    // Add loading state
+    if (confirmBtn) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Procesando...';
+    }
+
+    try {
+      // Generate order number
+      const orderNumber = 'ORD-' + Date.now().toString().slice(-8);
       
+      // Send WhatsApp message to provider
+      await sendWhatsAppOrder(customerData, orderNumber);
+      
+      // Send email confirmation to customer
+      await sendEmailConfirmation(customerData, orderNumber);
+      
+      // Save order to database (if implemented)
+      await saveOrderToDatabase(customerData, orderNumber);
+      
+      // Show success message
+      showNotification('¡Pedido confirmado! Te contactaremos pronto.', 'success');
+      
+      // Clear cart and hide modal
+      clearCart();
+      hideCheckoutModal();
+      
+      // Show order confirmation details
+      showOrderConfirmation(customerData, orderNumber);
+      
+    } catch (error) {
+      console.error('Error processing order:', error);
+      showNotification('Error al procesar el pedido. Por favor intenta nuevamente.', 'error');
+    } finally {
       // Reset button state
-      if (elements.checkoutBtn) {
-        elements.checkoutBtn.classList.remove('loading');
-        elements.checkoutBtn.disabled = false;
+      if (confirmBtn) {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Confirmar Pedido';
       }
+    }
+  }
+
+  // Send WhatsApp order to provider
+  async function sendWhatsAppOrder(customerData, orderNumber) {
+    const providerPhone = '595983199896'; // Replace with actual provider WhatsApp number
+    
+    let message = `🛍️ *NUEVO PEDIDO - SOLARE*\n\n`;
+    message += `📋 *Número de Pedido:* ${orderNumber}\n`;
+    message += `📅 *Fecha:* ${new Date().toLocaleString('es-AR')}\n\n`;
+    
+    message += `👤 *DATOS DEL CLIENTE*\n`;
+    message += `📝 *Nombre:* ${customerData.name}\n`;
+    message += `📧 *Email:* ${customerData.email}\n`;
+    message += `📞 *Teléfono:* ${customerData.phone}\n`;
+    message += `💬 *WhatsApp:* ${customerData.whatsapp}\n\n`;
+    
+    message += `📍 *DIRECCIÓN DE ENVÍO*\n`;
+    message += `🏠 ${customerData.address}\n`;
+    message += `🏙️ ${customerData.city}, ${customerData.province}\n\n`;
+    
+    message += `🛒 *DETALLE DEL PEDIDO*\n`;
+    cart.items.forEach((item, index) => {
+      message += `${index + 1}. ${item.name}\n`;
+      message += `   Cantidad: ${item.quantity} x $${item.price.toFixed(2)} = $${(item.price * item.quantity).toFixed(2)}\n`;
+    });
+    
+    message += `\n💰 *RESUMEN DE PAGO*\n`;
+    message += `Subtotal: $${cart.subtotal.toFixed(2)}\n`;
+    message += `Envío: ${cart.shipping === 0 ? 'Gratis' : '$' + cart.shipping.toFixed(2)}\n`;
+    message += `Impuestos: $${cart.taxes.toFixed(2)}\n`;
+    message += `💳 *TOTAL: $${cart.total.toFixed(2)}*\n\n`;
+    
+    message += `💳 *MÉTODO DE PAGO:* Pago contra entrega\n`;
+    message += `🚚 *MÉTODO DE ENTREGA:* Envío a domicilio\n\n`;
+    
+    if (customerData.notes) {
+      message += `📝 *Notas del cliente:* ${customerData.notes}\n\n`;
+    }
+    
+    message += `⏰ Por favor contactar al cliente para coordinar la entrega.`;
+    
+    const whatsappUrl = `https://wa.me/${providerPhone.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  }
+
+  // Send email confirmation to customer
+  async function sendEmailConfirmation(customerData, orderNumber) {
+    // Check if EmailJS is initialized
+    if (!window.emailjs) {
+      console.warn('EmailJS not initialized. Skipping email confirmation.');
+      return;
+    }
+
+    try {
+      await window.emailjs.send('service_solare', 'template_order_confirmation', {
+        order_number: orderNumber,
+        customer_name: customerData.name,
+        customer_email: customerData.email,
+        customer_phone: customerData.phone,
+        customer_address: `${customerData.address}, ${customerData.city}, ${customerData.province}`,
+        order_items: cart.items.map(item => 
+          `${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`
+        ).join('\n'),
+        order_total: cart.total.toFixed(2),
+        order_date: new Date().toLocaleString('es-AR'),
+        reply_to: customerData.email
+      });
       
-      // In a real app, redirect to payment processor
-      // window.location.href = '/checkout';
-    }, 2000);
+      console.log('Email confirmation sent successfully');
+    } catch (error) {
+      console.error('Error sending email confirmation:', error);
+      throw error;
+    }
+  }
+
+  // Save order to database (placeholder for future implementation)
+  async function saveOrderToDatabase(customerData, orderNumber) {
+    // This would save the order to your database
+    // For now, we'll just log it
+    const orderData = {
+      order_number: orderNumber,
+      customer: customerData,
+      items: cart.items,
+      totals: {
+        subtotal: cart.subtotal,
+        shipping: cart.shipping,
+        taxes: cart.taxes,
+        total: cart.total
+      },
+      status: 'pending',
+      created_at: new Date().toISOString()
+    };
+    
+    console.log('Order data to be saved:', orderData);
+    
+    // If you have Supabase or another database, you would save it here:
+    // if (window.supabase) {
+    //   await window.supabase.from('orders').insert([orderData]);
+    // }
+  }
+
+  // Show order confirmation
+  function showOrderConfirmation(customerData, orderNumber) {
+    const confirmationHtml = `
+      <div style="max-width: 600px; margin: 20px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <h2 style="color: #10b981; margin-bottom: 20px;">✅ ¡Pedido Confirmado!</h2>
+        <p><strong>Número de Pedido:</strong> ${orderNumber}</p>
+        <p><strong>Gracias por tu compra, ${customerData.name}!</strong></p>
+        <p>Hemos recibido tu pedido y te contactaremos pronto para coordinar la entrega.</p>
+        <p>Revisa tu email (${customerData.email}) para ver los detalles completos de tu pedido.</p>
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e5e5;">
+          <h3>Resumen del Pedido:</h3>
+          <p><strong>Total:</strong> $${cart.total.toFixed(2)}</p>
+          <p><strong>Método de entrega:</strong> Envío a domicilio</p>
+          <p><strong>Método de pago:</strong> Pago contra entrega</p>
+        </div>
+        <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 20px; padding: 12px 24px; background: #111; color: white; border: none; border-radius: 6px; cursor: pointer;">Cerrar</button>
+      </div>
+    `;
+    
+    const confirmationDiv = document.createElement('div');
+    confirmationDiv.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+    `;
+    confirmationDiv.innerHTML = confirmationHtml;
+    
+    document.body.appendChild(confirmationDiv);
+    
+    // Auto-remove after 10 seconds or when clicked
+    setTimeout(() => {
+      if (confirmationDiv.parentElement) {
+        confirmationDiv.remove();
+      }
+    }, 10000);
   }
 
   // Load recommended products

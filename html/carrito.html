@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../css/carrito.css" />
     <script src="../js/navbar.js" defer></script>
     <script src="../js/layout.js" defer></script>
+    <script src="../js/emailjs.js" defer></script>
     <script src="../js/carrito.js" defer></script>
   </head>
   <body class="carrito">
@@ -94,7 +95,7 @@
 
                 <!-- Checkout Button -->
                 <button id="checkout-btn" class="btn-checkout">
-                  <span>Proceder al Pago</span>
+                  <span>Realizar Pedido</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14m-7-7l7 7-7 7"/>
                   </svg>
@@ -173,5 +174,101 @@
         </div>
       </div>
     </template>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="checkout-modal" hidden>
+      <div class="checkout-modal-content">
+        <div class="checkout-modal-header">
+          <h2>Confirmar Pedido</h2>
+          <button id="close-checkout-modal" class="close-modal">&times;</button>
+        </div>
+        
+        <div class="checkout-modal-body">
+          <!-- Order Summary -->
+          <div class="order-summary">
+            <h3>Resumen del Pedido</h3>
+            <div id="checkout-items" class="checkout-items"></div>
+            <div class="checkout-totals">
+              <div class="total-row">
+                <span>Subtotal:</span>
+                <span id="checkout-subtotal">$0.00</span>
+              </div>
+              <div class="total-row">
+                <span>Envío:</span>
+                <span id="checkout-shipping">$0.00</span>
+              </div>
+              <div class="total-row">
+                <span>Impuestos:</span>
+                <span id="checkout-taxes">$0.00</span>
+              </div>
+              <div class="total-row total-final">
+                <span>Total:</span>
+                <span id="checkout-total">$0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Information -->
+          <div class="customer-info">
+            <h3>Datos del Cliente</h3>
+            <form id="checkout-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="customer-name">Nombre completo *</label>
+                  <input type="text" id="customer-name" name="name" required>
+                </div>
+                <div class="form-group">
+                  <label for="customer-email">Email *</label>
+                  <input type="email" id="customer-email" name="email" required>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="customer-phone">Teléfono *</label>
+                  <input type="tel" id="customer-phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                  <label for="customer-whatsapp">WhatsApp (opcional)</label>
+                  <input type="tel" id="customer-whatsapp" name="whatsapp">
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="customer-address">Dirección de envío *</label>
+                <input type="text" id="customer-address" name="address" required>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="customer-city">Ciudad *</label>
+                  <input type="text" id="customer-city" name="city" required>
+                </div>
+                <div class="form-group">
+                  <label for="customer-province">Provincia *</label>
+                  <input type="text" id="customer-province" name="province" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="customer-notes">Notas del pedido (opcional)</label>
+                <textarea id="customer-notes" name="notes" rows="3" placeholder="Algún comentario especial sobre tu pedido..."></textarea>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="checkout-modal-footer">
+          <div class="payment-info">
+            <p><strong>Método de entrega:</strong> Envío a domicilio</p>
+            <p><strong>Método de pago:</strong> Pago contra entrega</p>
+          </div>
+          <div class="checkout-actions">
+            <button id="cancel-checkout" class="btn-ghost">Cancelar</button>
+            <button id="confirm-order" class="btn-primary">Confirmar Pedido</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
