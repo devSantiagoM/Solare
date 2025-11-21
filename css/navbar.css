@@ -413,7 +413,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .navbar-menu {
     display: none;
   }
@@ -482,7 +482,7 @@
 }
 
 /* Tablet range - Ajustes para pantallas medianas */
-@media (min-width: 769px) and (max-width: 1023px) {
+@media (min-width: 769px) and (max-width: 1024px) {
   .navbar-nav {
     gap: 25px;
   }
