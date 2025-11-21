@@ -102,6 +102,24 @@
   color: #666;
 }
 
+/* Indicador de autenticación en iconos de cuenta */
+.icon-link.authenticated {
+  position: relative;
+}
+
+.icon-link.authenticated::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
 /* Dropdown Styles */
 .dropdown-content {
   position: absolute;

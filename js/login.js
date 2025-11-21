@@ -36,16 +36,49 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.session = session
                 this.user = session?.user || null
                 
+                // Si hay una sesión activa, actualizar el estado en la navbar
+                if (this.session && this.user) {
+                    this.updateNavbarAuthState(this.user)
+                }
+                
                 // Escuchar cambios en el estado de autenticación
                 window.supabase.auth.onAuthStateChange((event, session) => {
                     console.log('Auth state changed:', event)
                     this.session = session
                     this.user = session?.user || null
                     this.handleAuthStateChange(event, session)
+                    
+                    // Actualizar navbar cuando cambia el estado
+                    if (this.user) {
+                        this.updateNavbarAuthState(this.user)
+                    } else {
+                        this.updateNavbarAuthState(null)
+                    }
                 })
                 
             } catch (error) {
                 console.error('Error initializing auth:', error)
+            }
+        },
+        
+        // Actualizar el estado de autenticación en la navbar
+        updateNavbarAuthState(user) {
+            // Usar el módulo global de autenticación si está disponible
+            if (window.SolareAuth) {
+                window.SolareAuth.updateNavbar(user);
+            } else {
+                // Fallback: actualizar enlaces de cuenta en la navbar
+                const accountLinks = document.querySelectorAll('.account-icon-desktop, .login-icon-mobile')
+                accountLinks.forEach(link => {
+                    if (user) {
+                        // Cambiar el href a perfil o dashboard si existe
+                        link.href = link.href.replace('login.html', 'perfil.html') || 'perfil.html'
+                        link.title = 'Mi Cuenta'
+                    } else {
+                        link.href = 'login.html'
+                        link.title = 'Iniciar Sesión'
+                    }
+                })
             }
         },
 
@@ -109,13 +142,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (error) throw error
 
+                // Si el email no está confirmado, mostrar mensaje de confirmación
+                const needsConfirmation = !data.user?.email_confirmed_at;
+                
                 return {
                     success: true,
                     user: data.user,
                     session: data.session,
-                    message: data.user?.email_confirmed_at ? 
-                        'Cuenta creada exitosamente' : 
-                        'Revisa tu email para confirmar tu cuenta'
+                    needsConfirmation: needsConfirmation,
+                    message: needsConfirmation ? 
+                        'Revisa tu email para confirmar tu cuenta' : 
+                        'Cuenta creada exitosamente'
                 }
             } catch (error) {
                 console.error('Error signing up:', error)
@@ -363,6 +400,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (result.success) {
                 showMessage(loginMessage, result.message, 'success');
+                // Actualizar estado de navbar
+                auth.updateNavbarAuthState(result.user);
                 // La redirección ahora la maneja redirectAfterLogin según el rol
             } else {
                 showMessage(loginMessage, result.message);
@@ -425,6 +464,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (result.success) {
                 showMessage(signupMessage, result.message, 'success');
+                
+                // Mostrar toast de confirmación de email si es necesario
+                if (result.needsConfirmation && window.SolareToast) {
+                    window.SolareToast.info('Se envió un correo al email, esperando confirmación', 6000);
+                }
                 
                 // Switch to login form after successful registration
                 setTimeout(() => {
