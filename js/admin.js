@@ -1315,7 +1315,14 @@
 
       const { data: collections, error } = await window.supabase
         .from('collections')
-        .select('*')
+        .select(`
+          *,
+          collection_products (
+            products (
+              name
+            )
+          )
+        `)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -1329,11 +1336,23 @@
       // Contar productos por colección (simplificado)
       tbody.innerHTML = collections.map(collection => {
         const statusClass = collection.is_active !== false ? 'admin-badge-active' : 'admin-badge-inactive';
+
+        // Extract product names
+        const products = collection.collection_products
+          ? collection.collection_products.map(cp => cp.products?.name).filter(Boolean)
+          : [];
+
+        const productsText = products.length > 0
+          ? (products.length > 3
+            ? `${products.slice(0, 3).join(', ')} (+${products.length - 3})`
+            : products.join(', '))
+          : 'Sin productos';
+
         return `
           <tr>
             <td><strong>${collection.title || 'Sin título'}</strong></td>
-            <td>${collection.type || 'manual'}</td>
-            <td>—</td>
+            <td>${collection.slug || '—'}</td>
+            <td><small>${productsText}</small></td>
             <td><span class="admin-badge ${statusClass}">${collection.is_active !== false ? 'Activa' : 'Inactiva'}</span></td>
             <td class="admin-th-actions">
               <div class="admin-table-actions">
@@ -1393,6 +1412,7 @@
         collectionForm.reset();
         if (el('#collection-is-active')) el('#collection-is-active').checked = true;
       }
+      loadCollectionProducts(collectionId);
     }
   }
 
@@ -1417,24 +1437,58 @@
           title: formData.get('title'),
           slug: formData.get('slug') || generateSlug(formData.get('title')),
           description: formData.get('description') || null,
-          type: formData.get('type') || 'manual',
-          is_active: formData.get('is_active') === 'on',
-          is_featured: formData.get('is_featured') === 'on'
+          is_active: formData.get('is_active') === 'on'
         };
 
         let error;
+        let collectionId = editingCollectionId;
+
         if (editingCollectionId) {
           ({ error } = await window.supabase
             .from('collections')
             .update(data)
             .eq('id', editingCollectionId));
         } else {
-          ({ error } = await window.supabase
+          const { data: newCollection, error: insertError } = await window.supabase
             .from('collections')
-            .insert([data]));
+            .insert([data])
+            .select()
+            .single();
+
+          error = insertError;
+          if (newCollection) collectionId = newCollection.id;
         }
 
         if (error) throw error;
+
+        // Save Product Associations
+        if (collectionId) {
+          // 1. Get selected products
+          const selectedProducts = Array.from(collectionForm.querySelectorAll('input[name="collection_products"]:checked'))
+            .map(input => input.value);
+
+          // 2. Delete existing associations
+          const { error: deleteError } = await window.supabase
+            .from('collection_products')
+            .delete()
+            .eq('collection_id', collectionId);
+
+          if (deleteError) throw deleteError;
+
+          // 3. Insert new associations
+          if (selectedProducts.length > 0) {
+            const associations = selectedProducts.map(productId => ({
+              collection_id: collectionId,
+              product_id: productId
+            }));
+
+            const { error: insertAssocError } = await window.supabase
+              .from('collection_products')
+              .insert(associations);
+
+            if (insertAssocError) throw insertAssocError;
+          }
+        }
 
         showToast(editingCollectionId ? 'Colección actualizada' : 'Colección creada', 'success');
         closeCollectionModal();
@@ -1461,6 +1515,64 @@
 
   // Slug generation for collections
   const collectionTitleInput = el('#collection-title');
+
+  async function loadCollectionProducts(collectionId = null) {
+    const container = el('#collection-products-list');
+    if (!container) return;
+
+    try {
+      container.innerHTML = '<p class="admin-loading">Cargando productos...</p>';
+
+      // 1. Fetch all active products
+      const { data: products, error: productsError } = await window.supabase
+        .from('products')
+        .select('id, name, sku')
+        .eq('is_active', true)
+        .order('name');
+
+      if (productsError) throw productsError;
+
+      if (!products || products.length === 0) {
+        container.innerHTML = '<p class="admin-empty-state">No hay productos activos disponibles</p>';
+        return;
+      }
+
+      // 2. If editing, fetch existing associations
+      let selectedProductIds = new Set();
+      if (collectionId) {
+        const { data: associations, error: assocError } = await window.supabase
+          .from('collection_products')
+          .select('product_id')
+          .eq('collection_id', collectionId);
+
+        if (assocError) {
+          console.warn('Error fetching collection products:', assocError);
+        } else if (associations) {
+          associations.forEach(a => selectedProductIds.add(a.product_id));
+        }
+      }
+
+      // 3. Render checkboxes
+      container.innerHTML = products.map(product => {
+        const isChecked = selectedProductIds.has(product.id);
+        return `
+          <div class="admin-checkbox-item">
+            <label class="admin-checkbox-label">
+              <input type="checkbox" name="collection_products" value="${product.id}" ${isChecked ? 'checked' : ''}>
+              <span class="admin-checkmark"></span>
+              <span class="admin-product-name">${product.name}</span>
+              <span class="admin-product-sku">${product.sku || ''}</span>
+            </label>
+          </div>
+        `;
+      }).join('');
+
+    } catch (error) {
+      console.error('Error loading collection products:', error);
+      container.innerHTML = '<p class="admin-error">Error al cargar productos</p>';
+    }
+  }
+
   if (collectionTitleInput) {
     collectionTitleInput.addEventListener('blur', () => {
       const slugInput = el('#collection-slug');
