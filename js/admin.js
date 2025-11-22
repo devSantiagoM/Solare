@@ -558,15 +558,20 @@
   }
 
   async function loadProductFormData() {
+    console.log('Loading product form data...');
     // Cargar categorías
     const categorySelect = el('#product-category');
     if (categorySelect) {
       try {
-        const { data: categories } = await window.supabase
+        console.log('Fetching categories...');
+        const { data: categories, error } = await window.supabase
           .from('categories')
           .select('id, name')
           .eq('is_active', true)
           .order('name');
+
+        if (error) throw error;
+        console.log('Categories fetched:', categories);
 
         categorySelect.innerHTML = '<option value="">Seleccionar categoría</option>' +
           (categories || []).map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
@@ -591,20 +596,35 @@
         console.error('Error cargando marcas:', error);
       }
     }
-    // Cargar colecciones
-    const collectionSelect = el('#product-collection');
-    if (collectionSelect) {
+
+    // Cargar colecciones (Checkboxes)
+    const collectionsList = el('#product-collections-list');
+    if (collectionsList) {
       try {
-        const { data: collections } = await window.supabase
+        const { data: collections, error } = await window.supabase
           .from('collections')
           .select('id, title')
           .eq('is_active', true)
           .order('title');
 
-        collectionSelect.innerHTML = '<option value="">Sin colección</option>' +
-          (collections || []).map(col => `<option value="${col.id}">${col.title}</option>`).join('');
+        if (error) throw error;
+
+        if (!collections || collections.length === 0) {
+          collectionsList.innerHTML = '<p class="admin-empty-state">No hay colecciones activas</p>';
+        } else {
+          collectionsList.innerHTML = collections.map(col => `
+            <div class="admin-checkbox-item">
+              <label class="admin-checkbox-label">
+                <input type="checkbox" name="collections" value="${col.id}" id="col-${col.id}">
+                <span class="admin-checkmark"></span>
+                ${col.title}
+              </label>
+            </div>
+          `).join('');
+        }
       } catch (error) {
         console.error('Error cargando colecciones:', error);
+        collectionsList.innerHTML = '<p class="admin-error">Error al cargar colecciones</p>';
       }
     }
   }
@@ -1114,10 +1134,45 @@
       }).join('');
 
       if (countEl) countEl.textContent = `${categories.length} categoría${categories.length !== 1 ? 's' : ''}`;
+
+      // Cargar categorías padre para el formulario
+      await loadParentCategories();
     } catch (error) {
       console.error('Error cargando categorías:', error);
       tbody.innerHTML = '<tr><td colspan="5" class="admin-table-empty"><p>Error al cargar categorías</p></td></tr>';
       showToast('Error al cargar categorías', 'error');
+    }
+  }
+
+
+
+  async function loadParentCategories() {
+    const select = el('#category-parent');
+    if (!select) return;
+
+    try {
+      let query = window.supabase
+        .from('categories')
+        .select('id, name')
+        .eq('is_active', true)
+        .order('name');
+
+      // If editing, exclude self to avoid cycles
+      if (editingCategoryId) {
+        query = query.neq('id', editingCategoryId);
+      }
+
+      const { data: categories, error } = await query;
+
+      if (error) throw error;
+
+      const currentValue = select.value;
+      select.innerHTML = '<option value="">Sin categoría padre</option>' +
+        (categories || []).map(cat =>
+          `<option value="${cat.id}" ${currentValue === cat.id ? 'selected' : ''}>${cat.name}</option>`
+        ).join('');
+    } catch (error) {
+      console.error('Error cargando categorías padre:', error);
     }
   }
 
@@ -1129,6 +1184,123 @@
       if (slugInput && !slugInput.value) {
         slugInput.value = generateSlug(categoryNameInput.value);
       }
+    });
+  }
+
+  // Category Image Handling
+  const categoryImageInput = el('#category-image');
+  const categoryImagePreview = el('#category-image-preview');
+  let selectedCategoryFile = null;
+
+  if (categoryImageInput) {
+    categoryImageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showToast('Solo se permiten archivos de imagen', 'error');
+        return;
+      }
+
+      selectedCategoryFile = file;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (categoryImagePreview) {
+          categoryImagePreview.innerHTML = `<img src="${event.target.result}" alt="Preview" />`;
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Category Form Submit
+  const categoryForm = el('#category-form');
+  if (categoryForm) {
+    categoryForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = categoryForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Guardando...';
+
+      try {
+        const formData = new FormData(categoryForm);
+
+        // Upload image if selected
+        let imageUrl = null;
+        if (selectedCategoryFile) {
+          const fileExt = selectedCategoryFile.name.split('.').pop();
+          const fileName = `category_${Date.now()}.${fileExt}`;
+          const { error: uploadError } = await window.supabase.storage
+            .from('categories') // Ensure this bucket exists
+            .upload(fileName, selectedCategoryFile);
+
+          if (uploadError) throw uploadError;
+
+          const { data } = window.supabase.storage
+            .from('categories')
+            .getPublicUrl(fileName);
+
+          imageUrl = data.publicUrl;
+        }
+
+        const data = {
+          name: formData.get('name'),
+          slug: formData.get('slug') || generateSlug(formData.get('name')),
+          description: formData.get('description') || null,
+          parent_id: formData.get('parent_id') || null,
+          is_active: formData.get('is_active') === 'on'
+        };
+
+        if (imageUrl) {
+          data.image_url = imageUrl; // Adjust column name if different
+        }
+
+        let error;
+        if (editingCategoryId) {
+          ({ error } = await window.supabase
+            .from('categories')
+            .update(data)
+            .eq('id', editingCategoryId));
+        } else {
+          ({ error } = await window.supabase
+            .from('categories')
+            .insert([data]));
+        }
+
+        if (error) throw error;
+
+        showToast(editingCategoryId ? 'Categoría actualizada' : 'Categoría creada', 'success');
+
+        // Reset form
+        categoryForm.reset();
+        editingCategoryId = null;
+        selectedCategoryFile = null;
+        if (categoryImagePreview) categoryImagePreview.innerHTML = '';
+        if (el('#category-id')) el('#category-id').value = '';
+
+        await loadCategories();
+        await loadParentCategories(); // Refresh parent options
+
+      } catch (err) {
+        console.error('Error guardando categoría:', err);
+        showToast('Error al guardar la categoría: ' + err.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  }
+
+  // Cancel button
+  const btnCancelCategory = el('#btn-cancel-category');
+  if (btnCancelCategory) {
+    btnCancelCategory.addEventListener('click', () => {
+      if (categoryForm) categoryForm.reset();
+      editingCategoryId = null;
+      selectedCategoryFile = null;
+      if (categoryImagePreview) categoryImagePreview.innerHTML = '';
+      if (el('#category-id')) el('#category-id').value = '';
     });
   }
 
@@ -1189,6 +1361,113 @@
       tbody.innerHTML = '<tr><td colspan="5" class="admin-table-empty"><p>Error al cargar colecciones</p></td></tr>';
       showToast('Error al cargar colecciones', 'error');
     }
+  }
+
+  // Modal de Colección
+  const collectionModal = el('#collection-modal');
+  const collectionForm = el('#collection-form');
+  const btnAddCollection = el('#btn-add-collection');
+  const btnCloseCollectionModal = el('#btn-close-collection-modal');
+  const btnCancelCollection = el('#btn-cancel-collection');
+
+
+  if (btnAddCollection) {
+    btnAddCollection.addEventListener('click', () => {
+      editingCollectionId = null;
+      openCollectionModal();
+    });
+  }
+
+  if (btnCloseCollectionModal) btnCloseCollectionModal.addEventListener('click', closeCollectionModal);
+  if (btnCancelCollection) btnCancelCollection.addEventListener('click', closeCollectionModal);
+
+  function openCollectionModal(collectionId = null) {
+    editingCollectionId = collectionId;
+    const title = el('#collection-modal-title');
+    if (title) title.textContent = collectionId ? 'Editar Colección' : 'Nueva Colección';
+
+    if (collectionModal) {
+      collectionModal.hidden = false;
+      // Reset form if adding
+      if (!collectionId && collectionForm) {
+        collectionForm.reset();
+        if (el('#collection-is-active')) el('#collection-is-active').checked = true;
+      }
+    }
+  }
+
+  function closeCollectionModal() {
+    if (collectionModal) collectionModal.hidden = true;
+    editingCollectionId = null;
+    if (collectionForm) collectionForm.reset();
+  }
+
+  // Collection Form Submit
+  if (collectionForm) {
+    collectionForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = collectionForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Guardando...';
+
+      try {
+        const formData = new FormData(collectionForm);
+        const data = {
+          title: formData.get('title'),
+          slug: formData.get('slug') || generateSlug(formData.get('title')),
+          description: formData.get('description') || null,
+          type: formData.get('type') || 'manual',
+          is_active: formData.get('is_active') === 'on',
+          is_featured: formData.get('is_featured') === 'on'
+        };
+
+        let error;
+        if (editingCollectionId) {
+          ({ error } = await window.supabase
+            .from('collections')
+            .update(data)
+            .eq('id', editingCollectionId));
+        } else {
+          ({ error } = await window.supabase
+            .from('collections')
+            .insert([data]));
+        }
+
+        if (error) throw error;
+
+        showToast(editingCollectionId ? 'Colección actualizada' : 'Colección creada', 'success');
+        closeCollectionModal();
+        await loadCollections();
+        // Reload product form data to update collections checkboxes
+        await loadProductFormData();
+
+      } catch (err) {
+        console.error('Error guardando colección:', err);
+        console.error('Error details:', {
+          message: err.message,
+          details: err.details,
+          hint: err.hint,
+          code: err.code
+        });
+        const errorMsg = err.message || err.hint || 'Error desconocido';
+        showToast('Error al guardar la colección: ' + errorMsg, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  }
+
+  // Slug generation for collections
+  const collectionTitleInput = el('#collection-title');
+  if (collectionTitleInput) {
+    collectionTitleInput.addEventListener('blur', () => {
+      const slugInput = el('#collection-slug');
+      if (slugInput && !slugInput.value) {
+        slugInput.value = generateSlug(collectionTitleInput.value);
+      }
+    });
   }
 
   // ===== CUPONES =====
@@ -1700,8 +1979,29 @@
     },
 
     editCollection: async (id) => {
-      // Implementar edición de colección
-      showToast('Funcionalidad en desarrollo', 'info');
+      try {
+        const { data: collection, error } = await window.supabase
+          .from('collections')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) throw error;
+
+        openCollectionModal(id);
+
+        // Populate form
+        if (el('#collection-title')) el('#collection-title').value = collection.title;
+        if (el('#collection-slug')) el('#collection-slug').value = collection.slug;
+        if (el('#collection-description')) el('#collection-description').value = collection.description || '';
+        if (el('#collection-type')) el('#collection-type').value = collection.type || 'manual';
+        if (el('#collection-is-active')) el('#collection-is-active').checked = collection.is_active !== false;
+        if (el('#collection-is-featured')) el('#collection-is-featured').checked = collection.is_featured === true;
+
+      } catch (error) {
+        console.error('Error cargando colección:', error);
+        showToast('Error al cargar la colección', 'error');
+      }
     },
 
     deleteCollection: async (id) => {
@@ -1984,6 +2284,14 @@
       // Inicializar navegación de todas formas
       initNavigation();
     }
+  }
+
+  // Botón de ir al inicio
+  const btnAdminHome = el('#btn-admin-home');
+  if (btnAdminHome) {
+    btnAdminHome.addEventListener('click', () => {
+      window.location.href = '../html/index.html';
+    });
   }
 
   // Esperar a que el DOM esté listo

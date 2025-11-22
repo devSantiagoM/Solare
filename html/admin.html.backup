@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Solare - Panel de Administración" />
+  <title>Solare | Admin</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+  <script type="module" src="../js/supabase.js"></script>
+  <script src="../js/route-guard.js" defer></script>
+  <script src="../js/auth-state.js" defer></script>
+  <script src="../js/toast.js" defer></script>
+  <script src="../js/navbar.js" defer></script>
+  <script src="../js/layout.js" defer></script>
+  <script src="../js/admin.js" defer></script>
+</head>
+
+<body class="admin-body">
+  <nav class="navbar">
+    <div class="navbar-container" id="navbar-root"></div>
+  </nav>
+
+  <main id="main-content" tabindex="-1" class="admin-main">
+    <section class="admin-shell">
+      <div class="admin-layout container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+          <div class="admin-sidebar-header">
+            <p class="admin-kicker">Panel</p>
+            <h1 class="admin-title">Administración</h1>
+            <p class="admin-subtitle">
+              Gestiona todo el contenido de Solare
+            </p>
+          </div>
+
+          <div class="admin-account">
+            <p class="admin-section-label">Cuenta</p>
+            <p id="admin-user-email" class="admin-account-email">
+              Cargando...
+            </p>
+            <p id="admin-user-role" class="admin-account-role">
+              Administrador
+            </p>
+          </div>
+
+          <nav aria-label="Secciones del panel" class="admin-nav">
+            <p class="admin-section-label">Navegación</p>
+            <div class="admin-nav-list">
+              <button class="admin-nav-btn admin-nav-btn-active" data-section="dashboard">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Dashboard
+              </button>
+              <button class="admin-nav-btn" data-section="products">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                Productos
+              </button>
+              <button class="admin-nav-btn" data-section="orders">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                </svg>
+                Pedidos
+              </button>
+              <button class="admin-nav-btn" data-section="users">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Usuarios
+              </button>
+              <button class="admin-nav-btn" data-section="categories">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="8" y1="6" x2="21" y2="6"></line>
+                  <line x1="8" y1="12" x2="21" y2="12"></line>
+                  <line x1="8" y1="18" x2="21" y2="18"></line>
+                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                Categorías
+              </button>
+              <button class="admin-nav-btn" data-section="collections">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="3" x2="9" y2="21"></line>
+                </svg>
+                Colecciones
+              </button>
+              <button class="admin-nav-btn" data-section="faq">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                FAQ
+              </button>
+              <button class="admin-nav-btn" data-section="messages">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Mensajes
+              </button>
+              <button class="admin-nav-btn" data-section="settings">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"></path>
+                </svg>
+                Configuración
+              </button>
+            </div>
+          </nav>
+
+          <div class="admin-sidebar-actions">
+            <button id="btn-go-home" class="admin-btn admin-btn-primary">
+              Ir a inicio
+            </button>
+            <button id="btn-logout" class="admin-btn admin-btn-ghost">
+              Cerrar sesión
+            </button>
+          </div>
+
+          <p id="admin-status" class="admin-status">
+            Verificando permisos...
+          </p>
+        </aside>
+
+        <!-- Contenido principal -->
+        <div class="admin-content">
+          <!-- Dashboard -->
+          <section data-admin-section="dashboard" class="admin-section admin-section-active">
+            <header class="admin-section-header">
+              <div>
+                <p class="admin-section-kicker">Resumen</p>
+                <h2 class="admin-section-title">Dashboard</h2>
+              </div>
+              <div class="admin-header-actions">
+                <button class="admin-btn-icon" id="btn-refresh-dashboard" title="Actualizar">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"></polyline>
+                    <polyline points="1 20 1 14 7 14"></polyline>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.23L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                  </svg>
+                </button>
+              </div>
+            </header>
+
+            <div class="admin-cards-grid">
+              <article class="admin-card">
+                <div class="admin-card-icon" style="background: #dbeafe;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+                <p class="admin-card-label">Usuarios</p>
+                <p id="dash-users-count" class="admin-card-value">—</p>
+                <p class="admin-card-help">Total registrados</p>
+              </article>
+
+              <article class="admin-card">
+                <div class="admin-card-icon" style="background: #d1fae5;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#065f46" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                </div>
+                <p class="admin-card-label">Productos</p>
+                <p id="dash-products-count" class="admin-card-value">—</p>
+                <p class="admin-card-help">En catálogo</p>
+              </article>
+
+              <article class="admin-card">
+                <div class="admin-card-icon" style="background: #fef3c7;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                  </svg>
+                </div>
+                <p class="admin-card-label">Pedidos</p>
+                <p id="dash-orders-count" class="admin-card-value">—</p>
+                <p class="admin-card-help">Total recibidos</p>
+              </article>
+
+              <article class="admin-card">
+                <div class="admin-card-icon" style="background: #fee2e2;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#991b1b" stroke-width="2">
+                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                  </svg>
+                </div>
+                <p class="admin-card-label">Ventas</p>
+                <p id="dash-sales-total" class="admin-card-value">—</p>
+                <p class="admin-card-help">Total acumulado</p>
+              </article>
+            </div>
+
+            <div class="admin-dashboard-stats">
+              <div class="admin-stat-card">
+                <h3 class="admin-stat-title">Pedidos Recientes</h3>
+                <div id="dashboard-recent-orders" class="admin-stat-content">
+                  <p class="admin-loading">Cargando...</p>
+                </div>
+              </div>
+              <div class="admin-stat-card">
+                <h3 class="admin-stat-title">Productos con Bajo Stock</h3>
+                <div id="dashboard-low-stock" class="admin-stat-content">
+                  <p class="admin-loading">Cargando...</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Productos -->
+          <section data-admin-section="products" class="admin-section">
+            <header class="admin-section-header">
+              <div>
+                <p class="admin-section-kicker">Catálogo</p>
+                <h2 class="admin-section-title">Gestión de Productos</h2>
+              </div>
+              <div class="admin-header-actions">
+                <div class="admin-search-box">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                  </svg>
+                  <input type="search" id="products-search" placeholder="Buscar productos..."
+                    class="admin-search-input" />
+                </div>
+                <select id="products-filter-category" class="admin-filter-select">
+                  <option value="">Todas las categorías</option>
+                </select>
+                <select id="products-filter-status" class="admin-filter-select">
+                  <option value="">Todos los estados</option>
+                  <option value="active">Activos</option>
+                  <option value="inactive">Inactivos</option>
+                </select>
+                <button id="btn-add-product" class="admin-btn admin-btn-primary">
+                  + Nuevo Producto
+                </button>
+              </div>
+            </header>
+
+            <div class="admin-table-card">
+              <div class="admin-table-header">
+                <p class="admin-table-title">Lista de Productos</p>
+                <span id="products-count" class="admin-table-meta">0 items</span>
+              </div>
+              <div class="admin-table-scroll">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Imagen</th>
+                      <th>Producto</th>
+                      <th>Categoría</th>
+                      <th>Precio</th>
+                      <th>Stock</th>
+                      <th>Estado</th>
+                      <th class="admin-th-actions">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="products-table-body">
+                    <tr>
+                      <td colspan="7" class="admin-table-empty">
+                        <p>Cargando productos...</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="admin-table-pagination" id="products-pagination"></div>
+            </div>
+          </section>
+
+          <!-- Modal de Producto -->
+          <div id="product-modal" class="admin-modal" hidden>
+            <div class="admin-modal-content admin-modal-large">
+              <div class="admin-modal-header">
+                <h3 id="product-modal-title">Nuevo Producto</h3>
+                <button id="btn-close-product-modal" class="admin-modal-close" aria-label="Cerrar">
+                  &times;
+                </button>
+              </div>
+              <form id="product-form" class="admin-form">
+                <div class="admin-form-tabs">
+                  <button type="button" class="admin-form-tab active" data-tab="basic">Información Básica</button>
+                  <button type="button" class="admin-form-tab" data-tab="details">Detalles</button>
+                  <button type="button" class="admin-form-tab" data-tab="variants">Variantes</button>
+                  <button type="button" class="admin-form-tab" data-tab="inventory">Inventario</button>
+                  <button type="button" class="admin-form-tab" data-tab="collections">Colecciones</button>
+                </div>
+
+                <div class="admin-form-tab-content active" data-tab-content="basic">
+                  <div class="admin-form-grid">
+                    <div class="admin-form-group admin-form-group-full">
+                      <label for="product-name" class="admin-label">Nombre del Producto *</label>
+                      <input id="product-name" name="name" type="text" placeholder="Ej: Blazer Estructurado"
+                        class="admin-input" required />
+                    </div>
+
+                    <div class="admin-form-group admin-form-group-full">
+                      <label for="product-slug" class="admin-label">Slug (URL) *</label>
+                      <input id="product-slug" name="slug" type="text" placeholder="blazer-estructurado"
+                        class="admin-input" required />
+                      <small class="admin-help-text">Se genera automáticamente desde el nombre</small>
+                    </div>
+
+                    <div class="admin-form-group admin-form-group-full">
+                      <label for="product-short-description" class="admin-label">Descripción Corta</label>
+                      <textarea id="product-short-description" name="short_description" rows="2" class="admin-input"
+                        placeholder="Breve descripción del producto"></textarea>
+                    </div>
+
+                    <div class="admin-form-group admin-form-group-full">
+                      <label for="product-description" class="admin-label">Descripción Completa</label>
+                      <textarea id="product-description" name="description" rows="5" class="admin-input"
+                        placeholder="Descripción detallada del producto"></textarea>
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label for="product-category" class="admin-label">Categoría *</label>
+                      <select id="product-category" name="category_id" class="admin-input" required>
+                        <option value="">Seleccionar categoría</option>
+                      </select>
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label for="product-brand" class="admin-label">Marca</label>
+                      <select id="product-brand" name="brand_id" class="admin-input">
+                        <option value="">Sin marca</option>
+                      </select>
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label for="product-sku" class="admin-label">SKU</label>
+                      <input id="product-sku" name="sku" type="text" placeholder="SKU-001" class="admin-input" />
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label for="product-price" class="admin-label">Precio *</label>
+                      <input id="product-price" name="price" type="number" step="0.01" min="0" placeholder="0.00"
+                        class="admin-input" required />
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label for="product-compare-price" class="admin-label">Precio Comparación</label>
+                      <input id="product-compare-price" name="compare_price" type="number" step="0.01" min="0"
+                        placeholder="0.00" class="admin-input" />
+                    </div>
+
+                    <div class="admin-form-group admin-form-group-full">
+                      <label class="admin-label">Imágenes del Producto</label>
+                      <div class="admin-image-upload">
+                        <input type="file" id="product-images" name="images" accept="image/*" multiple
+                          class="admin-input-file" />
+                        <div id="product-images-preview" class="admin-images-preview"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="admin-form-tab-content" data-tab-content="details">
+                  <div class="admin-form-grid">
+                    <div class="admin-form-group">
+                      <label class="admin-checkbox-label">
+                        <input type="checkbox" id="product-is-active" name="is_active" checked />
+                        <span class="admin-checkmark"></span>
+                        Producto activo
+                      </label>
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label class="admin-checkbox-label">
+                        <input type="checkbox" id="product-is-featured" name="is_featured" />
+                        <span class="admin-checkmark"></span>
+                        Producto destacado
+                      </label>
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label class="admin-checkbox-label">
+                        <input type="checkbox" id="product-requires-shipping" name="requires_shipping" checked />
+                        <span class="admin-checkmark"></span>
+                        Requiere envío
+                      </label>
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label class="admin-checkbox-label">
+                        <input type="checkbox" id="product-taxable" name="taxable" checked />
+                        <span class="admin-checkmark"></span>
+                        Aplicar impuestos
+                      </label>
+                    </div>
+
+                    <div class="admin-form-group admin-form-group-full">
+                      <label for="product-tags" class="admin-label">Tags (separados por comas)</label>
+                      <input id="product-tags" name="tags" type="text" placeholder="nuevo, verano, mujer"
+                        class="admin-input" />
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label for="product-meta-title" class="admin-label">Meta Título (SEO)</label>
+                      <input id="product-meta-title" name="meta_title" type="text" class="admin-input" />
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label for="product-meta-description" class="admin-label">Meta Descripción (SEO)</label>
+                      <textarea id="product-meta-description" name="meta_description" rows="3"
+                        class="admin-input"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="admin-form-tab-content" data-tab-content="variants">
+                  <div class="admin-variants-section">
+                    <div class="admin-section-header-small">
+                      <h4>Variantes del Producto</h4>
+                      <button type="button" id="btn-add-variant" class="admin-btn admin-btn-ghost admin-btn-sm">
+                        + Agregar Variante
+                      </button>
+                    </div>
+                    <div id="product-variants-list" class="admin-variants-list">
+                      <p class="admin-empty-state">No hay variantes. Agrega tallas, colores u otras opciones.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="admin-form-tab-content" data-tab-content="inventory">
+                  <div class="admin-form-grid">
+                    <div class="admin-form-group">
+                      <label class="admin-checkbox-label">
+                        <input type="checkbox" id="product-track-inventory" name="track_inventory" checked />
+                        <span class="admin-checkmark"></span>
+                        Controlar inventario
+                      </label>
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label for="product-inventory-quantity" class="admin-label">Cantidad en Stock</label>
+                      <input id="product-inventory-quantity" name="inventory_quantity" type="number" min="0" value="0"
+                        class="admin-input" />
+                    </div>
+
+                    <div class="admin-form-group">
+                      <label for="product-low-stock-threshold" class="admin-label">Umbral de Stock Bajo</label>
+                      <input id="product-low-stock-threshold" name="low_stock_threshold" type="number" min="0" value="5"
+                        class="admin-input" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="admin-form-tab-content" data-tab-content="collections">
+                  <div class="admin-collections-section">
+                    <p class="admin-help-text">Selecciona las colecciones a las que pertenece este producto</p>
+                    <div id="product-collections-list" class="admin-collections-checkboxes">
+                      <p class="admin-loading">Cargando colecciones...</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="admin-form-actions">
+                  <button type="submit" class="admin-btn admin-btn-primary">
+                    Guardar Producto
+                  </button>
+                  <button type="button" id="btn-cancel-product" class="admin-btn admin-btn-ghost">
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Pedidos -->
+          <section data-admin-section="orders" class="admin-section">
+            <header class="admin-section-header">
+              <div>
+                <p class="admin-section-kicker">Actividad</p>
+                <h2 class="admin-section-title">Gestión de Pedidos</h2>
+              </div>
+              <div class="admin-header-actions">
+                <div class="admin-search-box">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                  </svg>
+                  <input type="search" id="orders-search" placeholder="Buscar pedidos..." class="admin-search-input" />
+                </div>
+                <select id="orders-filter-status" class="admin-filter-select">
+                  <option value="">Todos los estados</option>
+                </select>
+                <input type="date" id="orders-filter-date" class="admin-filter-input" />
+              </div>
+            </header>
+
+            <div class="admin-table-card">
+              <div class="admin-table-header">
+                <p class="admin-table-title">Lista de Pedidos</p>
+                <span id="orders-count" class="admin-table-meta">0 pedidos</span>
+              </div>
+              <div class="admin-table-scroll">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th># Pedido</th>
+                      <th>Cliente</th>
+                      <th>Fecha</th>
+                      <th>Estado</th>
+                      <th>Total</th>
+                      <th class="admin-th-actions">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="orders-table-body">
+                    <tr>
+                      <td colspan="6" class="admin-table-empty">
+                        <p>Cargando pedidos...</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="admin-table-pagination" id="orders-pagination"></div>
+            </div>
+          </section>
+
+          <!-- Modal de Detalle de Pedido -->
+          <div id="order-modal" class="admin-modal" hidden>
+            <div class="admin-modal-content admin-modal-large">
+              <div class="admin-modal-header">
+                <h3 id="order-modal-title">Detalle del Pedido</h3>
+                <button id="btn-close-order-modal" class="admin-modal-close" aria-label="Cerrar">
+                  &times;
+                </button>
+              </div>
+              <div id="order-modal-content" class="admin-order-detail">
+                <p class="admin-loading">Cargando...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Usuarios -->
+          <section data-admin-section="users" class="admin-section">
+            <header class="admin-section-header">
+              <div>
+                <p class="admin-section-kicker">Gestión</p>
+                <h2 class="admin-section-title">Usuarios</h2>
+              </div>
+              <div class="admin-header-actions">
+                <div class="admin-search-box">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                  </svg>
+                  <input type="search" id="users-search" placeholder="Buscar usuarios..." class="admin-search-input" />
+                </div>
+                <select id="users-filter-status" class="admin-filter-select">
+                  <option value="">Todos</option>
+                  <option value="active">Activos</option>
+                  <option value="inactive">Inactivos</option>
+                </select>
+              </div>
+            </header>
+
+            <div class="admin-table-card">
+              <div class="admin-table-header">
+                <p class="admin-table-title">Lista de Usuarios</p>
+                <span id="users-count" class="admin-table-meta">0 usuarios</span>
+              </div>
+              <div class="admin-table-scroll">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Usuario</th>
+                      <th>Email</th>
+                      <th>Teléfono</th>
+                      <th>Registro</th>
+                      <th>Estado</th>
+                      <th class="admin-th-actions">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-table-body">
+                    <tr>
+                      <td colspan="6" class="admin-table-empty">
+                        <p>Cargando usuarios...</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="admin-table-pagination" id="users-pagination"></div>
+            </div>
+          </section>
+
+          <!-- Modal de Usuario -->
+          <div id="user-modal" class="admin-modal" hidden>
+            <div class="admin-modal-content">
+              <div class="admin-modal-header">
+                <h3 id="user-modal-title">Editar Usuario</h3>
+                <button id="btn-close-user-modal" class="admin-modal-close" aria-label="Cerrar">
+                  &times;
+                </button>
+              </div>
+              <form id="form-user" class="admin-form">
+                <input type="hidden" id="user-id" name="id" />
+
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label for="user-first-name" class="admin-label">Nombre</label>
+                    <input type="text" id="user-first-name" name="first_name" class="admin-input" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label for="user-last-name" class="admin-label">Apellido</label>
+                    <input type="text" id="user-last-name" name="last_name" class="admin-input" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label for="user-email" class="admin-label">Email</label>
+                    <input type="email" id="user-email" name="email" class="admin-input" disabled />
+                    <small class="admin-help-text">El email no se puede modificar</small>
+                  </div>
+                  <div class="admin-form-group">
+                    <label for="user-phone" class="admin-label">Teléfono</label>
+                    <input type="tel" id="user-phone" name="phone" class="admin-input" />
+                  </div>
+                  <div class="admin-form-group">
+                    <label for="user-role" class="admin-label">Rol *</label>
+                    <select id="user-role" name="role" class="admin-input" required>
+                      <option value="usuario">Usuario</option>
+                      <option value="admin">Administrador</option>
+                    </select>
+                    <small class="admin-help-text">El rol determina los permisos del usuario</small>
+                  </div>
+                  <div class="admin-form-group">
+                    <label class="admin-checkbox-label">
+                      <input type="checkbox" id="user-is-active" name="is_active" checked />
+                      <span class="admin-checkmark"></span>
+                      <h3 id="faq-modal-title">Nueva Pregunta</h3>
+                      <button id="btn-close-faq-modal" class="admin-modal-close" aria-label="Cerrar">
+                        &times;
+                      </button>
+                  </div>
+                  <form id="faq-form" class="admin-form">
+                    <div class="admin-form-group">
+                      <label for="faq-category" class="admin-label">Categoría</label>
+                      <select id="faq-category" name="category_id" class="admin-input">
+                        <option value="">Sin categoría</option>
+                      </select>
+                    </div>
+                    <div class="admin-form-group">
+                      <label for="faq-question" class="admin-label">Pregunta *</label>
+                      <input id="faq-question" name="question" type="text" class="admin-input" required />
+                    </div>
+                    <div class="admin-form-group">
+                      <label for="faq-answer" class="admin-label">Respuesta *</label>
+                      <textarea id="faq-answer" name="answer" rows="5" class="admin-input" required></textarea>
+                    </div>
+                    <div class="admin-form-group">
+                      <label class="admin-checkbox-label">
+                        <input type="checkbox" id="faq-is-active" name="is_active" checked />
+                        <span class="admin-checkmark"></span>
+                        Activa
+                      </label>
+                    </div>
+                    <div class="admin-form-actions">
+                      <button type="submit" class="admin-btn admin-btn-primary">
+                        Guardar
+                      </button>
+                      <button type="button" id="btn-cancel-faq" class="admin-btn admin-btn-ghost">
+                        Cancelar
+                      </button>
+                    </div>
+                  </form>
+                </div>
+            </div>
+
+            <!-- Mensajes de Contacto -->
+            <section data-admin-section="messages" class="admin-section">
+              <header class="admin-section-header">
+                <div>
+                  <p class="admin-section-kicker">Soporte</p>
+                  <h2 class="admin-section-title">Mensajes de Contacto</h2>
+                </div>
+                <div class="admin-header-actions">
+                  <select id="messages-filter-category" class="admin-filter-select">
+                    <option value="">Todas las categorías</option>
+                  </select>
+                  <select id="messages-filter-status" class="admin-filter-select">
+                    <option value="">Todos los estados</option>
+                    <option value="new">Nuevos</option>
+                    <option value="in_progress">En Proceso</option>
+                    <option value="resolved">Resueltos</option>
+                    <option value="closed">Cerrados</option>
+                  </select>
+                </div>
+              </header>
+
+              <div class="admin-table-card">
+                <div class="admin-table-header">
+                  <p class="admin-table-title">Lista de Mensajes</p>
+                  <span id="messages-count" class="admin-table-meta">0 mensajes</span>
+                </div>
+                <div class="admin-table-scroll">
+                  <table class="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Fecha</th>
+                        <th>Remitente</th>
+                        <th>Asunto</th>
+                        <th>Categoría</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                        <th class="admin-th-actions">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="messages-table-body">
+                      <tr>
+                        <td colspan="7" class="admin-table-empty">
+                          <p>Cargando mensajes...</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- Modal de Mensaje -->
+            <div id="message-modal" class="admin-modal" hidden>
+              <div class="admin-modal-content admin-modal-large">
+                <div class="admin-modal-header">
+                  <h3 id="message-modal-title">Mensaje de Contacto</h3>
+                  <button id="btn-close-message-modal" class="admin-modal-close" aria-label="Cerrar">
+                    &times;
+                  </button>
+                </div>
+                <div id="message-modal-content" class="admin-message-detail">
+                  <p class="admin-loading">Cargando...</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Configuración -->
+            <section data-admin-section="settings" class="admin-section">
+              <header class="admin-section-header">
+                <div>
+                  <p class="admin-section-kicker">Ajustes</p>
+                  <h2 class="admin-section-title">Configuración</h2>
+                </div>
+              </header>
+
+              <div class="admin-settings-grid">
+                <div class="admin-setting-card">
+                  <h3 class="admin-setting-title">Información General</h3>
+                  <form id="settings-general-form" class="admin-form">
+                    <div class="admin-form-group">
+                      <label for="settings-site-name" class="admin-label">Nombre del Sitio</label>
+                      <input id="settings-site-name" name="site_name" type="text" value="Solare" class="admin-input" />
+                    </div>
+                    <div class="admin-form-group">
+                      <label for="settings-site-email" class="admin-label">Email de Contacto</label>
+                      <input id="settings-site-email" name="site_email" type="email" class="admin-input" />
+                    </div>
+                    <div class="admin-form-actions">
+                      <button type="submit" class="admin-btn admin-btn-primary">
+                        Guardar
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="admin-setting-card">
+                  <h3 class="admin-setting-title">Estados de Pedidos</h3>
+                  <div id="order-statuses-list" class="admin-order-statuses-list">
+                    <p class="admin-loading">Cargando estados...</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <span class="admin-checkmark"></span>
+            Usuario activo
+            </label>
+          </div>
+        </div>
+
+        <div class="admin-form-actions">
+          <button type="button" id="btn-cancel-user" class="admin-btn admin-btn-ghost">
+            Cancelar
+          </button>
+          <button type="submit" class="admin-btn admin-btn-primary">
+            Guardar Usuario
+          </button>
+          <div class="admin-header-actions">
+            <button id="btn-add-faq-category" class="admin-btn admin-btn-ghost">
+              + Categoría FAQ
+            </button>
+            <button id="btn-add-faq" class="admin-btn admin-btn-primary">
+              + Nueva Pregunta
+            </button>
+          </div>
+          </header>
+
+          <div class="admin-two-column">
+            <div class="admin-table-card">
+              <div class="admin-table-header">
+                <p class="admin-table-title">Categorías FAQ</p>
+              </div>
+              <div class="admin-table-scroll">
+                <div id="faq-categories-list" class="admin-list-simple">
+                  <p class="admin-loading">Cargando...</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-table-card">
+              <div class="admin-table-header">
+                <p class="admin-table-title">Preguntas</p>
+                <span id="faqs-count" class="admin-table-meta">0 preguntas</span>
+              </div>
+              <div class="admin-table-scroll">
+                <div id="faqs-list" class="admin-faqs-list">
+                  <p class="admin-loading">Cargando...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+    </section>
+
+    <!-- Modal FAQ -->
+    <div id="faq-modal" class="admin-modal" hidden>
+      <div class="admin-modal-content">
+        <div class="admin-modal-header">
+          <h3 id="faq-modal-title">Nueva Pregunta</h3>
+          <button id="btn-close-faq-modal" class="admin-modal-close" aria-label="Cerrar">
+            &times;
+          </button>
+        </div>
+        <form id="faq-form" class="admin-form">
+          <div class="admin-form-group">
+            <label for="faq-category" class="admin-label">Categoría</label>
+            <select id="faq-category" name="category_id" class="admin-input">
+              <option value="">Sin categoría</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label for="faq-question" class="admin-label">Pregunta *</label>
+            <input id="faq-question" name="question" type="text" class="admin-input" required />
+          </div>
+          <div class="admin-form-group">
+            <label for="faq-answer" class="admin-label">Respuesta *</label>
+            <textarea id="faq-answer" name="answer" rows="5" class="admin-input" required></textarea>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-checkbox-label">
+              <input type="checkbox" id="faq-is-active" name="is_active" checked />
+              <span class="admin-checkmark"></span>
+              Activa
+            </label>
+          </div>
+          <div class="admin-form-actions">
+            <button type="submit" class="admin-btn admin-btn-primary">
+              Guardar
+            </button>
+            <button type="button" id="btn-cancel-faq" class="admin-btn admin-btn-ghost">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Mensajes de Contacto -->
+    <section data-admin-section="messages" class="admin-section">
+      <header class="admin-section-header">
+        <div>
+          <p class="admin-section-kicker">Soporte</p>
+          <h2 class="admin-section-title">Mensajes de Contacto</h2>
+        </div>
+        <div class="admin-header-actions">
+          <select id="messages-filter-category" class="admin-filter-select">
+            <option value="">Todas las categorías</option>
+          </select>
+          <select id="messages-filter-status" class="admin-filter-select">
+            <option value="">Todos los estados</option>
+            <option value="new">Nuevos</option>
+            <option value="in_progress">En Proceso</option>
+            <option value="resolved">Resueltos</option>
+            <option value="closed">Cerrados</option>
+          </select>
+        </div>
+      </header>
+
+      <div class="admin-table-card">
+        <div class="admin-table-header">
+          <p class="admin-table-title">Lista de Mensajes</p>
+          <span id="messages-count" class="admin-table-meta">0 mensajes</span>
+        </div>
+        <div class="admin-table-scroll">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Remitente</th>
+                <th>Asunto</th>
+                <th>Categoría</th>
+                <th>Estado</th>
+                <th>Prioridad</th>
+                <th class="admin-th-actions">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="messages-table-body">
+              <tr>
+                <td colspan="7" class="admin-table-empty">
+                  <p>Cargando mensajes...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal de Mensaje -->
+    <div id="message-modal" class="admin-modal" hidden>
+      <div class="admin-modal-content admin-modal-large">
+        <div class="admin-modal-header">
+          <h3 id="message-modal-title">Mensaje de Contacto</h3>
+          <button id="btn-close-message-modal" class="admin-modal-close" aria-label="Cerrar">
+            &times;
+          </button>
+        </div>
+        <div id="message-modal-content" class="admin-message-detail">
+          <p class="admin-loading">Cargando...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuración -->
+    <section data-admin-section="settings" class="admin-section">
+      <header class="admin-section-header">
+        <div>
+          <p class="admin-section-kicker">Ajustes</p>
+          <h2 class="admin-section-title">Configuración</h2>
+        </div>
+      </header>
+
+      <div class="admin-settings-grid">
+        <div class="admin-setting-card">
+          <h3 class="admin-setting-title">Información General</h3>
+          <form id="settings-general-form" class="admin-form">
+            <div class="admin-form-group">
+              <label for="settings-site-name" class="admin-label">Nombre del Sitio</label>
+              <input id="settings-site-name" name="site_name" type="text" value="Solare" class="admin-input" />
+            </div>
+            <div class="admin-form-group">
+              <label for="settings-site-email" class="admin-label">Email de Contacto</label>
+              <input id="settings-site-email" name="site_email" type="email" class="admin-input" />
+            </div>
+            <div class="admin-form-actions">
+              <button type="submit" class="admin-btn admin-btn-primary">
+                Guardar
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="admin-setting-card">
+          <h3 class="admin-setting-title">Estados de Pedidos</h3>
+          <div id="order-statuses-list" class="admin-order-statuses-list">
+            <p class="admin-loading">Cargando estados...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+    </div>
+    </section>
+  </main>
+
+  <!-- Modal de Colección -->
+  <div id="collection-modal" class="admin-modal" hidden>
+    <div class="admin-modal-content admin-modal-large">
+      <div class="admin-modal-header">
+        <h3 id="collection-modal-title">Nueva Colección</h3>
+        <button id="btn-close-collection-modal" class="admin-modal-close" aria-label="Cerrar">
+          &times;
+        </button>
+      </div>
+      <form id="collection-form" class="admin-form">
+        <div class="admin-form-grid">
+          <div class="admin-form-group">
+            <label for="collection-title" class="admin-label">Título *</label>
+            <input id="collection-title" name="title" type="text" class="admin-input" required />
+          </div>
+          <div class="admin-form-group">
+            <label for="collection-slug" class="admin-label">Slug *</label>
+            <input id="collection-slug" name="slug" type="text" class="admin-input" required />
+          </div>
+          <div class="admin-form-group admin-form-group-full">
+            <label for="collection-description" class="admin-label">Descripción</label>
+            <textarea id="collection-description" name="description" rows="3" class="admin-input"></textarea>
+          </div>
+          <div class="admin-form-group">
+            <label for="collection-type" class="admin-label">Tipo</label>
+            <select id="collection-type" name="type" class="admin-input">
+              <option value="manual">Manual</option>
+              <option value="automatic">Automática</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-checkbox-label">
+              <input type="checkbox" id="collection-is-active" name="is_active" checked />
+              <span class="admin-checkmark"></span>
+              Activa
+            </label>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-checkbox-label">
+              <input type="checkbox" id="collection-is-featured" name="is_featured" />
+              <span class="admin-checkmark"></span>
+              Destacada
+            </label>
+          </div>
+        </div>
+        <div id="collection-products-section" class="admin-collection-products">
+          <h4>Productos en la Colección</h4>
+          <div id="collection-products-list" class="admin-products-selector">
+            <p class="admin-loading">Cargando productos...</p>
+          </div>
+        </div>
+        <div class="admin-form-actions">
+          <button type="submit" class="admin-btn admin-btn-primary">
+            Guardar Colección
+          </button>
+          <button type="button" id="btn-cancel-collection" class="admin-btn admin-btn-ghost">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer id="footer"></footer>
+</body>
+
+</html>
