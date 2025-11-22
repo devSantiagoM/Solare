@@ -5,7 +5,19 @@
   const el = (s, c = document) => c.querySelector(s);
   const els = (s, c = document) => Array.from(c.querySelectorAll(s));
 
+  // REPLACE THESE WITH YOUR ACTUAL KEYS
+  const EMAILJS_PUBLIC_KEY = 'XGhHMU8D-PCEL5qkN';
+  const EMAILJS_SERVICE_ID = 'service_rkhzjpw';
+  const EMAILJS_TEMPLATE_ID = 'template_j6qb7vv';
+
   function init() {
+    // Initialize EmailJS
+    if (window.emailjs) {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+    } else {
+      console.warn('EmailJS SDK not loaded');
+    }
+
     const form = el('#contactForm');
     if (!form) return;
 
@@ -116,25 +128,30 @@
     }
 
     try {
-      if (!window.supabase) throw new Error('El sistema no está listo. Intente nuevamente.');
+      // 1. Send email via EmailJS
+      if (window.emailjs) {
+        await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form, EMAILJS_PUBLIC_KEY);
+      } else {
+        console.warn('EmailJS not available, skipping email sending.');
+      }
 
-      const formData = new FormData(form);
-      const data = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        subject: formData.get('topic'), // 'topic' matches select name in HTML usually, or 'subject'
-        message: formData.get('message'),
-        status: 'pending'
-      };
+      // 2. Save to Supabase (Backup)
+      if (window.supabase) {
+        const formData = new FormData(form);
+        const data = {
+          name: formData.get('name'),
+          email: formData.get('email'),
+          subject: formData.get('topic'),
+          message: formData.get('message'),
+          status: 'pending'
+        };
 
-      // If select name is 'topic' in HTML, we map it to 'subject' in DB or keep it if DB has 'subject'
-      // Previous code used 'topic' for validation ID. Let's assume name="topic".
+        const { error } = await window.supabase
+          .from('contact_messages')
+          .insert([data]);
 
-      const { error } = await window.supabase
-        .from('contact_messages')
-        .insert([data]);
-
-      if (error) throw error;
+        if (error) console.error('Supabase save error:', error);
+      }
 
       if (feedback) {
         feedback.className = 'form-feedback success';
@@ -142,10 +159,12 @@
       }
       form.reset();
     } catch (err) {
-      console.error(err);
+      console.error('Submission error:', err);
+      if (err.text) console.error('EmailJS Error Text:', err.text);
+
       if (feedback) {
         feedback.className = 'form-feedback error';
-        feedback.textContent = 'Ocurrió un error al enviar el mensaje. Intenta nuevamente.';
+        feedback.textContent = 'Ocurrió un error al enviar el mensaje. Por favor intenta nuevamente.';
       }
     } finally {
       setLoading(form, false);
