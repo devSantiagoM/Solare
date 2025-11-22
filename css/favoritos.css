@@ -25,7 +25,25 @@ body.favoritos { background: var(--bg); color: var(--text); font-family: 'Arial'
 .btn-primary { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; background: var(--accent); color: #fff; border: 1px solid var(--accent); border-radius: 6px; text-decoration: none; font-weight: 600; }
 .btn-primary:hover { background: #000; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+  gap: 24px; 
+}
+
+@media (max-width: 768px) {
+  .grid { 
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+    gap: 16px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .grid { 
+    grid-template-columns: 1fr; 
+    gap: 16px; 
+  }
+}
 
 .card { background: #fff; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: box-shadow .25s ease, transform .25s ease; }
 .card:hover { box-shadow: 0 12px 30px rgba(0,0,0,.08); transform: translateY(-2px); }
