@@ -647,18 +647,15 @@
   }
 
   // Manejo de imágenes de producto
-  const productImagesInput = el('#product-images-input');
+  const productImagesInput = el('#product-images'); // Fixed ID to match HTML
   const productImagesPreview = el('#product-images-preview');
-  const productUploadArea = el('.admin-upload-area');
+  const productUploadArea = el('.admin-image-upload'); // Fixed class selector
+
+  // Store selected files
+  let selectedProductFiles = [];
 
   if (productImagesInput) {
     productImagesInput.addEventListener('change', handleProductImages);
-  }
-
-  if (productUploadArea) {
-    productUploadArea.addEventListener('click', () => {
-      if (productImagesInput) productImagesInput.click();
-    });
   }
 
   function handleProductImages(e) {
@@ -671,37 +668,60 @@
         return;
       }
 
+      // Add to selected files
+      selectedProductFiles.push(file);
+
       const reader = new FileReader();
       reader.onload = (event) => {
         const imageUrl = event.target.result;
-        addProductImagePreview(imageUrl);
+        addProductImagePreview(imageUrl, file); // Pass file to identify it later if needed
       };
       reader.readAsDataURL(file);
     });
+
+    // Reset input to allow selecting same files again
+    e.target.value = '';
   }
 
-  function addProductImagePreview(imageUrl) {
+  function addProductImagePreview(imageUrl, file) {
     if (!productImagesPreview) return;
 
     const item = document.createElement('div');
     item.className = 'admin-image-preview-item';
     item.innerHTML = `
       <img src="${imageUrl}" alt="Preview" />
-      <button type="button" class="admin-action-btn admin-image-remove" onclick="this.parentElement.remove()">
+      <button type="button" class="admin-action-btn admin-image-remove" title="Eliminar">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     `;
+
+    // Add remove handler
+    const removeBtn = item.querySelector('.admin-image-remove');
+    removeBtn.addEventListener('click', () => {
+      item.remove();
+      // Remove from selectedProductFiles if it's a new file
+      if (file) {
+        const index = selectedProductFiles.indexOf(file);
+        if (index > -1) selectedProductFiles.splice(index, 1);
+      }
+      // If it was an existing image (url), we might need to track deletions, but for now we just remove from UI
+      // and when saving, we only collect what's in the DOM.
+    });
+
     productImagesPreview.appendChild(item);
   }
 
   function displayProductImages(images) {
     if (!productImagesPreview) return;
     productImagesPreview.innerHTML = '';
+    selectedProductFiles = []; // Reset new files
+
     images.forEach(imageUrl => {
-      addProductImagePreview(imageUrl);
+      // For existing images, we don't pass a File object
+      addProductImagePreview(imageUrl, null);
     });
   }
 
@@ -709,6 +729,30 @@
   if (productForm) {
     productForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      const submitBtn = productForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Guardando...';
+
+      // Helper function to upload image
+      async function uploadImage(file, bucket = 'products') {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await window.supabase.storage
+          .from(bucket)
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data } = window.supabase.storage
+          .from(bucket)
+          .getPublicUrl(filePath);
+
+        return data.publicUrl;
+      }
 
       try {
         const formData = new FormData(productForm);
@@ -736,11 +780,37 @@
           taxable: formData.get('taxable') === 'on',
         };
 
-        // Obtener imágenes del preview
-        const imagePreviews = els('#product-images-preview img');
-        data.images = Array.from(imagePreviews).map(img => img.src);
+        // Validation: compare_price must be greater than or equal to price
+        if (data.compare_price !== null && data.compare_price < data.price) {
+          showToast('El precio de comparación debe ser mayor o igual al precio normal', 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+          return;
+        }
 
-        let result;
+        // 1. Collect existing images from DOM
+        const existingImages = Array.from(els('#product-images-preview img'))
+          .map(img => img.src)
+          .filter(src => src.startsWith('http')); // Only keep URLs
+
+        // 2. Upload new files
+        const newImageUrls = [];
+        if (selectedProductFiles.length > 0) {
+          for (const file of selectedProductFiles) {
+            try {
+              const url = await uploadImage(file, 'products');
+              newImageUrls.push(url);
+            } catch (err) {
+              console.error('Failed to upload image:', file.name, err);
+              showToast(`Error al subir imagen ${file.name}`, 'error');
+            }
+          }
+        }
+
+        const allImages = [...existingImages, ...newImageUrls];
+        let productId = editingProductId;
+
+        // 3. Save Product Data
         if (editingProductId) {
           const { error } = await window.supabase
             .from('products')
@@ -748,15 +818,50 @@
             .eq('id', editingProductId);
 
           if (error) throw error;
-          showToast('Producto actualizado correctamente', 'success');
         } else {
-          const { error } = await window.supabase
+          const { data: newProduct, error } = await window.supabase
             .from('products')
-            .insert([data]);
+            .insert([data])
+            .select()
+            .single();
 
           if (error) throw error;
-          showToast('Producto creado correctamente', 'success');
+          productId = newProduct.id;
         }
+
+        // 4. Save Images to product_images table
+        if (productId) {
+          // First delete existing mapping to ensure clean state (simplest approach)
+          // Note: This doesn't delete files from storage, just the DB references
+          const { error: deleteError } = await window.supabase
+            .from('product_images')
+            .delete()
+            .eq('product_id', productId);
+
+          if (deleteError) throw deleteError;
+
+          // Insert new mapping
+          if (allImages.length > 0) {
+            const imagesToInsert = allImages.map((url, index) => ({
+              product_id: productId,
+              url: url,
+              sort_order: index,
+              is_primary: index === 0
+            }));
+
+            const { error: insertError } = await window.supabase
+              .from('product_images')
+              .insert(imagesToInsert);
+
+            if (insertError) throw insertError;
+          }
+        }
+
+        showToast(editingProductId ? 'Producto actualizado correctamente' : 'Producto creado correctamente', 'success');
+
+        // Clear selection
+        selectedProductFiles = [];
+        if (el('#product-images')) el('#product-images').value = '';
 
         closeProductModal();
         await loadProducts();
@@ -764,6 +869,9 @@
       } catch (error) {
         console.error('Error guardando producto:', error);
         showToast('Error al guardar el producto: ' + (error.message || 'Error desconocido'), 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
       }
     });
   }
@@ -932,68 +1040,80 @@
       if (countEl) countEl.textContent = `${profiles.length} usuario${profiles.length !== 1 ? 's' : ''}`;
     } catch (error) {
       console.error('Error cargando usuarios:', error);
-      tbody.innerHTML = '<tr><td colspan="6" class="admin-table-empty"><p>Error al cargar usuarios</p></td></tr>';
       showToast('Error al cargar usuarios', 'error');
     }
   }
 
+
   // ===== CATEGORÍAS =====
   async function loadCategories() {
-    const container = el('#categories-list');
+    const tbody = el('#categories-table-body');
     const countEl = el('#categories-count');
-    if (!container) return;
+    if (!tbody) return;
 
     try {
-      container.innerHTML = '<p class="admin-loading">Cargando categorías...</p>';
+      tbody.innerHTML = '<tr><td colspan="5" class="admin-table-empty"><p>Cargando categorías...</p></td></tr>';
 
       const { data: categories, error } = await window.supabase
         .from('categories')
-        .select('*')
-        .order('name');
+        .select('*, parent:parent_id(name)')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
 
       if (!categories || categories.length === 0) {
-        container.innerHTML = '<p class="admin-empty-state">No hay categorías</p>';
+        tbody.innerHTML = '<tr><td colspan="5" class="admin-table-empty"><p>No hay categorías</p></td></tr>';
         if (countEl) countEl.textContent = '0 categorías';
         return;
       }
 
-      container.innerHTML = categories.map(category => {
+      tbody.innerHTML = categories.map(category => {
         const statusClass = category.is_active !== false ? 'admin-badge-active' : 'admin-badge-inactive';
+        const parentName = category.parent?.name || '—';
+
         return `
-          <div class="admin-category-item">
-            <div class="admin-category-info">
-              ${category.image ? `<img src="${category.image}" alt="${category.name}" class="admin-category-image" />` : ''}
-              <div class="admin-category-details">
-                <h4>${category.name}</h4>
-                <p>${category.slug || ''} • <span class="admin-badge ${statusClass}">${category.is_active !== false ? 'Activa' : 'Inactiva'}</span></p>
-              </div>
-            </div>
-            <div class="admin-category-actions">
-              <button class="admin-action-btn admin-action-btn-edit" onclick="admin.editCategory('${category.id}')" title="Editar">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-              </button>
-              <button class="admin-action-btn admin-action-btn-delete" onclick="admin.deleteCategory('${category.id}')" title="Eliminar">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-              </button>
-            </div>
+      <tr>
+        <td><strong>${category.name}</strong></td>
+        <td>${category.slug}</td>
+        <td>${parentName}</td>
+        <td><span class="admin-badge ${statusClass}">${category.is_active !== false ? 'Activa' : 'Inactiva'}</span></td>
+        <td class="admin-th-actions">
+          <div class="admin-table-actions">
+            <button class="admin-action-btn admin-action-btn-edit" onclick="admin.editCategory('${category.id}')" title="Editar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+            <button class="admin-action-btn admin-action-btn-delete" onclick="admin.deleteCategory('${category.id}')" title="Eliminar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
           </div>
-        `;
+        </td>
+      </tr>
+    `;
       }).join('');
 
       if (countEl) countEl.textContent = `${categories.length} categoría${categories.length !== 1 ? 's' : ''}`;
     } catch (error) {
       console.error('Error cargando categorías:', error);
-      container.innerHTML = '<p class="admin-loading">Error al cargar categorías</p>';
+      tbody.innerHTML = '<tr><td colspan="5" class="admin-table-empty"><p>Error al cargar categorías</p></td></tr>';
       showToast('Error al cargar categorías', 'error');
     }
+  }
+
+  // Event listener for slug generation
+  const categoryNameInput = el('#category-name');
+  if (categoryNameInput) {
+    categoryNameInput.addEventListener('blur', () => {
+      const slugInput = el('#category-slug');
+      if (slugInput && !slugInput.value) {
+        slugInput.value = generateSlug(categoryNameInput.value);
+      }
+    });
   }
 
   // ===== COLECCIONES =====
@@ -1513,8 +1633,36 @@
     },
 
     editCategory: async (id) => {
-      // Implementar edición de categoría
-      showToast('Funcionalidad en desarrollo', 'info');
+      try {
+        const { data: category, error } = await window.supabase
+          .from('categories')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) throw error;
+
+        editingCategoryId = id;
+
+        // Populate form
+        if (el('#category-id')) el('#category-id').value = category.id;
+        if (el('#category-name')) el('#category-name').value = category.name;
+        if (el('#category-slug')) el('#category-slug').value = category.slug;
+        if (el('#category-description')) el('#category-description').value = category.description || '';
+        if (el('#category-parent')) el('#category-parent').value = category.parent_id || '';
+        if (el('#category-is-active')) el('#category-is-active').checked = category.is_active !== false;
+
+        // Scroll to form
+        const form = el('#category-form');
+        if (form) form.scrollIntoView({ behavior: 'smooth' });
+
+        // Update parent categories to exclude self
+        await loadParentCategories();
+
+      } catch (error) {
+        console.error('Error cargando categoría:', error);
+        showToast('Error al cargar la categoría', 'error');
+      }
     },
 
     deleteCategory: async (id) => {
