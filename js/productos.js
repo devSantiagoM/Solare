@@ -100,12 +100,17 @@
       // Favorites toggle
       const favBtn = card.querySelector('.fav-toggle');
       if (favBtn) {
-        try { if (window.SolareFavs?.isFav(p.id)) favBtn.classList.add('active'); } catch (e) { }
+        // Check state directly
+        if (window.SolareState && window.SolareState.favorites.isFavorite(p.id)) {
+          favBtn.classList.add('active');
+        }
+
         favBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          if (window.SolareFavs) {
-            window.SolareFavs.toggle(p);
-            favBtn.classList.toggle('active');
+          if (window.SolareState) {
+            window.SolareState.favorites.toggle(p).then(() => {
+              favBtn.classList.toggle('active');
+            });
           }
         });
       }
@@ -116,8 +121,10 @@
         addToCartBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           const productData = JSON.parse(addToCartBtn.dataset.product);
-          if (window.SolareCart) {
-            window.SolareCart.addToCart(productData);
+          if (window.SolareState) {
+            window.SolareState.cart.addItem(productData).then(() => {
+              if (window.SolareToast) window.SolareToast.success(`${productData.name} agregado al carrito`);
+            });
           }
         });
       }
