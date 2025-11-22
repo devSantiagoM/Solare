@@ -1,9 +1,13 @@
 // Gestión del estado de autenticación global - Solare
-(function() {
+(function () {
   'use strict';
 
   let currentUser = null;
   let currentSession = null;
+  let initResolve;
+  const initPromise = new Promise((resolve) => {
+    initResolve = resolve;
+  });
 
   // Inicializar estado de autenticación
   async function initAuthState() {
@@ -16,9 +20,10 @@
     try {
       // Obtener sesión actual
       const { data: { session }, error } = await window.supabase.auth.getSession();
-      
+
       if (error) {
         console.error('Error obteniendo sesión:', error);
+        initResolve(); // Resolver incluso con error
         return;
       }
 
@@ -36,8 +41,12 @@
         updateNavbarAuthState(currentUser);
       });
 
+      // Resolver la promesa de inicialización
+      initResolve();
+
     } catch (error) {
       console.error('Error inicializando estado de autenticación:', error);
+      initResolve(); // Resolver incluso con error
     }
   }
 
@@ -45,7 +54,7 @@
   function updateNavbarAuthState(user) {
     // Actualizar enlaces de cuenta en la navbar
     const accountLinks = document.querySelectorAll('.account-icon-desktop, .login-icon-mobile');
-    
+
     accountLinks.forEach(link => {
       if (user) {
         // Cambiar el href a perfil o dashboard si existe
@@ -74,6 +83,7 @@
 
   // API pública
   window.SolareAuth = {
+    ready: initPromise, // Promesa que se resuelve cuando la auth está lista
     getUser: () => currentUser,
     getSession: () => currentSession,
     isAuthenticated: () => !!currentUser && !!currentSession,

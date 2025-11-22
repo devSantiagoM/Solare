@@ -29,6 +29,7 @@
   // Constants
   const TAX_RATE = 0.21;
   const FREE_SHIPPING_THRESHOLD = 100;
+  const STORAGE_KEY = 'solare-cart';
   const SESSION_KEY = 'solare_session_id';
 
   // DOM elements
@@ -67,20 +68,25 @@
       return;
     }
 
-    // Load cart
-    await loadCart();
-
     // Bind events
     bindEvents();
 
-    // Listen for auth changes to reload cart
-    if (window.supabase.auth) {
-      window.supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
-          loadCart();
-        }
-      });
+    // Listen for auth changes
+    window.supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+        cart.items = []; // Clear current state
+        loadCart(); // Reload for new context
+      }
+    });
+
+    // CRITICAL: Wait for SolareAuth to initialize before loading cart
+    // This ensures getContext() returns the correct user
+    if (window.SolareAuth?.ready) {
+      await window.SolareAuth.ready;
     }
+
+    // Load cart
+    await loadCart();
 
     // Load recommended products
     loadRecommendedProducts();
@@ -89,6 +95,7 @@
   // Get current context (User ID or Session ID)
   function getContext() {
     const user = window.SolareAuth?.getUser();
+
     if (user) {
       return { type: 'user', id: user.id };
     }
@@ -113,9 +120,9 @@
               name,
               price,
               slug,
-              categories (slug)
-            ),
-            product_images (url)
+              categories (slug),
+              product_images (url)
+            )
           )
         `);
 
@@ -125,21 +132,22 @@
         query = query.eq('session_id', ctx.id);
       }
 
-      const { data, error } = await query.maybeSingle();
+      const { data: carts, error } = await query;
 
       if (error) throw error;
 
+      console.log('All found carts:', carts);
+
+      // Pick the first cart, or handle duplicates if needed
+      const data = carts?.[0] || null;
+
       if (data) {
+        console.log('Selected Cart Data:', data);
         cart.id = data.id;
         // Transform items
         cart.items = (data.cart_items || []).map(item => {
           // Get primary image or first image
-          const img = item.product_images?.[0]?.url || null; // Simplified, ideally filter by is_primary in query but nested filter is complex
-
-          // We need to fetch the image separately or improve the query if we want the primary one strictly
-          // For now, let's assume the relation returns images. 
-          // Actually, standard join might return multiple rows per product if not careful.
-          // Let's refine the query logic below or just fetch images separately.
+          const img = item.products.product_images?.[0]?.url || null;
 
           return {
             id: item.products.id, // Product ID
@@ -153,7 +161,6 @@
         });
 
         // Need to fetch images properly if the above nested select didn't work as expected for 1:1
-        // For simplicity in this iteration, we'll fetch images for these products if missing
         if (cart.items.length > 0) {
           await enrichImages(cart.items);
         }
@@ -529,6 +536,9 @@
 
   function updateNavbarCartCount() {
     const cartCountEl = document.querySelector('#cartCount');
+    // Sync to local storage so other pages/navbar.js see the correct count
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart.items));
+
     if (cartCountEl) {
       const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
       cartCountEl.textContent = totalItems;
@@ -582,30 +592,54 @@
     }, 2000);
   }
 
-  // Recommended products (Mock for now, could be DB)
-  function loadRecommendedProducts() {
+  // Recommended products (Fetch from DB)
+  async function loadRecommendedProducts() {
     if (!elements.recommendedGrid) return;
-    const recommendedProducts = [
-      { id: 'rec1', name: 'Blazer Clásico', price: 120.00, image: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=800&auto=format&fit=crop' },
-      { id: 'rec2', name: 'Camisa Oxford', price: 65.00, image: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=800&auto=format&fit=crop' },
-      { id: 'rec3', name: 'Bandolera Minimal', price: 85.00, image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop' },
-      { id: 'rec4', name: 'Vestido Midi', price: 135.00, image: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=800&auto=format&fit=crop' }
-    ];
-    elements.recommendedGrid.innerHTML = '';
-    recommendedProducts.forEach(product => {
-      const el = document.createElement('div');
-      el.className = 'recommended-card';
-      el.innerHTML = `
-        <div class="recommended-card-image"><img src="${product.image}" alt="${product.name}"></div>
-        <div class="recommended-card-body">
-          <h3 class="recommended-card-title">${product.name}</h3>
-          <div class="recommended-card-price">$${product.price.toFixed(2)}</div>
-          <button class="btn-add-to-cart">Agregar al Carrito</button>
-        </div>
-      `;
-      el.querySelector('.btn-add-to-cart').addEventListener('click', () => addToCart(product));
-      elements.recommendedGrid.appendChild(el);
-    });
+
+    try {
+      // Fetch 4 random active products (simplified as just 4 active products for now)
+      const { data: products, error } = await window.supabase
+        .from('products')
+        .select('id, name, price, slug, categories(slug), product_images(url)')
+        .eq('is_active', true)
+        .limit(4);
+
+      if (error) throw error;
+
+      elements.recommendedGrid.innerHTML = '';
+
+      if (!products || products.length === 0) return;
+
+      products.forEach(product => {
+        const imgUrl = product.product_images?.[0]?.url || 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=800&auto=format&fit=crop';
+        const category = product.categories?.slug || 'producto';
+
+        const el = document.createElement('div');
+        el.className = 'recommended-card';
+        el.innerHTML = `
+          <div class="recommended-card-image"><img src="${imgUrl}" alt="${product.name}"></div>
+          <div class="recommended-card-body">
+            <h3 class="recommended-card-title">${product.name}</h3>
+            <div class="recommended-card-price">$${product.price.toFixed(2)}</div>
+            <button class="btn-add-to-cart">Agregar al Carrito</button>
+          </div>
+        `;
+
+        // Prepare product object for addToCart
+        const productForCart = {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: imgUrl,
+          category: category
+        };
+
+        el.querySelector('.btn-add-to-cart').addEventListener('click', () => addToCart(productForCart));
+        elements.recommendedGrid.appendChild(el);
+      });
+    } catch (error) {
+      console.error('Error loading recommended products:', error);
+    }
   }
 
   // Public API

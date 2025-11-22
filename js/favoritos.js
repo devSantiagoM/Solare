@@ -1,9 +1,9 @@
 // Favoritos Page - render and interactions
-(function(){
+(function () {
   'use strict';
 
-  const el = (s, c=document) => c.querySelector(s);
-  const els = (s, c=document) => Array.from(c.querySelectorAll(s));
+  const el = (s, c = document) => c.querySelector(s);
+  const els = (s, c = document) => Array.from(c.querySelectorAll(s));
 
   function render() {
     const grid = el('#favs-grid');
@@ -12,6 +12,8 @@
     if (!grid || !tpl) return;
 
     const favs = (window.SolareFavs && window.SolareFavs.all()) || [];
+
+    console.log('Rendering favorites:', favs);
 
     grid.innerHTML = '';
     if (!favs.length) {
@@ -34,7 +36,7 @@
       if (card) card.dataset.id = p.id;
       if (img) { img.src = p.image || 'https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?q=80&w=800&auto=format&fit=crop'; img.alt = p.name; }
       if (title) title.textContent = p.name;
-      if (price) price.textContent = `$${Number(p.price||0).toFixed(2)}`;
+      if (price) price.textContent = `$${Number(p.price || 0).toFixed(2)}`;
 
       if (btnRemove) btnRemove.addEventListener('click', () => { window.SolareFavs?.remove(p.id); render(); });
       if (favBtn) favBtn.addEventListener('click', () => { window.SolareFavs?.remove(p.id); render(); });
@@ -45,7 +47,10 @@
     grid.appendChild(frag);
   }
 
-  function init(){ render(); }
+  function init() { render(); }
+
+  // Expose render globally so favoritos_api can trigger re-render
+  window.renderFavs = render;
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

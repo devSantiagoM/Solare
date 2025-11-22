@@ -591,6 +591,22 @@
         console.error('Error cargando marcas:', error);
       }
     }
+    // Cargar colecciones
+    const collectionSelect = el('#product-collection');
+    if (collectionSelect) {
+      try {
+        const { data: collections } = await window.supabase
+          .from('collections')
+          .select('id, title')
+          .eq('is_active', true)
+          .order('title');
+
+        collectionSelect.innerHTML = '<option value="">Sin colección</option>' +
+          (collections || []).map(col => `<option value="${col.id}">${col.title}</option>`).join('');
+      } catch (error) {
+        console.error('Error cargando colecciones:', error);
+      }
+    }
   }
 
   async function loadProductData(productId) {
@@ -1056,7 +1072,7 @@
 
       const { data: categories, error } = await window.supabase
         .from('categories')
-        .select('*, parent:parent_id(name)')
+        .select('*, parent:categories!parent_id(name)')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

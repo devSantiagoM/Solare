@@ -36,8 +36,7 @@
 
   // Dataset de respaldo por si falla Supabase
   function mockFor(slug) {
-    // ... (Mismo mock data para fallback)
-    return []; // Simplificado para brevedad, idealmente mantener el mock anterior
+    return [];
   }
 
   let currentCollection = COLLECTION_SLUGS.NUEVOS;
@@ -237,7 +236,7 @@
           .from('collections')
           .select('id')
           .eq('slug', slug)
-          .single();
+          .maybeSingle();
 
         if (!collectionData) return mockFor(slug);
 

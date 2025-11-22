@@ -23,6 +23,11 @@
       return;
     }
 
+    // CRITICAL: Wait for SolareAuth to initialize
+    if (window.SolareAuth?.ready) {
+      await window.SolareAuth.ready;
+    }
+
     // Check auth
     const user = window.SolareAuth?.getUser();
     if (user) {
@@ -48,18 +53,25 @@
     try {
       const { data, error } = await window.supabase
         .from('user_favorites')
-        .select('product_id, products(id, name, price, slug, categories(slug)), product_images(url)')
+        .select('product_id, products(id, name, price, slug, categories(slug), product_images(url))')
         .eq('user_id', userId);
 
       if (error) throw error;
 
-      dbFavs = (data || []).map(item => ({
-        id: item.products.id,
-        name: item.products.name,
-        price: item.products.price,
-        image: item.product_images?.[0]?.url || null, // Simplified
-        category: item.products.categories?.slug || 'producto'
-      }));
+      console.log('Raw Favorites Data:', data);
+
+      dbFavs = (data || []).map(item => {
+        console.log('Mapping item:', item);
+        return {
+          id: item.products.id,
+          name: item.products.name,
+          price: item.products.price,
+          image: item.products.product_images?.[0]?.url || null, // Simplified
+          category: item.products.categories?.slug || 'producto'
+        };
+      });
+
+      console.log('Mapped dbFavs:', dbFavs);
 
       // Enrich images if needed (similar to cart)
       if (dbFavs.length > 0) {
@@ -67,35 +79,50 @@
         // Ideally we fetch primary images.
       }
 
+      // Trigger UI update
+      updateNavbarFavCount();
+
     } catch (e) {
       console.error('Error loading DB favs:', e);
     }
   }
 
   async function syncFavs(userId) {
-    // Merge local into DB (simple strategy: add local items to DB if not present)
+    // Merge local into DB
     const toAdd = localFavs.filter(l => !dbFavs.some(d => d.id === l.id));
 
     if (toAdd.length > 0) {
-      const records = toAdd.map(item => ({
-        user_id: userId,
-        product_id: item.id
-      }));
-
-      const { error } = await window.supabase
+      // Filter out items that might already exist in DB but weren't in dbFavs state yet
+      // (Double check with DB to avoid 409)
+      const idsToCheck = toAdd.map(i => i.id);
+      const { data: existing } = await window.supabase
         .from('user_favorites')
-        .insert(records)
-        .ignoreDuplicates(); // Ignore if already exists
+        .select('product_id')
+        .eq('user_id', userId)
+        .in('product_id', idsToCheck);
 
-      if (!error) {
-        // Clear local after sync? Or keep as cache? 
-        // Let's clear local to avoid confusion, or keep it empty for auth users.
-        // Strategy: Auth users use DB, Guests use Local.
-        // So if auth, we move everything to DB and empty local.
-        localStorage.removeItem(STORAGE_KEY);
-        localFavs = [];
-        await loadDbFavs(userId); // Reload to get everything
+      const existingIds = new Set((existing || []).map(e => e.product_id));
+      const finalToAdd = toAdd.filter(item => !existingIds.has(item.id));
+
+      if (finalToAdd.length > 0) {
+        const records = finalToAdd.map(item => ({
+          user_id: userId,
+          product_id: item.id
+        }));
+
+        const { error } = await window.supabase
+          .from('user_favorites')
+          .insert(records);
+
+        if (error) {
+          console.error('Error syncing favs:', error);
+        }
       }
+
+      // Clear local storage after sync attempt
+      localStorage.removeItem(STORAGE_KEY);
+      localFavs = [];
+      await loadDbFavs(userId);
     }
     updateNavbarFavCount();
   }

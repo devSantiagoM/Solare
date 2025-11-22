@@ -9,7 +9,6 @@
         // Páginas que requieren autenticación
         authenticated: [
             'perfil.html',
-            'carrito.html',
             'favoritos.html'
         ],
         // Páginas que requieren rol de administrador
