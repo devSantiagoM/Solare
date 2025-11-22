@@ -1,7 +1,7 @@
 // Admin Panel - Solare
 // Gestión completa del panel de administración
 
-(function() {
+(function () {
   'use strict';
 
   // Utilidades - Definir primero para que estén disponibles en todas las funciones
@@ -66,29 +66,27 @@
 
     try {
       const { data: { session }, error } = await window.supabase.auth.getSession();
-      
+
       if (error || !session) {
         if (statusEl) statusEl.textContent = 'No hay sesión activa';
-        // No redirigir automáticamente, permitir que el usuario vea la interfaz
         return false;
       }
 
       currentUser = session.user;
-      
+
       // Mostrar email del usuario
       if (emailEl) emailEl.textContent = currentUser.email || 'Sin email';
-      
-      // Intentar obtener perfil del usuario (puede no tener columna role)
+
+      // Intentar obtener perfil del usuario
       let role = null;
       try {
         const { data: profile, error: profileError } = await window.supabase
           .from('profiles')
           .select('*')
           .eq('id', currentUser.id)
-          .single();
+          .maybeSingle();
 
         if (!profileError && profile) {
-          // Intentar obtener role de diferentes lugares
           role = profile.role || profile.rol || null;
         }
       } catch (profileErr) {
@@ -97,27 +95,24 @@
 
       // Verificar role en user_metadata o app_metadata
       if (!role) {
-        role = currentUser.user_metadata?.role || 
-               currentUser.user_metadata?.rol ||
-               currentUser.app_metadata?.role ||
-               currentUser.app_metadata?.rol ||
-               null;
+        role = currentUser.user_metadata?.role ||
+          currentUser.user_metadata?.rol ||
+          currentUser.app_metadata?.role ||
+          currentUser.app_metadata?.rol ||
+          null;
       }
 
       // Si no hay role definido, permitir acceso temporalmente (para desarrollo)
-      // En producción, deberías tener una forma de asignar roles
       if (!role) {
         console.warn('Usuario sin role definido. Permitiendo acceso temporal.');
         if (statusEl) statusEl.textContent = 'Acceso temporal (sin role definido)';
         if (roleEl) roleEl.textContent = 'Usuario';
-        // Permitir acceso pero mostrar advertencia
         return true;
       }
-      
+
       if (role !== 'admin' && role !== 'administrador') {
         if (statusEl) statusEl.textContent = 'No tienes permisos de administrador';
         if (roleEl) roleEl.textContent = `Rol: ${role}`;
-        // No redirigir automáticamente, solo mostrar mensaje
         return false;
       }
 
@@ -128,7 +123,6 @@
     } catch (error) {
       console.error('Error verificando acceso:', error);
       if (statusEl) statusEl.textContent = 'Error al verificar acceso: ' + error.message;
-      // No redirigir en caso de error, permitir que el usuario vea la interfaz
       return false;
     }
   }
@@ -146,7 +140,7 @@
 
       function showSection(sectionName) {
         currentSection = sectionName;
-        
+
         sections.forEach((section) => {
           const name = section.getAttribute('data-admin-section');
           if (name === sectionName) {
@@ -211,6 +205,12 @@
       case 'collections':
         await loadCollections();
         break;
+      case 'coupons':
+        await loadCoupons();
+        break;
+      case 'reviews':
+        await loadReviews();
+        break;
       case 'faq':
         await loadFAQs();
         break;
@@ -244,9 +244,9 @@
       // Calcular total de ventas
       const { data: orders } = await window.supabase
         .from('orders')
-        .select('total');
+        .select('total_amount');
 
-      const salesTotal = orders?.reduce((sum, order) => sum + (order.total || 0), 0) || 0;
+      const salesTotal = orders?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
 
       // Actualizar UI
       const dashUsersEl = el('#dash-users-count');
@@ -261,7 +261,7 @@
 
       // Cargar pedidos recientes
       await loadRecentOrders();
-      
+
       // Cargar productos con bajo stock
       await loadLowStockProducts();
     } catch (error) {
@@ -277,7 +277,7 @@
     try {
       const { data: orders, error } = await window.supabase
         .from('orders')
-        .select('id, order_number, total, status, created_at')
+        .select('id, order_number, total_amount, created_at, order_statuses(name)')
         .order('created_at', { ascending: false })
         .limit(5);
 
@@ -288,15 +288,18 @@
         return;
       }
 
-      container.innerHTML = orders.map(order => `
+      container.innerHTML = orders.map(order => {
+        const statusName = order.order_statuses?.name || 'Pendiente';
+        return `
         <div class="admin-stat-item">
           <div>
             <div class="admin-stat-item-title">Pedido ${order.order_number || order.id}</div>
-            <div class="admin-stat-item-meta">${formatDate(order.created_at)} • ${formatCurrency(order.total)}</div>
+            <div class="admin-stat-item-meta">${formatDate(order.created_at)} • ${formatCurrency(order.total_amount)}</div>
           </div>
-          <span class="admin-badge admin-badge-${order.status || 'pending'}">${order.status || 'Pendiente'}</span>
+          <span class="admin-badge admin-badge-${statusName}">${statusName}</span>
         </div>
-      `).join('');
+      `;
+      }).join('');
     } catch (error) {
       console.error('Error cargando pedidos recientes:', error);
       container.innerHTML = '<p class="admin-loading">Error al cargar</p>';
@@ -436,7 +439,7 @@
 
       const currentValue = select.value;
       select.innerHTML = '<option value="">Todas las categorías</option>' +
-        (categories || []).map(cat => 
+        (categories || []).map(cat =>
           `<option value="${cat.id}" ${currentValue === cat.id ? 'selected' : ''}>${cat.name}</option>`
         ).join('');
     } catch (error) {
@@ -706,7 +709,7 @@
   if (productForm) {
     productForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       try {
         const formData = new FormData(productForm);
         const data = {
@@ -743,14 +746,14 @@
             .from('products')
             .update(data)
             .eq('id', editingProductId);
-          
+
           if (error) throw error;
           showToast('Producto actualizado correctamente', 'success');
         } else {
           const { error } = await window.supabase
             .from('products')
             .insert([data]);
-          
+
           if (error) throw error;
           showToast('Producto creado correctamente', 'success');
         }
@@ -811,7 +814,7 @@
       }
 
       tbody.innerHTML = orders.map(order => {
-        const customerName = order.profiles 
+        const customerName = order.profiles
           ? `${order.profiles.first_name || ''} ${order.profiles.last_name || ''}`.trim() || order.profiles.email
           : 'Cliente desconocido';
         const statusClass = getOrderStatusClass(order.status);
@@ -882,15 +885,15 @@
       // Obtener roles de los usuarios desde auth
       const userIds = profiles.map(p => p.id);
       const userRoles = {};
-      
+
       // Intentar obtener roles desde user_metadata (esto requiere permisos de admin)
       for (const profile of profiles) {
         try {
           // Obtener role desde diferentes fuentes
           const role = profile.role || profile.rol || null;
-          userRoles[profile.id] = role || 'usuario';
+          userRoles[profile.id] = role || 'customer';
         } catch (err) {
-          userRoles[profile.id] = 'usuario';
+          userRoles[profile.id] = 'customer';
         }
       }
 
@@ -898,7 +901,7 @@
         const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Sin nombre';
         const statusClass = profile.is_active !== false ? 'admin-badge-active' : 'admin-badge-inactive';
         const statusText = profile.is_active !== false ? 'Activo' : 'Inactivo';
-        const userRole = userRoles[profile.id] || 'usuario';
+        const userRole = userRoles[profile.id] || 'customer';
         const roleBadgeClass = userRole === 'admin' ? 'admin-badge-processing' : 'admin-badge-inactive';
 
         return `
@@ -1052,7 +1055,273 @@
     }
   }
 
-  // ===== FAQ =====
+  // ===== CUPONES =====
+  async function loadCoupons() {
+    const tbody = el('#coupons-table-body');
+    const countEl = el('#coupons-count');
+    if (!tbody) return;
+
+    try {
+      tbody.innerHTML = '<tr><td colspan="6" class="admin-table-empty"><p>Cargando cupones...</p></td></tr>';
+
+      const { data: coupons, error } = await window.supabase
+        .from('discount_codes')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      if (!coupons || coupons.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="admin-table-empty"><p>No hay cupones</p></td></tr>';
+        if (countEl) countEl.textContent = '0 cupones';
+        return;
+      }
+
+      tbody.innerHTML = coupons.map(coupon => {
+        const statusClass = coupon.is_active ? 'admin-badge-active' : 'admin-badge-inactive';
+        const typeText = coupon.type === 'percentage' ? '%' : '$';
+        const valueText = coupon.type === 'percentage' ? `${coupon.value}%` : formatCurrency(coupon.value);
+
+        return `
+          <tr>
+            <td><strong>${coupon.code}</strong></td>
+            <td>${valueText}</td>
+            <td>${coupon.usage_count || 0} / ${coupon.usage_limit || '∞'}</td>
+            <td>${formatDate(coupon.expires_at)}</td>
+            <td><span class="admin-badge ${statusClass}">${coupon.is_active ? 'Activo' : 'Inactivo'}</span></td>
+            <td class="admin-th-actions">
+              <div class="admin-table-actions">
+                <button class="admin-action-btn admin-action-btn-edit" onclick="admin.editCoupon('${coupon.id}')" title="Editar">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+                <button class="admin-action-btn admin-action-btn-delete" onclick="admin.deleteCoupon('${coupon.id}')" title="Eliminar">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (countEl) countEl.textContent = `${coupons.length} cupón${coupons.length !== 1 ? 'es' : ''}`;
+    } catch (error) {
+      console.error('Error cargando cupones:', error);
+      tbody.innerHTML = '<tr><td colspan="6" class="admin-table-empty"><p>Error al cargar cupones</p></td></tr>';
+      showToast('Error al cargar cupones', 'error');
+    }
+  }
+
+  // Modal de Cupón
+  const couponModal = el('#coupon-modal');
+  const couponForm = el('#coupon-form');
+  const btnAddCoupon = el('#btn-add-coupon');
+  const btnCloseCouponModal = el('#btn-close-coupon-modal');
+  const btnCancelCoupon = el('#btn-cancel-coupon');
+  let editingCouponId = null;
+
+  if (btnAddCoupon) {
+    btnAddCoupon.addEventListener('click', () => {
+      editingCouponId = null;
+      openCouponModal();
+    });
+  }
+
+  if (btnCloseCouponModal) btnCloseCouponModal.addEventListener('click', closeCouponModal);
+  if (btnCancelCoupon) btnCancelCoupon.addEventListener('click', closeCouponModal);
+
+  async function openCouponModal(couponId = null) {
+    editingCouponId = couponId;
+    const title = el('#coupon-modal-title');
+    if (title) title.textContent = couponId ? 'Editar Cupón' : 'Nuevo Cupón';
+
+    if (couponId) {
+      try {
+        const { data: coupon, error } = await window.supabase
+          .from('discount_codes')
+          .select('*')
+          .eq('id', couponId)
+          .single();
+
+        if (error) throw error;
+
+        if (el('#coupon-code')) el('#coupon-code').value = coupon.code;
+        if (el('#coupon-type')) el('#coupon-type').value = coupon.type;
+        if (el('#coupon-value')) el('#coupon-value').value = coupon.value;
+        if (el('#coupon-min-purchase')) el('#coupon-min-purchase').value = coupon.minimum_amount || '';
+        if (el('#coupon-start-date')) el('#coupon-start-date').value = coupon.starts_at ? new Date(coupon.starts_at).toISOString().slice(0, 16) : '';
+        if (el('#coupon-end-date')) el('#coupon-end-date').value = coupon.expires_at ? new Date(coupon.expires_at).toISOString().slice(0, 16) : '';
+        if (el('#coupon-usage-limit')) el('#coupon-usage-limit').value = coupon.usage_limit || '';
+        if (el('#coupon-is-active')) el('#coupon-is-active').checked = coupon.is_active;
+
+      } catch (error) {
+        console.error('Error cargando cupón:', error);
+        showToast('Error al cargar el cupón', 'error');
+        return;
+      }
+    } else {
+      if (couponForm) couponForm.reset();
+      if (el('#coupon-is-active')) el('#coupon-is-active').checked = true;
+    }
+
+    if (couponModal) {
+      couponModal.hidden = false;
+      couponModal.removeAttribute('hidden');
+    }
+  }
+
+  function closeCouponModal() {
+    if (couponModal) {
+      couponModal.hidden = true;
+      couponModal.setAttribute('hidden', '');
+    }
+    editingCouponId = null;
+    if (couponForm) couponForm.reset();
+  }
+
+  if (couponForm) {
+    couponForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(couponForm);
+
+      const data = {
+        code: formData.get('code').toUpperCase(),
+        type: formData.get('discount_type'),
+        value: parseFloat(formData.get('discount_value')),
+        minimum_amount: formData.get('min_purchase_amount') ? parseFloat(formData.get('min_purchase_amount')) : null,
+        starts_at: formData.get('start_date') || null,
+        expires_at: formData.get('end_date') || null,
+        usage_limit: formData.get('usage_limit') ? parseInt(formData.get('usage_limit')) : null,
+        is_active: formData.get('is_active') === 'on'
+      };
+
+      try {
+        let error;
+        if (editingCouponId) {
+          ({ error } = await window.supabase
+            .from('discount_codes')
+            .update(data)
+            .eq('id', editingCouponId));
+        } else {
+          ({ error } = await window.supabase
+            .from('discount_codes')
+            .insert([data]));
+        }
+
+        if (error) throw error;
+
+        showToast('Cupón guardado correctamente', 'success');
+        closeCouponModal();
+        await loadCoupons();
+      } catch (err) {
+        console.error('Error guardando cupón:', err);
+        showToast('Error al guardar el cupón', 'error');
+      }
+    });
+  }
+
+  // ===== RESEÑAS =====
+  async function loadReviews() {
+    const tbody = el('#reviews-table-body');
+    const countEl = el('#reviews-count');
+    const filterStatus = el('#reviews-filter-status');
+    if (!tbody) return;
+
+    try {
+      tbody.innerHTML = '<tr><td colspan="6" class="admin-table-empty"><p>Cargando reseñas...</p></td></tr>';
+
+      let query = window.supabase
+        .from('product_reviews')
+        .select(`
+          *,
+          products(name),
+          profiles(first_name, last_name, email)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (filterStatus && filterStatus.value) {
+        query = query.eq('is_approved', filterStatus.value === 'approved');
+        // Note: 'pending' logic depends on how you store status. 
+        // If is_approved is boolean, we only have true/false. 
+        // If we want 'pending', we might need a status column or assume false is pending?
+        // The schema has 'is_approved' boolean. So false = pending/rejected?
+        // Let's assume false is unapproved. If we want rejected, we might need to delete or add a status column.
+        // For now, let's just filter by is_approved true/false.
+        // Actually, let's ignore the filter for now or adapt it.
+        if (filterStatus.value === 'approved') query = query.eq('is_approved', true);
+        if (filterStatus.value === 'pending') query = query.eq('is_approved', false);
+      }
+
+      const { data: reviews, error } = await query;
+
+      if (error) throw error;
+
+      if (!reviews || reviews.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="admin-table-empty"><p>No hay reseñas</p></td></tr>';
+        if (countEl) countEl.textContent = '0 reseñas';
+        return;
+      }
+
+      tbody.innerHTML = reviews.map(review => {
+        const productName = review.products?.name || 'Producto eliminado';
+        const userName = review.profiles
+          ? `${review.profiles.first_name || ''} ${review.profiles.last_name || ''}`.trim() || review.profiles.email
+          : 'Anónimo';
+
+        const statusBadge = review.is_approved
+          ? '<span class="admin-badge admin-badge-active">Aprobada</span>'
+          : '<span class="admin-badge admin-badge-pending">Pendiente</span>';
+
+        return `
+          <tr>
+            <td>${productName}</td>
+            <td>${userName}</td>
+            <td>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</td>
+            <td><div class="admin-text-truncate" title="${review.comment}">${review.comment || ''}</div></td>
+            <td>${statusBadge}</td>
+            <td class="admin-th-actions">
+              <div class="admin-table-actions">
+                ${!review.is_approved ? `
+                  <button class="admin-action-btn admin-action-btn-success" onclick="admin.approveReview('${review.id}')" title="Aprobar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </button>
+                ` : `
+                  <button class="admin-action-btn admin-action-btn-warning" onclick="admin.rejectReview('${review.id}')" title="Rechazar (Ocultar)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                `}
+                <button class="admin-action-btn admin-action-btn-delete" onclick="admin.deleteReview('${review.id}')" title="Eliminar">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (countEl) countEl.textContent = `${reviews.length} reseña${reviews.length !== 1 ? 's' : ''}`;
+    } catch (error) {
+      console.error('Error cargando reseñas:', error);
+      tbody.innerHTML = '<tr><td colspan="6" class="admin-table-empty"><p>Error al cargar reseñas</p></td></tr>';
+    }
+  }
+
+  if (el('#reviews-filter-status')) {
+    el('#reviews-filter-status').addEventListener('change', loadReviews);
+  }
   async function loadFAQs() {
     const container = el('#faqs-list');
     const countEl = el('#faqs-count');
@@ -1184,7 +1453,7 @@
     try {
       // Nota: Esta tabla puede no existir, se puede crear o usar una configuración
       container.innerHTML = '<p class="admin-loading">Cargando estados...</p>';
-      
+
       // Por ahora, mostrar estados predefinidos
       const defaultStatuses = [
         { name: 'Pendiente', value: 'pending', color: '#f59e0b' },
@@ -1214,16 +1483,16 @@
     editProduct: (id) => {
       openProductModal(id);
     },
-    
+
     deleteProduct: async (id) => {
       if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) return;
-      
+
       try {
         const { error } = await window.supabase
           .from('products')
           .delete()
           .eq('id', id);
-        
+
         if (error) throw error;
         showToast('Producto eliminado correctamente', 'success');
         await loadProducts();
@@ -1250,13 +1519,13 @@
 
     deleteCategory: async (id) => {
       if (!confirm('¿Estás seguro de que deseas eliminar esta categoría?')) return;
-      
+
       try {
         const { error } = await window.supabase
           .from('categories')
           .delete()
           .eq('id', id);
-        
+
         if (error) throw error;
         showToast('Categoría eliminada correctamente', 'success');
         await loadCategories();
@@ -1273,13 +1542,13 @@
 
     deleteCollection: async (id) => {
       if (!confirm('¿Estás seguro de que deseas eliminar esta colección?')) return;
-      
+
       try {
         const { error } = await window.supabase
           .from('collections')
           .delete()
           .eq('id', id);
-        
+
         if (error) throw error;
         showToast('Colección eliminada correctamente', 'success');
         await loadCollections();
@@ -1296,13 +1565,13 @@
 
     deleteFaq: async (id) => {
       if (!confirm('¿Estás seguro de que deseas eliminar esta pregunta?')) return;
-      
+
       try {
         const { error } = await window.supabase
           .from('faqs')
           .delete()
           .eq('id', id);
-        
+
         if (error) throw error;
         showToast('Pregunta eliminada correctamente', 'success');
         await loadFAQs();
@@ -1315,6 +1584,60 @@
     viewMessage: async (id) => {
       // Implementar vista de mensaje
       showToast('Funcionalidad en desarrollo', 'info');
+    },
+
+    editCoupon: (id) => {
+      openCouponModal(id);
+    },
+
+    deleteCoupon: async (id) => {
+      if (!confirm('¿Estás seguro de eliminar este cupón?')) return;
+      try {
+        const { error } = await window.supabase.from('discount_codes').delete().eq('id', id);
+        if (error) throw error;
+        showToast('Cupón eliminado', 'success');
+        await loadCoupons();
+      } catch (e) {
+        console.error(e);
+        showToast('Error al eliminar cupón', 'error');
+      }
+    },
+
+    approveReview: async (id) => {
+      try {
+        const { error } = await window.supabase.from('product_reviews').update({ is_approved: true }).eq('id', id);
+        if (error) throw error;
+        showToast('Reseña aprobada', 'success');
+        await loadReviews();
+      } catch (e) {
+        console.error(e);
+        showToast('Error al aprobar reseña', 'error');
+      }
+    },
+
+    rejectReview: async (id) => {
+      try {
+        const { error } = await window.supabase.from('product_reviews').update({ is_approved: false }).eq('id', id);
+        if (error) throw error;
+        showToast('Reseña rechazada (oculta)', 'info');
+        await loadReviews();
+      } catch (e) {
+        console.error(e);
+        showToast('Error al rechazar reseña', 'error');
+      }
+    },
+
+    deleteReview: async (id) => {
+      if (!confirm('¿Estás seguro de eliminar esta reseña permanentemente?')) return;
+      try {
+        const { error } = await window.supabase.from('product_reviews').delete().eq('id', id);
+        if (error) throw error;
+        showToast('Reseña eliminada', 'success');
+        await loadReviews();
+      } catch (e) {
+        console.error(e);
+        showToast('Error al eliminar reseña', 'error');
+      }
     },
   };
 
@@ -1357,22 +1680,8 @@
 
       if (error) throw error;
 
-      // Obtener role desde diferentes fuentes
-      let userRole = profile.role || profile.rol || 'usuario';
-      
-      // Intentar obtener desde auth metadata
-      try {
-        const { data: { user }, error: authError } = await window.supabase.auth.admin.getUserById(userId);
-        if (!authError && user) {
-          userRole = user.user_metadata?.role || 
-                     user.user_metadata?.rol ||
-                     user.app_metadata?.role ||
-                     user.app_metadata?.rol ||
-                     userRole;
-        }
-      } catch (err) {
-        console.log('No se pudo obtener metadata de auth, usando role del perfil');
-      }
+      // Obtener role desde el perfil (el valor por defecto debe ser uno válido según el constraint)
+      let userRole = profile.role || 'customer'; // 'customer' es el valor por defecto válido
 
       // Llenar formulario
       if (el('#user-id')) el('#user-id').value = profile.id || '';
@@ -1408,77 +1717,34 @@
   if (userForm) {
     userForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       try {
         const formData = new FormData(userForm);
         const userId = formData.get('id');
         const role = formData.get('role');
-        
+
+        // Validar que el rol sea uno de los valores permitidos
+        const validRoles = ['customer', 'admin', 'staff'];
+        const finalRole = validRoles.includes(role) ? role : 'customer';
+
+        console.log('Rol recibido del formulario:', role);
+        console.log('Rol final a guardar:', finalRole);
+
         const profileData = {
           first_name: formData.get('first_name') || null,
           last_name: formData.get('last_name') || null,
           phone: formData.get('phone') || null,
           is_active: formData.get('is_active') === 'on',
+          role: finalRole // Usar el rol validado
         };
 
-        // Actualizar role en profile si la columna existe
-        // Intentar actualizar role en la tabla profiles
-        try {
-          const { error: profileError } = await window.supabase
-            .from('profiles')
-            .update({
-              ...profileData,
-              role: role, // Intentar actualizar role
-            })
-            .eq('id', userId);
+        // Actualizar perfil en la tabla profiles
+        const { error: profileError } = await window.supabase
+          .from('profiles')
+          .update(profileData)
+          .eq('id', userId);
 
-          if (profileError && !profileError.message.includes('column "role"')) {
-            // Si el error no es por columna inexistente, lanzarlo
-            throw profileError;
-          }
-        } catch (profileErr) {
-          // Si no existe la columna role, actualizar sin ella
-          const { error: profileError } = await window.supabase
-            .from('profiles')
-            .update(profileData)
-            .eq('id', userId);
-
-          if (profileError) throw profileError;
-        }
-
-        // Actualizar role en user_metadata de Supabase Auth
-        // Nota: Esto requiere permisos de administrador en Supabase
-        try {
-          // Usar la función admin de Supabase si está disponible
-          if (window.supabase.auth.admin) {
-            const { error: authError } = await window.supabase.auth.admin.updateUserById(
-              userId,
-              {
-                user_metadata: { role: role },
-                app_metadata: { role: role }
-              }
-            );
-
-            if (authError) {
-              console.warn('No se pudo actualizar role en auth metadata:', authError);
-              // Continuar de todas formas, el role se guardó en profiles
-            }
-          } else {
-            // Si no hay acceso admin, intentar actualizar metadata del usuario actual
-            if (currentUser && currentUser.id === userId) {
-              const { error: updateError } = await window.supabase.auth.updateUser({
-                data: { role: role }
-              });
-              
-              if (updateError) {
-                console.warn('No se pudo actualizar role en metadata:', updateError);
-              }
-            }
-          }
-        } catch (authErr) {
-          console.warn('Error actualizando role en auth:', authErr);
-          // Continuar de todas formas
-        }
+        if (profileError) throw profileError;
 
         showToast('Usuario actualizado correctamente', 'success');
         closeUserModal();

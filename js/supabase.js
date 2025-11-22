@@ -2,8 +2,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 // ⚠️ IMPORTANTE: Reemplaza con tus credenciales de Supabase
-const SUPABASE_URL = 'https://pdufdbynsbhznnvvzujm.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkdWZkYnluc2Joem5udnZ6dWptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY3NjU3MDIsImV4cCI6MjA3MjM0MTcwMn0.8AdR-DD2EPeBVPbSjkBNkGaENM97Hn1uzDc5tl9Ognw'
+const SUPABASE_URL = 'https://ntendpncnxxrozblooaj.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50ZW5kcG5jbnh4cm96Ymxvb2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NzQwMzQsImV4cCI6MjA3OTM1MDAzNH0.L3eF7v4u1eqa0E1eVskTgS7R-WYxMZPf2lzDtcnj2Ls'
 
 // Crear cliente de Supabase
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)

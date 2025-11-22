@@ -1,67 +1,209 @@
-// Favoritos API - Solare
-(function(){
+// Favoritos API - Solare (Supabase Integration)
+(function () {
   'use strict';
 
   const STORAGE_KEY = 'solare-favs';
+  let localFavs = [];
+  let dbFavs = [];
 
-  function readFavs(){
+  // Initialize
+  async function init() {
+    // Load local
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch(e){
-      console.error('Error leyendo favoritos', e);
-      return [];
+      localFavs = raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      console.error('Error loading local favs', e);
+      localFavs = [];
+    }
+
+    // Wait for auth to be ready
+    if (!window.supabase) {
+      setTimeout(init, 100);
+      return;
+    }
+
+    // Check auth
+    const user = window.SolareAuth?.getUser();
+    if (user) {
+      await loadDbFavs(user.id);
+      await syncFavs(user.id);
+    }
+
+    updateNavbarFavCount();
+
+    // Listen for auth changes
+    window.supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        await loadDbFavs(session.user.id);
+        await syncFavs(session.user.id);
+      } else if (event === 'SIGNED_OUT') {
+        dbFavs = [];
+        updateNavbarFavCount();
+      }
+    });
+  }
+
+  async function loadDbFavs(userId) {
+    try {
+      const { data, error } = await window.supabase
+        .from('user_favorites')
+        .select('product_id, products(id, name, price, slug, categories(slug)), product_images(url)')
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      dbFavs = (data || []).map(item => ({
+        id: item.products.id,
+        name: item.products.name,
+        price: item.products.price,
+        image: item.product_images?.[0]?.url || null, // Simplified
+        category: item.products.categories?.slug || 'producto'
+      }));
+
+      // Enrich images if needed (similar to cart)
+      if (dbFavs.length > 0) {
+        // For now, we assume the join works or we rely on what we have.
+        // Ideally we fetch primary images.
+      }
+
+    } catch (e) {
+      console.error('Error loading DB favs:', e);
     }
   }
 
-  function saveFavs(list){
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
-    catch(e){ console.error('Error guardando favoritos', e); }
+  async function syncFavs(userId) {
+    // Merge local into DB (simple strategy: add local items to DB if not present)
+    const toAdd = localFavs.filter(l => !dbFavs.some(d => d.id === l.id));
+
+    if (toAdd.length > 0) {
+      const records = toAdd.map(item => ({
+        user_id: userId,
+        product_id: item.id
+      }));
+
+      const { error } = await window.supabase
+        .from('user_favorites')
+        .insert(records)
+        .ignoreDuplicates(); // Ignore if already exists
+
+      if (!error) {
+        // Clear local after sync? Or keep as cache? 
+        // Let's clear local to avoid confusion, or keep it empty for auth users.
+        // Strategy: Auth users use DB, Guests use Local.
+        // So if auth, we move everything to DB and empty local.
+        localStorage.removeItem(STORAGE_KEY);
+        localFavs = [];
+        await loadDbFavs(userId); // Reload to get everything
+      }
+    }
+    updateNavbarFavCount();
   }
 
-  function isFav(id){
-    return readFavs().some(it => String(it.id) === String(id));
+  function getFavs() {
+    const user = window.SolareAuth?.getUser();
+    return user ? dbFavs : localFavs;
   }
 
-  function add(product){
-    const list = readFavs();
-    if (!list.some(it => String(it.id) === String(product.id))){
-      const item = {
+  function isFav(id) {
+    return getFavs().some(it => String(it.id) === String(id));
+  }
+
+  async function add(product) {
+    const user = window.SolareAuth?.getUser();
+
+    if (user) {
+      // Add to DB
+      if (isFav(product.id)) return;
+
+      // Optimistic update
+      const newItem = {
         id: product.id,
         name: product.name,
-        price: Number(product.price||0),
+        price: Number(product.price || 0),
         image: product.primary_image || product.image,
         category: product.category_slug || product.category || 'producto'
       };
-      list.push(item);
-      saveFavs(list);
+      dbFavs.push(newItem);
+      updateNavbarFavCount();
+
+      const { error } = await window.supabase
+        .from('user_favorites')
+        .insert([{ user_id: user.id, product_id: product.id }]);
+
+      if (error) {
+        console.error('Error adding fav to DB:', error);
+        // Rollback
+        dbFavs = dbFavs.filter(i => i.id !== product.id);
+        updateNavbarFavCount();
+      }
+    } else {
+      // Add to Local
+      if (isFav(product.id)) return;
+
+      const item = {
+        id: product.id,
+        name: product.name,
+        price: Number(product.price || 0),
+        image: product.primary_image || product.image,
+        category: product.category_slug || product.category || 'producto'
+      };
+      localFavs.push(item);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(localFavs));
       updateNavbarFavCount();
     }
   }
 
-  function remove(id){
-    const list = readFavs().filter(it => String(it.id) !== String(id));
-    saveFavs(list);
-    updateNavbarFavCount();
+  async function remove(id) {
+    const user = window.SolareAuth?.getUser();
+
+    if (user) {
+      // Remove from DB
+      const prev = [...dbFavs];
+      dbFavs = dbFavs.filter(it => String(it.id) !== String(id));
+      updateNavbarFavCount();
+
+      const { error } = await window.supabase
+        .from('user_favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('product_id', id);
+
+      if (error) {
+        console.error('Error removing fav from DB:', error);
+        dbFavs = prev;
+        updateNavbarFavCount();
+      }
+    } else {
+      // Remove from Local
+      localFavs = localFavs.filter(it => String(it.id) !== String(id));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(localFavs));
+      updateNavbarFavCount();
+    }
   }
 
-  function toggle(product){
+  function toggle(product) {
     if (isFav(product.id)) remove(product.id); else add(product);
   }
 
-  function all(){ return readFavs(); }
+  function all() { return getFavs(); }
 
-  function updateNavbarFavCount(){
+  function updateNavbarFavCount() {
     const el = document.querySelector('#favCount');
     if (!el) return;
-    const count = readFavs().length;
+    const count = getFavs().length;
     el.textContent = count;
     if (count > 0) el.classList.add('show'); else el.classList.remove('show');
+
+    // Also update UI if on favorites page
+    if (window.location.pathname.includes('favoritos.html') && typeof window.renderFavs === 'function') {
+      window.renderFavs();
+    }
   }
 
   window.SolareFavs = { isFav, add, remove, toggle, all, updateNavbarFavCount };
 
-  document.addEventListener('DOMContentLoaded', updateNavbarFavCount);
-  window.addEventListener('storage', (e)=>{ if (e.key === STORAGE_KEY) updateNavbarFavCount(); });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+
 })();

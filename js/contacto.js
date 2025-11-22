@@ -1,9 +1,9 @@
 // Contacto page interactions and form validation
-(function() {
+(function () {
   'use strict';
 
-  const el = (s, c=document) => c.querySelector(s);
-  const els = (s, c=document) => Array.from(c.querySelectorAll(s));
+  const el = (s, c = document) => c.querySelector(s);
+  const els = (s, c = document) => Array.from(c.querySelectorAll(s));
 
   function init() {
     const form = el('#contactForm');
@@ -12,7 +12,7 @@
     form.addEventListener('submit', onSubmit);
 
     // live validation
-    ['name','email','topic','message'].forEach(id => {
+    ['name', 'email', 'topic', 'message'].forEach(id => {
       const input = el('#' + id);
       if (input) input.addEventListener('input', () => validateField(input));
       if (input && input.tagName === 'SELECT') input.addEventListener('change', () => validateField(input));
@@ -72,7 +72,7 @@
   }
 
   function validate(form) {
-    const requiredIds = ['name','email','topic','message'];
+    const requiredIds = ['name', 'email', 'topic', 'message'];
     let ok = true;
     requiredIds.forEach(id => {
       const input = el('#' + id);
@@ -116,8 +116,25 @@
     }
 
     try {
-      // Simulación de envío. Aquí se podría integrar un backend o servicio (Supabase/Email API)
-      await new Promise(res => setTimeout(res, 1500));
+      if (!window.supabase) throw new Error('El sistema no está listo. Intente nuevamente.');
+
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        subject: formData.get('topic'), // 'topic' matches select name in HTML usually, or 'subject'
+        message: formData.get('message'),
+        status: 'pending'
+      };
+
+      // If select name is 'topic' in HTML, we map it to 'subject' in DB or keep it if DB has 'subject'
+      // Previous code used 'topic' for validation ID. Let's assume name="topic".
+
+      const { error } = await window.supabase
+        .from('contact_messages')
+        .insert([data]);
+
+      if (error) throw error;
 
       if (feedback) {
         feedback.className = 'form-feedback success';

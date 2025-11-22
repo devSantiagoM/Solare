@@ -1,177 +1,280 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Solare - Carrito de Compras" />
-    <title>Solare | Carrito</title>
-    <link rel="stylesheet" href="../css/global.css" />
-    <link rel="stylesheet" href="../css/navbar.css" />
-    <link rel="stylesheet" href="../css/footer.css" />
-    <link rel="stylesheet" href="../css/carrito.css" />
-    <script src="../js/navbar.js" defer></script>
-    <script src="../js/layout.js" defer></script>
-    <script src="../js/carrito.js" defer></script>
-  </head>
-  <body class="carrito">
-    <nav class="navbar"><div class="navbar-container"><div class="navbar-left"><div class="hamburger-menu"><button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button></div><a href="login.html" class="icon-link login-icon-mobile" title="Mi Cuenta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a></div><div class="navbar-brand"><a href="index.html" class="brand-link"><span class="brand-text">SOLARE</span></a></div><div class="navbar-menu"><ul class="navbar-nav"><li class="nav-item dropdown"><a href="productos.html?cat=mujer" class="nav-link">MUJER</a><div class="dropdown-content"><a href="productos.html?cat=mujer#nuevos-llegados">Nuevos Llegados</a><a href="productos.html?cat=mujer#invierno-otono">Invierno-Otoño</a><a href="productos.html?cat=mujer#primavera-verano">Primavera-Verano</a><a href="productos.html?cat=mujer">Ver Todo</a></div></li><li class="nav-item dropdown"><a href="productos.html?cat=hombre" class="nav-link">HOMBRE</a><div class="dropdown-content"><a href="productos.html?cat=hombre#nuevos-llegados">Nuevos Llegados</a><a href="productos.html?cat=hombre#invierno-otono">Invierno-Otoño</a><a href="productos.html?cat=hombre#primavera-verano">Primavera-Verano</a><a href="productos.html?cat=hombre">Ver Todo</a></div></li><li class="nav-item dropdown"><a href="productos.html" class="nav-link">COLECCIONES</a><div class="dropdown-content"><a href="productos.html#nuevos-llegados">Nuevos Llegados</a><a href="productos.html#invierno-otono">Invierno-Otoño</a><a href="productos.html#primavera-verano">Primavera-Verano</a><a href="productos.html#otros">Otros</a></div></li><li class="nav-item"><a href="productos.html" class="nav-link">PRODUCTOS</a></li><li class="nav-item"><a href="novedades.html" class="nav-link">NOVEDADES</a></li><li class="nav-item"><a href="faq.html" class="nav-link">FAQ</a></li><li class="nav-item"><a href="nosotros.html" class="nav-link">NOSOTROS</a></li><li class="nav-item"><a href="contacto.html" class="nav-link">CONTACTO</a></li></ul></div><div class="navbar-icons"><a href="favoritos.html" class="icon-link fav-icon" title="Favoritos"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z"></path></svg><span class="fav-count" id="favCount">0</span></a><a href="carrito.html" class="icon-link cart-icon" title="Carrito"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg><span class="cart-count" id="cartCount">0</span></a><a href="login.html" class="icon-link account-icon-desktop" title="Mi Cuenta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></a></div></div><div class="mobile-menu-overlay" id="mobileMenuOverlay"><div class="mobile-menu-content"><div class="mobile-menu-header"><span class="mobile-brand">SOLARE</span><button class="close-btn" id="closeBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div><nav class="mobile-nav"><div class="mobile-nav-item"><a href="productos.html?cat=mujer" class="mobile-nav-link main-link">MUJER</a><div class="mobile-submenu"><a href="productos.html?cat=mujer#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a><a href="productos.html?cat=mujer#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a href="productos.html?cat=mujer#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a href="productos.html?cat=mujer" class="mobile-submenu-link">Ver Todo</a></div></div><div class="mobile-nav-item"><a href="productos.html?cat=hombre" class="mobile-nav-link main-link">HOMBRE</a><div class="mobile-submenu"><a href="productos.html?cat=hombre#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a><a href="productos.html?cat=hombre#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a href="productos.html?cat=hombre#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a href="productos.html?cat=hombre" class="mobile-submenu-link">Ver Todo</a></div></div><div class="mobile-nav-item"><a href="productos.html" class="mobile-nav-link main-link">COLECCIONES</a><div class="mobile-submenu"><a href="productos.html#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a><a href="productos.html#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a href="productos.html#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a href="productos.html#otros" class="mobile-submenu-link">Otros</a></div></div><div class="mobile-nav-item"><a href="productos.html" class="mobile-nav-link">PRODUCTOS</a></div><div class="mobile-nav-item"><a href="novedades.html" class="mobile-nav-link">NOVEDADES</a></div><div class="mobile-nav-item"><a href="faq.html" class="mobile-nav-link">FAQ</a></div><div class="mobile-nav-item"><a href="nosotros.html" class="mobile-nav-link">NOSOTROS</a></div><div class="mobile-nav-item"><a href="contacto.html" class="mobile-nav-link">CONTACTO</a></div></nav></div></div></nav>
-    <main id="main-content" class="carrito-main" tabindex="-1">
-      <!-- Hero Section -->
-      <section class="carrito-hero" aria-label="Cabecera del carrito">
-        <div class="container">
-          <h1 class="titulo">Carrito de Compras</h1>
-          <p class="subtitulo">Revisa y confirma tu selección</p>
-        </div>
-      </section>
 
-      <!-- Cart Content -->
-      <section class="carrito-content">
-        <div class="container">
-          <div class="carrito-layout">
-            <!-- Cart Items -->
-            <div class="carrito-items">
-              <!-- Empty Cart State -->
-              <div id="empty-cart" class="empty-cart" hidden>
-                <div class="empty-cart-icon">
-                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <path d="M16 10a4 4 0 0 1-8 0"></path>
-                  </svg>
-                </div>
-                <h2>Tu carrito está vacío</h2>
-                <p>Explora nuestras colecciones y encuentra productos únicos</p>
-                <a href="productos.html" class="btn-primary">Explorar Productos</a>
-              </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Solare - Carrito de Compras" />
+  <title>Solare | Carrito</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
+  <link rel="stylesheet" href="../css/carrito.css" />
+  <script src="../js/navbar.js" defer></script>
+  <script src="../js/layout.js" defer></script>
+  <script src="../js/carrito.js" defer></script>
+  <script type="module" src="../js/supabase.js"></script>
+  <script src="../js/route-guard.js" defer></script>
+</head>
 
-              <!-- Cart Items List -->
-              <div id="cart-items-list" class="cart-items-list">
-                <!-- Items will be rendered here by JavaScript -->
-              </div>
+<body class="carrito">
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <div class="hamburger-menu"><button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú"><span
+              class="hamburger-line"></span><span class="hamburger-line"></span><span
+              class="hamburger-line"></span></button></div><a href="login.html" class="icon-link login-icon-mobile"
+          title="Mi Cuenta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg></a>
+      </div>
+      <div class="navbar-brand"><a href="index.html" class="brand-link"><span class="brand-text">SOLARE</span></a></div>
+      <div class="navbar-menu">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown"><a href="productos.html?cat=mujer" class="nav-link">MUJER</a>
+            <div class="dropdown-content"><a href="productos.html?cat=mujer#nuevos-llegados">Nuevos Llegados</a><a
+                href="productos.html?cat=mujer#invierno-otono">Invierno-Otoño</a><a
+                href="productos.html?cat=mujer#primavera-verano">Primavera-Verano</a><a
+                href="productos.html?cat=mujer">Ver Todo</a></div>
+          </li>
+          <li class="nav-item dropdown"><a href="productos.html?cat=hombre" class="nav-link">HOMBRE</a>
+            <div class="dropdown-content"><a href="productos.html?cat=hombre#nuevos-llegados">Nuevos Llegados</a><a
+                href="productos.html?cat=hombre#invierno-otono">Invierno-Otoño</a><a
+                href="productos.html?cat=hombre#primavera-verano">Primavera-Verano</a><a
+                href="productos.html?cat=hombre">Ver Todo</a></div>
+          </li>
+          <li class="nav-item dropdown"><a href="productos.html" class="nav-link">COLECCIONES</a>
+            <div class="dropdown-content"><a href="productos.html#nuevos-llegados">Nuevos Llegados</a><a
+                href="productos.html#invierno-otono">Invierno-Otoño</a><a
+                href="productos.html#primavera-verano">Primavera-Verano</a><a href="productos.html#otros">Otros</a>
+            </div>
+          </li>
+          <li class="nav-item"><a href="productos.html" class="nav-link">PRODUCTOS</a></li>
+          <li class="nav-item"><a href="novedades.html" class="nav-link">NOVEDADES</a></li>
+          <li class="nav-item"><a href="faq.html" class="nav-link">FAQ</a></li>
+          <li class="nav-item"><a href="nosotros.html" class="nav-link">NOSOTROS</a></li>
+          <li class="nav-item"><a href="contacto.html" class="nav-link">CONTACTO</a></li>
+        </ul>
+      </div>
+      <div class="navbar-icons"><a href="favoritos.html" class="icon-link fav-icon" title="Favoritos"><svg width="20"
+            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z">
+            </path>
+          </svg><span class="fav-count" id="favCount">0</span></a><a href="carrito.html" class="icon-link cart-icon"
+          title="Carrito"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg><span class="cart-count" id="cartCount">0</span></a><a href="login.html"
+          class="icon-link account-icon-desktop" title="Mi Cuenta"><svg width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg></a></div>
+    </div>
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+      <div class="mobile-menu-content">
+        <div class="mobile-menu-header"><span class="mobile-brand">SOLARE</span><button class="close-btn"
+            id="closeBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg></button></div>
+        <nav class="mobile-nav">
+          <div class="mobile-nav-item"><a href="productos.html?cat=mujer" class="mobile-nav-link main-link">MUJER</a>
+            <div class="mobile-submenu"><a href="productos.html?cat=mujer#nuevos-llegados"
+                class="mobile-submenu-link">Nuevos Llegados</a><a href="productos.html?cat=mujer#invierno-otono"
+                class="mobile-submenu-link">Invierno-Otoño</a><a href="productos.html?cat=mujer#primavera-verano"
+                class="mobile-submenu-link">Primavera-Verano</a><a href="productos.html?cat=mujer"
+                class="mobile-submenu-link">Ver Todo</a></div>
+          </div>
+          <div class="mobile-nav-item"><a href="productos.html?cat=hombre" class="mobile-nav-link main-link">HOMBRE</a>
+            <div class="mobile-submenu"><a href="productos.html?cat=hombre#nuevos-llegados"
+                class="mobile-submenu-link">Nuevos Llegados</a><a href="productos.html?cat=hombre#invierno-otono"
+                class="mobile-submenu-link">Invierno-Otoño</a><a href="productos.html?cat=hombre#primavera-verano"
+                class="mobile-submenu-link">Primavera-Verano</a><a href="productos.html?cat=hombre"
+                class="mobile-submenu-link">Ver Todo</a></div>
+          </div>
+          <div class="mobile-nav-item"><a href="productos.html" class="mobile-nav-link main-link">COLECCIONES</a>
+            <div class="mobile-submenu"><a href="productos.html#nuevos-llegados" class="mobile-submenu-link">Nuevos
+                Llegados</a><a href="productos.html#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a
+                href="productos.html#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a
+                href="productos.html#otros" class="mobile-submenu-link">Otros</a></div>
+          </div>
+          <div class="mobile-nav-item"><a href="productos.html" class="mobile-nav-link">PRODUCTOS</a></div>
+          <div class="mobile-nav-item"><a href="novedades.html" class="mobile-nav-link">NOVEDADES</a></div>
+          <div class="mobile-nav-item"><a href="faq.html" class="mobile-nav-link">FAQ</a></div>
+          <div class="mobile-nav-item"><a href="nosotros.html" class="mobile-nav-link">NOSOTROS</a></div>
+          <div class="mobile-nav-item"><a href="contacto.html" class="mobile-nav-link">CONTACTO</a></div>
+        </nav>
+      </div>
+    </div>
+  </nav>
+  <main id="main-content" class="carrito-main" tabindex="-1">
+    <!-- Hero Section -->
+    <section class="carrito-hero" aria-label="Cabecera del carrito">
+      <div class="container">
+        <h1 class="titulo">Carrito de Compras</h1>
+        <p class="subtitulo">Revisa y confirma tu selección</p>
+      </div>
+    </section>
 
-              <!-- Cart Actions -->
-              <div id="cart-actions" class="cart-actions" hidden>
-                <button id="clear-cart" class="btn-ghost">Vaciar Carrito</button>
-                <a href="productos.html" class="btn-ghost">Seguir Comprando</a>
+    <!-- Cart Content -->
+    <section class="carrito-content">
+      <div class="container">
+        <div class="carrito-layout">
+          <!-- Cart Items -->
+          <div class="carrito-items">
+            <!-- Empty Cart State -->
+            <div id="empty-cart" class="empty-cart" hidden>
+              <div class="empty-cart-icon">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
               </div>
+              <h2>Tu carrito está vacío</h2>
+              <p>Explora nuestras colecciones y encuentra productos únicos</p>
+              <a href="productos.html" class="btn-primary">Explorar Productos</a>
             </div>
 
-            <!-- Cart Summary -->
-            <div id="cart-summary" class="cart-summary" hidden>
-              <div class="summary-card">
-                <h3 class="summary-title">Resumen del Pedido</h3>
-                
-                <div class="summary-row">
-                  <span>Subtotal</span>
-                  <span id="subtotal">$0.00</span>
-                </div>
-                
-                <div class="summary-row">
-                  <span>Envío</span>
-                  <span id="shipping">Gratis</span>
-                </div>
-                
-                <div class="summary-row">
-                  <span>Impuestos</span>
-                  <span id="taxes">$0.00</span>
-                </div>
-                
-                <div class="summary-divider"></div>
-                
-                <div class="summary-row summary-total">
-                  <span>Total</span>
-                  <span id="total">$0.00</span>
-                </div>
+            <!-- Cart Items List -->
+            <div id="cart-items-list" class="cart-items-list">
+              <!-- Items will be rendered here by JavaScript -->
+            </div>
 
-                <!-- Promo Code -->
-                <div class="promo-section">
-                  <div class="promo-input-group">
-                    <input type="text" id="promo-code" placeholder="Código promocional" class="promo-input">
-                    <button id="apply-promo" class="btn-promo">Aplicar</button>
-                  </div>
-                  <div id="promo-message" class="promo-message" hidden></div>
-                </div>
+            <!-- Cart Actions -->
+            <div id="cart-actions" class="cart-actions" hidden>
+              <button id="clear-cart" class="btn-ghost">Vaciar Carrito</button>
+              <a href="productos.html" class="btn-ghost">Seguir Comprando</a>
+            </div>
+          </div>
 
-                <!-- Checkout Button -->
-                <button id="checkout-btn" class="btn-checkout">
-                  <span>Proceder al Pago</span>
+          <!-- Cart Summary -->
+          <div id="cart-summary" class="cart-summary" hidden>
+            <div class="summary-card">
+              <h3 class="summary-title">Resumen del Pedido</h3>
+
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">$0.00</span>
+              </div>
+
+              <div class="summary-row">
+                <span>Envío</span>
+                <span id="shipping">Gratis</span>
+              </div>
+
+              <div class="summary-row">
+                <span>Impuestos</span>
+                <span id="taxes">$0.00</span>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="summary-row summary-total">
+                <span>Total</span>
+                <span id="total">$0.00</span>
+              </div>
+
+              <!-- Promo Code -->
+              <div class="promo-section">
+                <div class="promo-input-group">
+                  <input type="text" id="promo-code" placeholder="Código promocional" class="promo-input">
+                  <button id="apply-promo" class="btn-promo">Aplicar</button>
+                </div>
+                <div id="promo-message" class="promo-message" hidden></div>
+              </div>
+
+              <!-- Checkout Button -->
+              <button id="checkout-btn" class="btn-checkout">
+                <span>Proceder al Pago</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14m-7-7l7 7-7 7" />
+                </svg>
+              </button>
+
+              <!-- Security Info -->
+              <div class="security-info">
+                <div class="security-item">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14m-7-7l7 7-7 7"/>
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <circle cx="12" cy="16" r="1"></circle>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                   </svg>
-                </button>
-
-                <!-- Security Info -->
-                <div class="security-info">
-                  <div class="security-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                      <circle cx="12" cy="16" r="1"></circle>
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                    <span>Pago seguro SSL</span>
-                  </div>
-                  <div class="security-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                      <polyline points="7.5,12 10.5,15 16.5,9"></polyline>
-                    </svg>
-                    <span>Garantía de calidad</span>
-                  </div>
+                  <span>Pago seguro SSL</span>
+                </div>
+                <div class="security-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                    </path>
+                    <polyline points="7.5,12 10.5,15 16.5,9"></polyline>
+                  </svg>
+                  <span>Garantía de calidad</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Recommended Products -->
-      <section id="recommended-products" class="recommended-section" hidden>
-        <div class="container">
-          <h2 class="section-title">También te puede interesar</h2>
-          <div id="recommended-grid" class="recommended-grid">
-            <!-- Recommended products will be rendered here -->
-          </div>
+    <!-- Recommended Products -->
+    <section id="recommended-products" class="recommended-section" hidden>
+      <div class="container">
+        <h2 class="section-title">También te puede interesar</h2>
+        <div id="recommended-grid" class="recommended-grid">
+          <!-- Recommended products will be rendered here -->
         </div>
-      </section>
-    </main>
-    <footer id="footer"></footer>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
 
-    <!-- Cart Item Template -->
-    <template id="cart-item-template">
-      <div class="cart-item" data-id="">
-        <div class="item-image">
-          <img src="" alt="" loading="lazy">
-        </div>
-        <div class="item-details">
-          <h3 class="item-name"></h3>
-          <p class="item-category"></p>
-          <div class="item-price">$0.00</div>
-        </div>
-        <div class="item-controls">
-          <div class="quantity-controls">
-            <button class="qty-btn qty-decrease" aria-label="Disminuir cantidad">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </button>
-            <span class="qty-display">1</span>
-            <button class="qty-btn qty-increase" aria-label="Aumentar cantidad">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </button>
-          </div>
-          <button class="remove-item" aria-label="Eliminar producto">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3,6 5,6 21,6"></polyline>
-              <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
-              <line x1="10" y1="11" x2="10" y2="17"></line>
-              <line x1="14" y1="11" x2="14" y2="17"></line>
+  <!-- Cart Item Template -->
+  <template id="cart-item-template">
+    <div class="cart-item" data-id="">
+      <div class="item-image">
+        <img src="" alt="" loading="lazy">
+      </div>
+      <div class="item-details">
+        <h3 class="item-name"></h3>
+        <p class="item-category"></p>
+        <div class="item-price">$0.00</div>
+      </div>
+      <div class="item-controls">
+        <div class="quantity-controls">
+          <button class="qty-btn qty-decrease" aria-label="Disminuir cantidad">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <span class="qty-display">1</span>
+          <button class="qty-btn qty-increase" aria-label="Aumentar cantidad">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
           </button>
         </div>
+        <button class="remove-item" aria-label="Eliminar producto">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"></polyline>
+            <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </button>
       </div>
-    </template>
-  </body>
+    </div>
+  </template>
+</body>
+
 </html>
