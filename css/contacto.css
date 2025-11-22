@@ -207,14 +207,15 @@ body.contacto {
   border-bottom-color: var(--accent);
 }
 
-@media (max-width: 480px) {
-  .info-card {
-    padding: 14px 16px;
-  }
-
-  .info-text h3 {
-    font-size: 11px;
-  }
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #25D366;
+  color: #fff !important;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: 600;
 
   .info-text p {
     font-size: 14px;
