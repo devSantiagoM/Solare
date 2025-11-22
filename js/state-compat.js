@@ -59,15 +59,7 @@
             }));
         });
 
-        // Emit cart storage event for navbar.js
-        window.SolareState.on('cart:changed', ({ items }) => {
-            // Trigger storage event for sync across tabs/pages
-            window.dispatchEvent(new StorageEvent('storage', {
-                key: 'solare-cart',
-                newValue: JSON.stringify(items),
-                url: window.location.href
-            }));
-        });
+
 
         console.log('[Compat] Compatibility layer initialized');
     });

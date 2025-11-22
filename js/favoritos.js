@@ -47,7 +47,21 @@
     grid.appendChild(frag);
   }
 
-  function init() { render(); }
+  function init() {
+    if (!window.SolareState) {
+      setTimeout(init, 100);
+      return;
+    }
+
+    // Initial render
+    render();
+
+    // Listen for changes
+    window.SolareState.on('favorites:changed', () => {
+      console.log('Favorites changed, re-rendering...');
+      render();
+    });
+  }
 
   // Expose render globally so favoritos_api can trigger re-render
   window.renderFavs = render;
