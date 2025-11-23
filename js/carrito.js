@@ -83,6 +83,34 @@
     if (elements.checkoutBtn) {
       elements.checkoutBtn.addEventListener('click', proceedToCheckout);
     }
+
+    // Checkout Modal Events
+    const checkoutModal = el('#checkout-modal');
+    const closeCheckoutBtn = el('#close-checkout-modal');
+    const cancelCheckoutBtn = el('#cancel-checkout');
+    const checkoutForm = el('#checkout-form');
+
+    if (closeCheckoutBtn) {
+      closeCheckoutBtn.addEventListener('click', () => {
+        if (checkoutModal) {
+          checkoutModal.hidden = true;
+          checkoutModal.style.display = 'none';
+        }
+      });
+    }
+
+    if (cancelCheckoutBtn) {
+      cancelCheckoutBtn.addEventListener('click', () => {
+        if (checkoutModal) {
+          checkoutModal.hidden = true;
+          checkoutModal.style.display = 'none';
+        }
+      });
+    }
+
+    if (checkoutForm) {
+      checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+    }
   }
 
   function renderCart() {
@@ -241,27 +269,151 @@
   function proceedToCheckout() {
     const items = window.SolareState.cart.getItems();
     if (!items.length) {
-      if (!items.length) {
-        if (window.SolareToast) window.SolareToast.error('Tu carrito está vacío');
-        return;
-      }
+      if (window.SolareToast) window.SolareToast.error('Tu carrito está vacío');
       return;
     }
-    if (elements.checkoutBtn) {
-      elements.checkoutBtn.classList.add('loading');
-      elements.checkoutBtn.disabled = true;
+
+    // Open Checkout Modal
+    const modal = el('#checkout-modal');
+    if (modal) {
+      modal.hidden = false;
+      modal.style.display = 'flex';
+
+      // Update modal total
+      const totals = window.SolareState.cart.getTotals();
+      const finalTotal = totals.total - discountAmount;
+      const totalEl = el('#checkout-total-amount');
+      if (totalEl) totalEl.textContent = `$${finalTotal.toFixed(2)}`;
+
+      // Render items summary
+      const summaryContainer = el('#checkout-items-summary');
+      if (summaryContainer) {
+        summaryContainer.innerHTML = items.map(item => `
+          <div class="checkout-item-row" style="display: flex; gap: 12px; margin-bottom: 12px; align-items: center;">
+            <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+            <div style="flex: 1;">
+              <div style="font-size: 14px; font-weight: 500;">${item.name}</div>
+              <div style="font-size: 12px; color: var(--text-light);">Cant: ${item.quantity}</div>
+            </div>
+            <div style="font-weight: 600; font-size: 14px;">$${(item.price * item.quantity).toFixed(2)}</div>
+          </div>
+        `).join('');
+      }
+
+      // Pre-fill user data if available
+      if (window.SolareState.auth && window.SolareState.auth.user) {
+        const user = window.SolareState.auth.user;
+        const emailInput = el('#checkout-email');
+        if (emailInput) emailInput.value = user.email || '';
+
+        // Try to get profile data if available in state or fetch it
+        // For now, we just use email
+      }
+    }
+  }
+
+  async function handleCheckoutSubmit(e) {
+    e.preventDefault();
+
+    const submitBtn = el('.btn-confirm-order');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Procesando...';
     }
 
-    const totals = window.SolareState.cart.getTotals();
-    const finalTotal = totals.total - discountAmount;
+    try {
+      const formData = new FormData(e.target);
+      const items = window.SolareState.cart.getItems();
+      const totals = window.SolareState.cart.getTotals();
+      const finalTotal = totals.total - discountAmount;
 
-    setTimeout(() => {
-      alert(`¡Gracias por tu compra!\n\nResumen:\n- Productos: ${items.length}\n- Total: $${finalTotal.toFixed(2)}\n\nSerás redirigido al proceso de pago.`);
-      if (elements.checkoutBtn) {
-        elements.checkoutBtn.classList.remove('loading');
-        elements.checkoutBtn.disabled = false;
+      const orderData = {
+        user_id: window.SolareState.auth?.user?.id || null, // Null for guest checkout if allowed
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        first_name: formData.get('first_name'),
+        last_name: formData.get('last_name'),
+        total: finalTotal,
+        subtotal: totals.subtotal,
+        discount: discountAmount,
+        tax: totals.tax,
+        shipping_cost: totals.shipping,
+        status: 'pending',
+        payment_status: 'pending',
+        payment_method: 'to_be_confirmed',
+        shipping_method: 'to_be_confirmed',
+        items: items
+      };
+
+      // 1. Create Order in Supabase
+      const { data: order, error: orderError } = await window.supabase
+        .from('orders')
+        .insert([{
+          user_id: orderData.user_id,
+          total_amount: orderData.total,
+          status: orderData.status,
+          payment_status: orderData.payment_status,
+          shipping_address: { // Store address as JSON for now or use address ID if we had one selected
+            first_name: orderData.first_name,
+            last_name: orderData.last_name,
+            phone: orderData.phone,
+            email: orderData.email
+          }
+        }])
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      // 2. Create Order Items
+      const orderItems = items.map(item => ({
+        order_id: order.id,
+        product_id: item.id,
+        quantity: item.quantity,
+        unit_price: item.price,
+        total_price: item.price * item.quantity
+      }));
+
+      const { error: itemsError } = await window.supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      // 3. Send Emails
+      const emailResult = await window.SolareEmailJS.sendOrderEmail({
+        ...orderData,
+        order_number: order.order_number || order.id
+      });
+
+      if (!emailResult.success) {
+        console.warn('Email sending failed, but order was created:', emailResult.error);
+        // We don't stop the process, just log it
       }
-    }, 2000);
+
+      // 4. Clear Cart & Success
+      await window.SolareState.cart.clear();
+
+      // Close modal
+      const modal = el('#checkout-modal');
+      if (modal) {
+        modal.hidden = true;
+        modal.style.display = 'none';
+      }
+
+      // Show success message
+      alert(`¡Pedido confirmado!\n\nTu número de orden es: ${order.order_number || order.id}\n\nTe hemos enviado un correo con los detalles.`);
+      window.location.href = 'index.html';
+
+    } catch (error) {
+      console.error('Checkout error:', error);
+      if (window.SolareToast) window.SolareToast.error('Error al procesar el pedido. Por favor intenta de nuevo.');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirmar Pedido';
+      }
+    }
   }
 
   async function loadRecommendedProducts() {

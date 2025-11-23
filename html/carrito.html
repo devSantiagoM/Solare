@@ -242,6 +242,68 @@
   </main>
   <footer id="footer"></footer>
 
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="checkout-modal" hidden>
+    <div class="checkout-modal-content">
+      <form id="checkout-form">
+        <div class="checkout-modal-header">
+          <h2>Finalizar Compra</h2>
+          <button type="button" id="close-checkout-modal" class="close-modal">&times;</button>
+        </div>
+
+        <div class="checkout-modal-body">
+          <div class="customer-info">
+            <h3>Información de Contacto</h3>
+            <div class="form-group">
+              <label for="checkout-email">Email</label>
+              <input type="email" id="checkout-email" name="email" required placeholder="tu@email.com">
+            </div>
+            <div class="form-group">
+              <label for="checkout-phone">Teléfono</label>
+              <input type="tel" id="checkout-phone" name="phone" required placeholder="Tu número de teléfono">
+            </div>
+
+            <h3 style="margin-top: 24px;">Información de Envío</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="checkout-name">Nombre</label>
+                <input type="text" id="checkout-name" name="first_name" required placeholder="Nombre">
+              </div>
+              <div class="form-group">
+                <label for="checkout-lastname">Apellido</label>
+                <input type="text" id="checkout-lastname" name="last_name" required placeholder="Apellido">
+              </div>
+            </div>
+          </div>
+
+          <div class="order-summary">
+            <h3>Resumen del Pedido</h3>
+            <div id="checkout-items-summary" class="checkout-items-summary"></div>
+
+            <div class="checkout-totals">
+              <div class="total-row total-final">
+                <span>Total a Pagar:</span>
+                <span id="checkout-total-amount">$0.00</span>
+              </div>
+            </div>
+
+            <div class="payment-info">
+              <p><strong>Pago contra entrega</strong></p>
+              <p class="text-sm text-muted">Coordinaremos el pago y el envío una vez confirmado el pedido.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-modal-footer">
+          <div class="checkout-actions">
+            <button type="button" id="cancel-checkout" class="btn-ghost">Cancelar</button>
+            <button type="submit" class="btn-primary btn-confirm-order">Confirmar Pedido</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Cart Item Template -->
   <template id="cart-item-template">
     <div class="cart-item" data-id="">
