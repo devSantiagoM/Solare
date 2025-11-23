@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Check authentication
     const { data: { session } } = await window.supabase.auth.getSession();
     if (!session) {
-        window.location.href = 'login.html';
+        window.location.href = '../html/login.html';
         return;
     }
 
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .single();
 
     if (profile?.role !== 'admin' && profile?.role !== 'staff') {
-        window.location.href = 'index.html';
+        window.location.href = '../html/index.html';
         return;
     }
 
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (btnGoHome) {
         btnGoHome.addEventListener('click', () => {
-            window.location.href = '../index.html'; // Go up one level
+            window.location.href = '../html/index.html'; // Go up one level
         });
     }
 
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnLogout.addEventListener('click', async () => {
             try {
                 await window.supabase.auth.signOut();
-                window.location.href = '../login.html'; // Go up one level
+                window.location.href = '../html/login.html'; // Go up one level
             } catch (error) {
                 console.error('Error al cerrar sesión:', error);
                 showToast('Error al cerrar sesión', 'error');
