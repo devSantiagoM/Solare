@@ -84,12 +84,18 @@
       console.log('User Role:', currentProfile.role);
 
       // Mostrar botón de admin si corresponde
-      if (currentProfile.role === 'admin' || currentProfile.role === 'staff') {
-        console.log('Showing admin button');
-        const adminBtn = el('#btn-admin-panel');
-        if (adminBtn) adminBtn.hidden = false;
-      } else {
-        console.log('Hiding admin button (role mismatch or no role)');
+      // Mostrar botón de admin si corresponde
+      const adminBtn = el('button[data-section="administrador"]');
+      if (adminBtn) {
+        if (currentProfile.role === 'admin' || currentProfile.role === 'staff') {
+          console.log('Showing admin button');
+          adminBtn.hidden = false;
+          adminBtn.style.display = '';
+        } else {
+          console.log('Hiding admin button (role mismatch)');
+          adminBtn.hidden = true;
+          adminBtn.style.display = 'none';
+        }
       }
 
     } catch (error) {
@@ -262,9 +268,12 @@
     }
 
     // Botón de ir al panel de admin
-    const adminBtn = el('#btn-admin-panel');
+    // Botón de ir al panel de admin
+    const adminBtn = el('button[data-section="administrador"]');
     if (adminBtn) {
-      adminBtn.addEventListener('click', () => {
+      adminBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         window.location.href = 'admin.html';
       });
     }
