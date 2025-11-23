@@ -16,7 +16,7 @@
     script.onload = function () {
       // Initialize EmailJS with your public key
       // IMPORTANT: Replace 'YOUR_PUBLIC_KEY' with your actual EmailJS public key
-      window.emailjs.init('YOUR_PUBLIC_KEY');
+      window.emailjs.init('XGhHMU8D-PCEL5qkN');
       console.log('EmailJS initialized successfully');
     };
     script.onerror = function () {
@@ -53,7 +53,7 @@
 
       // Send to Provider (Admin)
       const providerParams = {
-        to_email: 'lucas@solare.com', // Replace with actual admin email
+        to_email: 'lucassosavega@gmail.com', // Replace with actual admin email
         client_name: `${orderData.first_name} ${orderData.last_name}`,
         client_email: orderData.email,
         client_phone: orderData.phone,
@@ -64,8 +64,8 @@
 
       // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with actual values
       // You might want separate templates for client and provider
-      // await window.emailjs.send('YOUR_SERVICE_ID', 'YOUR_CLIENT_TEMPLATE_ID', clientParams);
-      // await window.emailjs.send('YOUR_SERVICE_ID', 'YOUR_PROVIDER_TEMPLATE_ID', providerParams);
+      await window.emailjs.send('service_rkhzjpw', 'template_4afqq84', clientParams);
+      await window.emailjs.send('service_esxi5pn', 'template_j6qb7vv', providerParams);
 
       console.log('Emails sent successfully (simulated)', clientParams, providerParams);
       return { success: true };
