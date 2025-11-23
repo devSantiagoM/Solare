@@ -324,11 +324,24 @@
     try {
       const formData = new FormData(e.target);
       const items = window.SolareState.cart.getItems();
+
+      if (!items.length) {
+        throw new Error('El carrito está vacío');
+      }
+
       const totals = window.SolareState.cart.getTotals();
       const finalTotal = totals.total - discountAmount;
 
+      // Basic Validation
+      const requiredFields = ['email', 'phone', 'first_name', 'last_name'];
+      for (const field of requiredFields) {
+        if (!formData.get(field)) {
+          throw new Error(`Por favor completa el campo ${field.replace('_', ' ')}`);
+        }
+      }
+
       const orderData = {
-        user_id: window.SolareState.auth?.user?.id || null, // Null for guest checkout if allowed
+        user_id: window.SolareState.auth?.user?.id || null,
         email: formData.get('email'),
         phone: formData.get('phone'),
         first_name: formData.get('first_name'),
@@ -340,20 +353,44 @@
         shipping_cost: totals.shipping,
         status: 'pending',
         payment_status: 'pending',
-        payment_method: 'to_be_confirmed',
-        shipping_method: 'to_be_confirmed',
+        payment_method: 'cod', // Cash on Delivery
+        shipping_method: 'standard',
         items: items
       };
 
-      // 1. Create Order in Supabase
+      // 1. Get 'pending' status ID
+      const { data: statusData, error: statusError } = await window.supabase
+        .from('order_statuses')
+        .select('id')
+        .eq('name', 'pending')
+        .single();
+
+      if (statusError) {
+        console.error('Error fetching status:', statusError);
+        throw new Error('Error interno al procesar el pedido (Status)');
+      }
+      const statusId = statusData.id;
+
+      // Generate Order Number
+      const orderNumber = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+      // 2. Create Order in Supabase
       const { data: order, error: orderError } = await window.supabase
         .from('orders')
         .insert([{
           user_id: orderData.user_id,
+          order_number: orderNumber,
+          email: orderData.email,
+          status_id: statusId,
+          currency: 'MXN',
+          subtotal: orderData.subtotal,
+          tax_amount: orderData.tax,
+          shipping_amount: orderData.shipping_cost,
+          discount_amount: orderData.discount,
           total_amount: orderData.total,
-          status: orderData.status,
           payment_status: orderData.payment_status,
-          shipping_address: { // Store address as JSON for now or use address ID if we had one selected
+          payment_method: orderData.payment_method,
+          shipping_address: {
             first_name: orderData.first_name,
             last_name: orderData.last_name,
             phone: orderData.phone,
@@ -365,13 +402,14 @@
 
       if (orderError) throw orderError;
 
-      // 2. Create Order Items
+      // 3. Create Order Items
       const orderItems = items.map(item => ({
         order_id: order.id,
         product_id: item.id,
+        product_name: item.name,
         quantity: item.quantity,
-        unit_price: item.price,
-        total_price: item.price * item.quantity
+        price: item.price,
+        total: item.price * item.quantity
       }));
 
       const { error: itemsError } = await window.supabase
@@ -380,18 +418,19 @@
 
       if (itemsError) throw itemsError;
 
-      // 3. Send Emails
-      const emailResult = await window.SolareEmailJS.sendOrderEmail({
-        ...orderData,
-        order_number: order.order_number || order.id
-      });
-
-      if (!emailResult.success) {
-        console.warn('Email sending failed, but order was created:', emailResult.error);
-        // We don't stop the process, just log it
+      // 4. Send Emails (if configured)
+      if (window.SolareEmailJS) {
+        try {
+          await window.SolareEmailJS.sendOrderEmail({
+            ...orderData,
+            order_number: order.order_number || order.id
+          });
+        } catch (emailErr) {
+          console.warn('Email sending failed:', emailErr);
+        }
       }
 
-      // 4. Clear Cart & Success
+      // 5. Clear Cart & Success
       await window.SolareState.cart.clear();
 
       // Close modal
@@ -401,13 +440,23 @@
         modal.style.display = 'none';
       }
 
-      // Show success message
-      alert(`¡Pedido confirmado!\n\nTu número de orden es: ${order.order_number || order.id}\n\nTe hemos enviado un correo con los detalles.`);
-      window.location.href = 'index.html';
+      // Show Success Message
+      if (window.SolareToast) {
+        window.SolareToast.success('¡Pedido realizado con éxito! Te hemos enviado un correo con los detalles.');
+      }
 
-    } catch (error) {
-      console.error('Checkout error:', error);
-      if (window.SolareToast) window.SolareToast.error('Error al procesar el pedido. Por favor intenta de nuevo.');
+      // Redirect to products or home
+      setTimeout(() => {
+        window.location.href = 'productos.html';
+      }, 2000);
+
+    } catch (err) {
+      console.error('Checkout error:', err);
+      if (window.SolareToast) {
+        window.SolareToast.error(err.message || 'Error al procesar el pedido');
+      } else {
+        alert(err.message || 'Error al procesar el pedido');
+      }
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -415,6 +464,7 @@
       }
     }
   }
+
 
   async function loadRecommendedProducts() {
     if (!elements.recommendedGrid) return;
