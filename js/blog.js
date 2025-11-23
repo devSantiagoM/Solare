@@ -1,3 +1,4 @@
+import { supabase } from './supabase.js';
 import { formatDate } from './utils.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -16,7 +17,11 @@ async function loadBlogPosts(container) {
     try {
         container.innerHTML = '<div class="loading-spinner"></div>';
 
-        const { data: posts, error } = await window.supabase
+        if (!supabase) {
+            throw new Error('Supabase client not initialized');
+        }
+
+        const { data: posts, error } = await supabase
             .from('blog_posts')
             .select('id, title, slug, excerpt, featured_image, published_at')
             .eq('is_active', true)
@@ -63,7 +68,11 @@ async function loadPostDetail(container) {
     try {
         container.innerHTML = '<div class="loading-spinner"></div>';
 
-        const { data: post, error } = await window.supabase
+        if (!supabase) {
+            throw new Error('Supabase client not initialized');
+        }
+
+        const { data: post, error } = await supabase
             .from('blog_posts')
             .select('*')
             .eq('id', postId)
@@ -73,7 +82,7 @@ async function loadPostDetail(container) {
         if (error) throw error;
 
         if (!post) {
-            container.innerHTML = '<h1>Entrada no encontrada</h1><a href="novedades.html">Volver a Novedades</a>';
+            container.innerHTML = '<div class="error-message"><h1>Entrada no encontrada</h1><a href="novedades.html" class="back-link">Volver a Novedades</a></div>';
             return;
         }
 
@@ -102,6 +111,6 @@ async function loadPostDetail(container) {
 
     } catch (error) {
         console.error('Error loading post detail:', error);
-        container.innerHTML = '<p class="error-message">Error al cargar la entrada.</p>';
+        container.innerHTML = '<div class="error-message"><p>Error al cargar la entrada.</p><a href="novedades.html" class="back-link">Volver a Novedades</a></div>';
     }
 }
