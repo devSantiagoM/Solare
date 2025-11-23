@@ -1,5 +1,5 @@
 // Perfil Page - Solare
-(function() {
+(function () {
   'use strict';
 
   // Elementos del DOM
@@ -20,26 +20,26 @@
 
     // Verificar autenticación
     const { data: { session }, error: sessionError } = await window.supabase.auth.getSession();
-    
+
     if (sessionError || !session) {
       window.location.href = 'login.html';
       return;
     }
 
     currentUser = session.user;
-    
+
     // Cargar perfil
     await loadProfile();
-    
+
     // Configurar navegación
     setupNavigation();
-    
+
     // Configurar formularios
     setupForms();
-    
+
     // Configurar eventos
     setupEvents();
-    
+
     // Cargar datos iniciales
     await loadAddresses();
     await loadOrders();
@@ -73,12 +73,25 @@
         gender: null,
         avatar_url: null,
         email_notifications: true,
-        sms_notifications: false
+        sms_notifications: false,
+        role: 'user' // Default role
       };
 
       // Actualizar UI
       updateProfileUI();
-      
+
+      console.log('Current Profile:', currentProfile);
+      console.log('User Role:', currentProfile.role);
+
+      // Mostrar botón de admin si corresponde
+      if (currentProfile.role === 'admin' || currentProfile.role === 'staff') {
+        console.log('Showing admin button');
+        const adminBtn = el('#btn-admin-panel');
+        if (adminBtn) adminBtn.hidden = false;
+      } else {
+        console.log('Hiding admin button (role mismatch or no role)');
+      }
+
     } catch (error) {
       console.error('Error en loadProfile:', error);
       // Usar datos básicos del usuario
@@ -121,7 +134,7 @@
         .single();
 
       if (error) throw error;
-      
+
       currentProfile = data;
       updateProfileUI();
     } catch (error) {
@@ -189,11 +202,11 @@
     navButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const sectionName = btn.dataset.section;
-        
+
         // Actualizar botones activos
         navButtons.forEach(b => b.classList.remove('perfil-nav-btn-active'));
         btn.classList.add('perfil-nav-btn-active');
-        
+
         // Mostrar sección correspondiente
         sections.forEach(s => {
           s.classList.remove('perfil-section-active');
@@ -248,6 +261,14 @@
       });
     }
 
+    // Botón de ir al panel de admin
+    const adminBtn = el('#btn-admin-panel');
+    if (adminBtn) {
+      adminBtn.addEventListener('click', () => {
+        window.location.href = 'admin.html';
+      });
+    }
+
     // Cambiar avatar
     const changeAvatarBtn = el('#btn-change-avatar');
     const avatarInput = el('#avatar-input');
@@ -255,7 +276,7 @@
       changeAvatarBtn.addEventListener('click', () => {
         avatarInput.click();
       });
-      
+
       avatarInput.addEventListener('change', handleAvatarChange);
     }
 
@@ -272,7 +293,7 @@
     const closeModalBtn = el('#btn-close-address-modal');
     const cancelAddressBtn = el('#btn-cancel-address');
     const addressModal = el('#address-modal');
-    
+
     if (closeModalBtn) {
       closeModalBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -280,14 +301,14 @@
         closeAddressModal();
       });
     }
-    
+
     if (cancelAddressBtn) {
       cancelAddressBtn.addEventListener('click', (e) => {
         e.preventDefault();
         closeAddressModal();
       });
     }
-    
+
     if (addressModal) {
       addressModal.addEventListener('click', (e) => {
         if (e.target === addressModal) {
@@ -295,7 +316,7 @@
         }
       });
     }
-    
+
     // Cerrar con tecla Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && addressModal && !addressModal.hidden) {
@@ -307,7 +328,7 @@
   // Actualizar perfil
   async function handleUpdateProfile(e) {
     e.preventDefault();
-    
+
     const formData = new FormData(e.target);
     const data = {
       first_name: formData.get('first_name'),
@@ -377,11 +398,11 @@
       const reader = new FileReader();
       reader.onload = async (event) => {
         const imageUrl = event.target.result;
-        
+
         // Actualizar perfil con la URL de la imagen
         const { error } = await window.supabase
           .from('profiles')
-          .update({ 
+          .update({
             avatar_url: imageUrl,
             updated_at: new Date().toISOString()
           })
@@ -479,13 +500,13 @@
     const modal = el('#address-modal');
     const form = el('#form-address');
     const title = el('#address-modal-title');
-    
+
     if (!modal || !form) return;
 
     if (address) {
       editingAddressId = address.id;
       if (title) title.textContent = 'Editar Dirección';
-      
+
       // Llenar formulario
       el('#address-id').value = address.id;
       el(`input[name="type"][value="${address.type}"]`).checked = true;
@@ -510,7 +531,7 @@
     modal.hidden = false;
     modal.removeAttribute('hidden');
     document.body.style.overflow = 'hidden';
-    
+
     // Enfocar el primer campo del formulario
     const firstInput = form.querySelector('input:not([type="hidden"]), select');
     if (firstInput) {
@@ -522,26 +543,26 @@
   function closeAddressModal() {
     const modal = el('#address-modal');
     const form = el('#form-address');
-    
+
     if (modal) {
       modal.hidden = true;
       modal.setAttribute('hidden', '');
       document.body.style.overflow = '';
     }
-    
+
     // Resetear formulario
     if (form) {
       form.reset();
       el('#address-country').value = 'México';
     }
-    
+
     editingAddressId = null;
   }
 
   // Guardar dirección
   async function handleSaveAddress(e) {
     e.preventDefault();
-    
+
     const formData = new FormData(e.target);
     const data = {
       user_id: currentUser.id,
@@ -602,7 +623,7 @@
   }
 
   // Editar dirección (función global)
-  window.perfilEditAddress = async function(addressId) {
+  window.perfilEditAddress = async function (addressId) {
     try {
       const { data: address, error } = await window.supabase
         .from('user_addresses')
@@ -621,7 +642,7 @@
   };
 
   // Eliminar dirección (función global)
-  window.perfilDeleteAddress = async function(addressId) {
+  window.perfilDeleteAddress = async function (addressId) {
     if (!confirm('¿Estás seguro de que deseas eliminar esta dirección?')) {
       return;
     }
@@ -673,7 +694,7 @@
   function renderOrders(orders) {
     const container = el('#orders-list');
     const empty = el('#orders-empty');
-    
+
     if (!container) return;
 
     if (orders.length === 0) {
@@ -734,7 +755,7 @@
   // Actualizar notificaciones
   async function handleUpdateNotifications(e) {
     e.preventDefault();
-    
+
     const formData = new FormData(e.target);
     const data = {
       email_notifications: formData.get('email_notifications') === 'on',
@@ -767,7 +788,7 @@
   // Cambiar contraseña
   async function handleChangePassword(e) {
     e.preventDefault();
-    
+
     const formData = new FormData(e.target);
     const currentPassword = formData.get('current_password');
     const newPassword = formData.get('new_password');
@@ -836,4 +857,3 @@
     init();
   }
 })();
-

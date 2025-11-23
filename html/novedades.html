@@ -1,44 +1,321 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novedades | Solare</title>
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/navbar.css">
-    <link rel="stylesheet" href="../css/footer.css">
-    <link rel="stylesheet" href="../css/novedades.css">
-    
-    <script type="module" src="../js/supabase.js"></script>
-    <script src="../js/auth-state.js" defer></script>
-    <script src="../js/toast.js" defer></script>
-    <script src="../js/cart-state.js" defer></script>
-    <script src="../js/navbar.js" defer></script>
-    <script src="../js/footer.js" defer></script>
-    <script type="module" src="../js/blog.js" defer></script>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="navbar-container" id="navbar-root"></div>
-    </nav>
 
-    <main class="main-content">
-        <section class="blog-hero">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Solare - Novedades y Tendencias" />
+    <title>Solare | Novedades</title>
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/footer.css" />
+    <link rel="stylesheet" href="../css/novedades.css" />
+    <script src="../js/navbar.js" defer></script>
+    <script src="../js/layout.js" defer></script>
+    <script src="../js/novedades.js" defer></script>
+</head>
+
+<body class="novedades">
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <div class="hamburger-menu"><button class="hamburger-btn" id="hamburgerBtn"
+                        aria-label="Abrir menú"><span class="hamburger-line"></span><span
+                            class="hamburger-line"></span><span class="hamburger-line"></span></button></div><a
+                    href="login.html" class="icon-link login-icon-mobile" title="Mi Cuenta"><svg width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg></a>
+            </div>
+            <div class="navbar-brand"><a href="index.html" class="brand-link"><span class="brand-text">SOLARE</span></a>
+            </div>
+            <div class="navbar-menu">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown"><a href="productos.html?cat=mujer" class="nav-link">MUJER</a>
+                        <div class="dropdown-content"><a href="productos.html?cat=mujer#nuevos-llegados">Nuevos
+                                Llegados</a><a href="productos.html?cat=mujer#invierno-otono">Invierno-Otoño</a><a
+                                href="productos.html?cat=mujer#primavera-verano">Primavera-Verano</a><a
+                                href="productos.html?cat=mujer">Ver Todo</a></div>
+                    </li>
+                    <li class="nav-item dropdown"><a href="productos.html?cat=hombre" class="nav-link">HOMBRE</a>
+                        <div class="dropdown-content"><a href="productos.html?cat=hombre#nuevos-llegados">Nuevos
+                                Llegados</a><a href="productos.html?cat=hombre#invierno-otono">Invierno-Otoño</a><a
+                                href="productos.html?cat=hombre#primavera-verano">Primavera-Verano</a><a
+                                href="productos.html?cat=hombre">Ver Todo</a></div>
+                    </li>
+                    <li class="nav-item dropdown"><a href="productos.html" class="nav-link">COLECCIONES</a>
+                        <div class="dropdown-content"><a href="productos.html#nuevos-llegados">Nuevos Llegados</a><a
+                                href="productos.html#invierno-otono">Invierno-Otoño</a><a
+                                href="productos.html#primavera-verano">Primavera-Verano</a><a
+                                href="productos.html#otros">Otros</a></div>
+                    </li>
+                    <li class="nav-item"><a href="productos.html" class="nav-link">PRODUCTOS</a></li>
+                    <li class="nav-item"><a href="novedades.html" class="nav-link">NOVEDADES</a></li>
+                    <li class="nav-item"><a href="faq.html" class="nav-link">FAQ</a></li>
+                    <li class="nav-item"><a href="nosotros.html" class="nav-link">NOSOTROS</a></li>
+                    <li class="nav-item"><a href="contacto.html" class="nav-link">CONTACTO</a></li>
+                </ul>
+            </div>
+            <div class="navbar-icons"><a href="favoritos.html" class="icon-link fav-icon" title="Favoritos"><svg
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z">
+                        </path>
+                    </svg><span class="fav-count" id="favCount">0</span></a><a href="carrito.html"
+                    class="icon-link cart-icon" title="Carrito"><svg width="20" height="20" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg><span class="cart-count" id="cartCount">0</span></a><a href="login.html"
+                    class="icon-link account-icon-desktop" title="Mi Cuenta"><svg width="20" height="20"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg></a></div>
+        </div>
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header"><span class="mobile-brand">SOLARE</span><button class="close-btn"
+                        id="closeBtn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg></button></div>
+                <nav class="mobile-nav">
+                    <div class="mobile-nav-item"><a href="productos.html?cat=mujer"
+                            class="mobile-nav-link main-link">MUJER</a>
+                        <div class="mobile-submenu"><a href="productos.html?cat=mujer#nuevos-llegados"
+                                class="mobile-submenu-link">Nuevos Llegados</a><a
+                                href="productos.html?cat=mujer#invierno-otono"
+                                class="mobile-submenu-link">Invierno-Otoño</a><a
+                                href="productos.html?cat=mujer#primavera-verano"
+                                class="mobile-submenu-link">Primavera-Verano</a><a href="productos.html?cat=mujer"
+                                class="mobile-submenu-link">Ver Todo</a></div>
+                    </div>
+                    <div class="mobile-nav-item"><a href="productos.html?cat=hombre"
+                            class="mobile-nav-link main-link">HOMBRE</a>
+                        <div class="mobile-submenu"><a href="productos.html?cat=hombre#nuevos-llegados"
+                                class="mobile-submenu-link">Nuevos Llegados</a><a
+                                href="productos.html?cat=hombre#invierno-otono"
+                                class="mobile-submenu-link">Invierno-Otoño</a><a
+                                href="productos.html?cat=hombre#primavera-verano"
+                                class="mobile-submenu-link">Primavera-Verano</a><a href="productos.html?cat=hombre"
+                                class="mobile-submenu-link">Ver Todo</a></div>
+                    </div>
+                    <div class="mobile-nav-item"><a href="productos.html"
+                            class="mobile-nav-link main-link">COLECCIONES</a>
+                        <div class="mobile-submenu"><a href="productos.html#nuevos-llegados"
+                                class="mobile-submenu-link">Nuevos Llegados</a><a href="productos.html#invierno-otono"
+                                class="mobile-submenu-link">Invierno-Otoño</a><a href="productos.html#primavera-verano"
+                                class="mobile-submenu-link">Primavera-Verano</a><a href="productos.html#otros"
+                                class="mobile-submenu-link">Otros</a></div>
+                    </div>
+                    <div class="mobile-nav-item"><a href="productos.html" class="mobile-nav-link">PRODUCTOS</a></div>
+                    <div class="mobile-nav-item"><a href="novedades.html" class="mobile-nav-link">NOVEDADES</a></div>
+                    <div class="mobile-nav-item"><a href="faq.html" class="mobile-nav-link">FAQ</a></div>
+                    <div class="mobile-nav-item"><a href="nosotros.html" class="mobile-nav-link">NOSOTROS</a></div>
+                    <div class="mobile-nav-item"><a href="contacto.html" class="mobile-nav-link">CONTACTO</a></div>
+                </nav>
+            </div>
+        </div>
+    </nav>
+    <main id="main-content" class="novedades-main" tabindex="-1">
+        <!-- Hero Section -->
+        <section class="novedades-hero" aria-label="Cabecera de novedades">
+            <div class="hero-background">
+                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop"
+                    alt="Fashion Background" loading="lazy">
+                <div class="hero-overlay"></div>
+            </div>
             <div class="container">
-                <h1 class="blog-hero-title">Novedades</h1>
-                <p class="blog-hero-subtitle">Descubre las últimas tendencias, colecciones y noticias de Solare.</p>
+                <div class="hero-content">
+                    <span class="hero-kicker">Editorial</span>
+                    <h1 class="hero-title">Novedades Solare</h1>
+                    <p class="hero-subtitle">Descubre las últimas tendencias, lanzamientos exclusivos y noticias del
+                        mundo de la moda</p>
+                </div>
             </div>
         </section>
 
-        <section class="blog-grid-section">
+        <!-- Featured News -->
+        <section class="featured-news">
             <div class="container">
-                <div id="blog-posts-grid" class="blog-grid">
-                    <!-- Posts will be loaded here dynamically -->
+                <h2 class="section-title">Destacados</h2>
+                <div class="featured-grid">
+                    <article class="featured-article main-feature">
+                        <div class="article-image">
+                            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2020&auto=format&fit=crop"
+                                alt="Nueva Colección Otoño" loading="lazy">
+                            <div class="article-badge">Nuevo</div>
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span class="article-category">Colección</span>
+                                <time class="article-date" datetime="2024-01-15">15 Enero 2024</time>
+                            </div>
+                            <h3 class="article-title">Nueva Colección Otoño-Invierno 2024</h3>
+                            <p class="article-excerpt">Descubre nuestra nueva colección inspirada en la elegancia
+                                atemporal y la sofisticación urbana. Piezas únicas que definen el estilo contemporáneo.
+                            </p>
+                            <a href="#" class="article-link">Leer más</a>
+                        </div>
+                    </article>
+
+                    <article class="featured-article">
+                        <div class="article-image">
+                            <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1974&auto=format&fit=crop"
+                                alt="Sostenibilidad" loading="lazy">
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span class="article-category">Sostenibilidad</span>
+                                <time class="article-date" datetime="2024-01-12">12 Enero 2024</time>
+                            </div>
+                            <h3 class="article-title">Compromiso con la Moda Sostenible</h3>
+                            <p class="article-excerpt">Nuestro compromiso con el medio ambiente a través de materiales
+                                eco-friendly y procesos responsables.</p>
+                            <a href="#" class="article-link">Leer más</a>
+                        </div>
+                    </article>
+
+                    <article class="featured-article">
+                        <div class="article-image">
+                            <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop"
+                                alt="Tendencias" loading="lazy">
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span class="article-category">Tendencias</span>
+                                <time class="article-date" datetime="2024-01-10">10 Enero 2024</time>
+                            </div>
+                            <h3 class="article-title">5 Tendencias que Marcarán el 2024</h3>
+                            <p class="article-excerpt">Las tendencias más importantes que definirán la moda este año
+                                según nuestros expertos.</p>
+                            <a href="#" class="article-link">Leer más</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- News Categories -->
+        <section class="news-categories">
+            <div class="container">
+                <div class="categories-header">
+                    <h2 class="section-title">Explora por Categoría</h2>
+                    <div class="category-filters">
+                        <button class="category-filter active" data-category="all">Todas</button>
+                        <button class="category-filter" data-category="coleccion">Colecciones</button>
+                        <button class="category-filter" data-category="tendencias">Tendencias</button>
+                        <button class="category-filter" data-category="eventos">Eventos</button>
+                        <button class="category-filter" data-category="sostenibilidad">Sostenibilidad</button>
+                    </div>
+                </div>
+
+                <div class="news-grid" id="newsGrid">
+                    <!-- News articles will be loaded here -->
+                </div>
+
+                <div class="load-more-section">
+                    <button id="loadMoreBtn" class="btn-load-more">Cargar Más Artículos</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Signup -->
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <div class="newsletter-text">
+                        <h2 class="newsletter-title">Mantente al Día</h2>
+                        <p class="newsletter-subtitle">Suscríbete a nuestro newsletter y recibe las últimas novedades,
+                            tendencias y ofertas exclusivas directamente en tu email.</p>
+                    </div>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder="Tu email" required class="newsletter-input">
+                            <button type="submit" class="btn-newsletter">Suscribirse</button>
+                        </div>
+                        <p class="newsletter-disclaimer">Al suscribirte, aceptas recibir emails promocionales. Puedes
+                            darte de baja en cualquier momento.</p>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Media Feed -->
+        <section class="social-feed">
+            <div class="container">
+                <h2 class="section-title">Síguenos en Instagram</h2>
+                <div class="social-grid" id="socialGrid">
+                    <!-- Instagram-style posts will be loaded here -->
+                </div>
+                <div class="social-cta">
+                    <a href="#" class="btn-social" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                        Seguir @solare_oficial
+                    </a>
                 </div>
             </div>
         </section>
     </main>
+    <footer id="footer"></footer>
 
-    <footer class="footer" id="footer-root"></footer>
+    <!-- Article Template -->
+    <template id="article-template">
+        <article class="news-article" data-category="">
+            <div class="article-image">
+                <img src="" alt="" loading="lazy">
+                <div class="article-badge"></div>
+            </div>
+            <div class="article-content">
+                <div class="article-meta">
+                    <span class="article-category"></span>
+                    <time class="article-date" datetime=""></time>
+                </div>
+                <h3 class="article-title"></h3>
+                <p class="article-excerpt"></p>
+                <a href="#" class="article-link">Leer más</a>
+            </div>
+        </article>
+    </template>
+
+    <!-- Social Post Template -->
+    <template id="social-post-template">
+        <div class="social-post">
+            <div class="social-image">
+                <img src="" alt="" loading="lazy">
+            </div>
+            <div class="social-overlay">
+                <div class="social-stats">
+                    <span class="social-likes">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z">
+                            </path>
+                        </svg>
+                        <span class="likes-count"></span>
+                    </span>
+                    <span class="social-comments">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span class="comments-count"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </template>
 </body>
+
 </html>
