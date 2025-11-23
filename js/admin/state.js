@@ -9,5 +9,6 @@ export const state = {
     editingFaqId: null,
     editingFaqCategoryId: null,
     editingUserId: null,
-    editingOrderStatusId: null
+    editingOrderStatusId: null,
+    editingBlogPostId: null
 };

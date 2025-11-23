@@ -101,34 +101,6 @@
                 </svg>
                 Colecciones
               </button>
-              <button class="admin-nav-btn" data-section="faq">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-                FAQ
-              </button>
-              <button class="admin-nav-btn" data-section="messages">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                Mensajes
-              </button>
-              <button class="admin-nav-btn" data-section="coupons">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                </svg>
-                Cupones
-              </button>
-              <button class="admin-nav-btn" data-section="reviews">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon
-                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                  </polygon>
-                </svg>
-                Reseñas
               </button>
               <button class="admin-nav-btn" data-section="settings">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -732,14 +704,6 @@
                     <p class="admin-loading">Cargando...</p>
                   </div>
                 </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Messages -->
-          <section data-admin-section="messages" class="admin-section" hidden>
-            <header class="admin-section-header">
-              <div>
                 <p class="admin-section-kicker">Soporte</p>
                 <h2 class="admin-section-title">Mensajes de Contacto</h2>
               </div>
@@ -755,73 +719,72 @@
                   <option value="closed">Cerrados</option>
                 </select>
               </div>
-            </header>
+              </header>
 
-            <div class="admin-table-card">
-              <div class="admin-table-header">
-                <p class="admin-table-title">Lista de Mensajes</p>
-                <span id="messages-count" class="admin-table-meta">0 mensajes</span>
+              <div class="admin-table-card">
+                <div class="admin-table-header">
+                  <p class="admin-table-title">Lista de Mensajes</p>
+                  <span id="messages-count" class="admin-table-meta">0 mensajes</span>
+                </div>
+                <div class="admin-table-scroll">
+                  <table class="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Fecha</th>
+                        <th>Remitente</th>
+                        <th>Asunto</th>
+                        <th>Categoría</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                        <th class="admin-th-actions">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="messages-table-body">
+                      <tr>
+                        <td colspan="7" class="admin-table-empty">
+                          <p>Cargando mensajes...</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div class="admin-table-scroll">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Fecha</th>
-                      <th>Remitente</th>
-                      <th>Asunto</th>
-                      <th>Categoría</th>
-                      <th>Estado</th>
-                      <th>Prioridad</th>
-                      <th class="admin-th-actions">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody id="messages-table-body">
-                    <tr>
-                      <td colspan="7" class="admin-table-empty">
-                        <p>Cargando mensajes...</p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </section>
 
-          <!-- Coupons -->
-          <section data-admin-section="coupons" class="admin-section" hidden>
+          <!-- Blog -->
+          <section data-admin-section="blog" class="admin-section" hidden>
             <header class="admin-section-header">
               <div>
-                <p class="admin-section-kicker">Marketing</p>
-                <h2 class="admin-section-title">Cupones de Descuento</h2>
+                <p class="admin-section-kicker">Contenido</p>
+                <h2 class="admin-section-title">Blog / Novedades</h2>
               </div>
               <div class="admin-header-actions">
-                <button id="btn-add-coupon" class="admin-btn admin-btn-primary">
-                  + Nuevo Cupón
+                <button id="btn-add-post" class="admin-btn admin-btn-primary">
+                  + Nueva Entrada
                 </button>
               </div>
             </header>
 
             <div class="admin-table-card">
               <div class="admin-table-header">
-                <p class="admin-table-title">Lista de Cupones</p>
-                <span id="coupons-count" class="admin-table-meta">0 cupones</span>
+                <p class="admin-table-title">Lista de Entradas</p>
+                <span id="posts-count" class="admin-table-meta">0 entradas</span>
               </div>
               <div class="admin-table-scroll">
                 <table class="admin-table">
                   <thead>
                     <tr>
-                      <th>Código</th>
-                      <th>Descuento</th>
-                      <th>Uso</th>
-                      <th>Expira</th>
+                      <th>Título</th>
+                      <th>Slug</th>
                       <th>Estado</th>
+                      <th>Fecha</th>
                       <th class="admin-th-actions">Acciones</th>
                     </tr>
                   </thead>
-                  <tbody id="coupons-table-body">
+                  <tbody id="posts-table-body">
                     <tr>
-                      <td colspan="6" class="admin-table-empty">
-                        <p>Cargando cupones...</p>
+                      <td colspan="5" class="admin-table-empty">
+                        <p>Cargando entradas...</p>
                       </td>
                     </tr>
                   </tbody>
@@ -830,50 +793,73 @@
             </div>
           </section>
 
-          <!-- Reviews -->
-          <section data-admin-section="reviews" class="admin-section" hidden>
-            <header class="admin-section-header">
-              <div>
-                <p class="admin-section-kicker">Comunidad</p>
-                <h2 class="admin-section-title">Reseñas de Productos</h2>
+          <!-- Blog Post Modal -->
+          <div id="post-modal" class="admin-modal" hidden>
+            <div class="admin-modal-content admin-modal-large">
+              <div class="admin-modal-header">
+                <h3 id="post-modal-title">Nueva Entrada</h3>
+                <button id="btn-close-post-modal" class="admin-modal-close" aria-label="Cerrar">
+                  &times;
+                </button>
               </div>
-              <div class="admin-header-actions">
-                <select id="reviews-filter-status" class="admin-filter-select">
-                  <option value="">Todos los estados</option>
-                  <option value="approved">Aprobadas</option>
-                  <option value="pending">Pendientes</option>
-                </select>
-              </div>
-            </header>
+              <form id="post-form" class="admin-form">
+                <input type="hidden" id="post-id" name="id" />
+                <div class="admin-form-grid">
+                  <div class="admin-form-group">
+                    <label for="post-title" class="admin-label">Título *</label>
+                    <input id="post-title" name="title" type="text" class="admin-input" required />
+                  </div>
+                  <div class="admin-form-group">
+                    <label for="post-slug" class="admin-label">Slug *</label>
+                    <input id="post-slug" name="slug" type="text" class="admin-input" required />
+                  </div>
+                  <div class="admin-form-group admin-form-group-full">
+                    <label for="post-excerpt" class="admin-label">Extracto</label>
+                    <textarea id="post-excerpt" name="excerpt" rows="2" class="admin-input"></textarea>
+                    <small class="admin-help-text">Breve descripción para la lista de novedades</small>
+                  </div>
+                  <div class="admin-form-group admin-form-group-full">
+                    <label for="post-content" class="admin-label">Contenido (HTML)</label>
+                    <textarea id="post-content" name="content" rows="10" class="admin-input"></textarea>
+                  </div>
+                  <div class="admin-form-group">
+                    <label for="post-image" class="admin-label">Imagen Destacada (URL)</label>
+                    <input id="post-image" name="featured_image" type="text" class="admin-input" placeholder="https://..." />
+                  </div>
+                  <div class="admin-form-group">
+                    <label class="admin-checkbox-label">
+                      <input type="checkbox" id="post-is-active" name="is_active" checked />
+                      <span class="admin-checkmark"></span>
+                      Publicada
+                    </label>
+                  </div>
+                </div>
+                <div class="admin-form-actions">
+                  <button type="submit" class="admin-btn admin-btn-primary">
+                    Guardar Entrada
+                  </button>
+                  <button type="button" id="btn-cancel-post" class="admin-btn admin-btn-ghost">
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
 
-            <div class="admin-table-card">
-              <div class="admin-table-header">
-                <p class="admin-table-title">Lista de Reseñas</p>
-                <span id="reviews-count" class="admin-table-meta">0 reseñas</span>
+          <!-- Message Modal -->
+          <div id="message-modal" class="admin-modal" hidden>
+            <div class="admin-modal-content admin-modal-large">
+              <div class="admin-modal-header">
+                <h3 id="message-modal-title">Mensaje de Contacto</h3>
+                <button id="btn-close-message-modal" class="admin-modal-close" aria-label="Cerrar">
+                  &times;
+                </button>
               </div>
-              <div class="admin-table-scroll">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Producto</th>
-                      <th>Usuario</th>
-                      <th>Calificación</th>
-                      <th>Comentario</th>
-                      <th>Estado</th>
-                      <th class="admin-th-actions">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody id="reviews-table-body">
-                    <tr>
-                      <td colspan="6" class="admin-table-empty">
-                        <p>Cargando reseñas...</p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div id="message-modal-content" class="admin-message-detail">
+                <p class="admin-loading">Cargando...</p>
               </div>
             </div>
-          </section>
+          </div>
 
           <!-- Settings -->
           <section data-admin-section="settings" class="admin-section" hidden>
@@ -917,9 +903,7 @@
     </section>
   </main>
 
-  <!-- Modals -->
-
-  <!-- Collection Modal -->
+  <!-- Collection Modal (at root level for proper overlay) -->
   <div id="collection-modal" class="admin-modal" hidden>
     <div class="admin-modal-content admin-modal-large">
       <div class="admin-modal-header">
@@ -972,170 +956,6 @@
           </button>
         </div>
       </form>
-    </div>
-  </div>
-
-  <!-- FAQ Category Modal -->
-  <div id="faq-category-modal" class="admin-modal" hidden>
-    <div class="admin-modal-content">
-      <div class="admin-modal-header">
-        <h3 id="faq-category-modal-title">Nueva Categoría FAQ</h3>
-        <button id="btn-close-faq-category-modal" class="admin-modal-close" aria-label="Cerrar">
-          &times;
-        </button>
-      </div>
-      <form id="faq-category-form" class="admin-form">
-        <div class="admin-form-grid">
-          <div class="admin-form-group">
-            <label for="faq-category-name" class="admin-label">Nombre *</label>
-            <input id="faq-category-name" name="name" type="text" class="admin-input" required />
-          </div>
-          <div class="admin-form-group">
-            <label for="faq-category-slug" class="admin-label">Slug *</label>
-            <input id="faq-category-slug" name="slug" type="text" class="admin-input" required />
-          </div>
-          <div class="admin-form-group">
-            <label class="admin-checkbox-label">
-              <input type="checkbox" id="faq-category-is-active" name="is_active" checked />
-              <span class="admin-checkmark"></span>
-              Activa
-            </label>
-          </div>
-        </div>
-        <div class="admin-form-actions">
-          <button type="button" id="btn-cancel-faq-category" class="admin-btn admin-btn-ghost">
-            Cancelar
-          </button>
-          <button type="submit" class="admin-btn admin-btn-primary">
-            Guardar Categoría
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- FAQ Modal -->
-  <div id="faq-modal" class="admin-modal" hidden>
-    <div class="admin-modal-content admin-modal-large">
-      <div class="admin-modal-header">
-        <h3 id="faq-modal-title">Nueva Pregunta</h3>
-        <button id="btn-close-faq-modal" class="admin-modal-close" aria-label="Cerrar">
-          &times;
-        </button>
-      </div>
-      <form id="faq-form" class="admin-form">
-        <div class="admin-form-grid">
-          <div class="admin-form-group admin-form-group-full">
-            <label for="faq-question" class="admin-label">Pregunta *</label>
-            <input id="faq-question" name="question" type="text" class="admin-input" required />
-          </div>
-          <div class="admin-form-group admin-form-group-full">
-            <label for="faq-answer" class="admin-label">Respuesta *</label>
-            <textarea id="faq-answer" name="answer" rows="4" class="admin-input" required></textarea>
-          </div>
-          <div class="admin-form-group">
-            <label for="faq-category" class="admin-label">Categoría</label>
-            <select id="faq-category" name="category_id" class="admin-input">
-              <option value="">Sin categoría</option>
-            </select>
-          </div>
-          <div class="admin-form-group">
-            <label class="admin-checkbox-label">
-              <input type="checkbox" id="faq-is-active" name="is_active" checked />
-              <span class="admin-checkmark"></span>
-              Activa
-            </label>
-          </div>
-        </div>
-        <div class="admin-form-actions">
-          <button type="button" id="btn-cancel-faq" class="admin-btn admin-btn-ghost">
-            Cancelar
-          </button>
-          <button type="submit" class="admin-btn admin-btn-primary">
-            Guardar Pregunta
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Coupon Modal -->
-  <div id="coupon-modal" class="admin-modal" hidden>
-    <div class="admin-modal-content admin-modal-large">
-      <div class="admin-modal-header">
-        <h3 id="coupon-modal-title">Nuevo Cupón</h3>
-        <button id="btn-close-coupon-modal" class="admin-modal-close" aria-label="Cerrar">
-          &times;
-        </button>
-      </div>
-      <form id="coupon-form" class="admin-form">
-        <div class="admin-form-grid">
-          <div class="admin-form-group">
-            <label for="coupon-code" class="admin-label">Código *</label>
-            <input id="coupon-code" name="code" type="text" class="admin-input" style="text-transform: uppercase;"
-              required />
-          </div>
-          <div class="admin-form-group">
-            <label for="coupon-type" class="admin-label">Tipo de Descuento</label>
-            <select id="coupon-type" name="discount_type" class="admin-input">
-              <option value="percentage">Porcentaje (%)</option>
-              <option value="fixed_amount">Monto Fijo ($)</option>
-            </select>
-          </div>
-          <div class="admin-form-group">
-            <label for="coupon-value" class="admin-label">Valor del Descuento *</label>
-            <input id="coupon-value" name="discount_value" type="number" min="0" step="0.01" class="admin-input"
-              required />
-          </div>
-          <div class="admin-form-group">
-            <label for="coupon-min-purchase" class="admin-label">Compra Mínima</label>
-            <input id="coupon-min-purchase" name="min_purchase_amount" type="number" min="0" step="0.01"
-              class="admin-input" />
-          </div>
-          <div class="admin-form-group">
-            <label for="coupon-start-date" class="admin-label">Fecha Inicio</label>
-            <input id="coupon-start-date" name="start_date" type="datetime-local" class="admin-input" />
-          </div>
-          <div class="admin-form-group">
-            <label for="coupon-end-date" class="admin-label">Fecha Fin</label>
-            <input id="coupon-end-date" name="end_date" type="datetime-local" class="admin-input" />
-          </div>
-          <div class="admin-form-group">
-            <label for="coupon-usage-limit" class="admin-label">Límite de Uso</label>
-            <input id="coupon-usage-limit" name="usage_limit" type="number" min="1" class="admin-input" />
-          </div>
-          <div class="admin-form-group">
-            <label class="admin-checkbox-label">
-              <input type="checkbox" id="coupon-is-active" name="is_active" checked />
-              <span class="admin-checkmark"></span>
-              Activo
-            </label>
-          </div>
-        </div>
-        <div class="admin-form-actions">
-          <button type="button" id="btn-cancel-coupon" class="admin-btn admin-btn-ghost">
-            Cancelar
-          </button>
-          <button type="submit" class="admin-btn admin-btn-primary">
-            Guardar Cupón
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Message Modal -->
-  <div id="message-modal" class="admin-modal" hidden>
-    <div class="admin-modal-content admin-modal-large">
-      <div class="admin-modal-header">
-        <h3 id="message-modal-title">Mensaje de Contacto</h3>
-        <button id="btn-close-message-modal" class="admin-modal-close" aria-label="Cerrar">
-          &times;
-        </button>
-      </div>
-      <div id="message-modal-content" class="admin-message-detail">
-        <p class="admin-loading">Cargando...</p>
-      </div>
     </div>
   </div>
 

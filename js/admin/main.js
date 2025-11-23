@@ -10,6 +10,7 @@ import * as Coupons from './coupons.js';
 import * as Reviews from './reviews.js';
 import * as Messages from './messages.js';
 import * as FAQ from './faq.js';
+import * as Blog from './blog.js';
 import * as Settings from './settings.js';
 
 // Expose global actions to window.admin
@@ -33,6 +34,8 @@ window.admin = {
     deleteFaqCategory: FAQ.deleteFaqCategory,
     editFaq: FAQ.editFaq,
     deleteFaq: FAQ.deleteFaq,
+    editBlogPost: Blog.editBlogPost,
+    deleteBlogPost: Blog.deleteBlogPost,
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -69,6 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await Reviews.init();
     await Messages.init();
     await FAQ.init();
+    await Blog.init();
     await Settings.init();
 
     // Setup Navigation
@@ -171,6 +175,9 @@ async function loadSection(sectionName) {
             break;
         case 'faq':
             await FAQ.loadFAQs();
+            break;
+        case 'blog':
+            await Blog.loadBlogPosts();
             break;
         case 'settings':
             await Settings.loadSettings();
