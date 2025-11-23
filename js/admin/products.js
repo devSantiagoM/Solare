@@ -348,6 +348,31 @@ async function loadProductData(productId) {
         if (product.images && product.images.length > 0) {
             displayProductImages(product.images);
         }
+
+        // Cargar colecciones asociadas
+        const { data: associations, error: assocError } = await window.supabase
+            .from('collection_products')
+            .select('collection_id')
+            .eq('product_id', productId);
+
+        if (assocError) {
+            console.warn('Error loading product collections:', assocError);
+        } else {
+            // Reset checkboxes first
+            const checkboxes = els('input[name="collections"]');
+            checkboxes.forEach(cb => cb.checked = false);
+
+            // Check associated ones
+            if (associations && associations.length > 0) {
+                const collectionIds = new Set(associations.map(a => a.collection_id));
+                checkboxes.forEach(cb => {
+                    if (collectionIds.has(cb.value)) {
+                        cb.checked = true;
+                    }
+                });
+            }
+        }
+
     } catch (error) {
         console.error('Error cargando producto:', error);
         showToast('Error al cargar el producto', 'error');
@@ -485,6 +510,34 @@ async function handleProductSubmit(e) {
             taxable: formData.get('taxable') === 'on',
         };
 
+        // Validaciones manuales
+        if (!data.name) {
+            showToast('El nombre del producto es obligatorio', 'error');
+            switchProductTab('general');
+            el('#product-name').focus();
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+            return;
+        }
+
+        if (!data.sku) {
+            showToast('El SKU es obligatorio', 'error');
+            switchProductTab('general');
+            el('#product-sku').focus();
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+            return;
+        }
+
+        if (!data.price && data.price !== 0) {
+            showToast('El precio es obligatorio', 'error');
+            switchProductTab('general');
+            el('#product-price').focus();
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+            return;
+        }
+
         if (data.compare_price !== null && data.compare_price < data.price) {
             showToast('El precio de comparación debe ser mayor o igual al precio normal', 'error');
             submitBtn.disabled = false;
@@ -531,6 +584,7 @@ async function handleProductSubmit(e) {
         }
 
         if (productId) {
+            // 1. Save Images
             const { error: deleteError } = await window.supabase
                 .from('product_images')
                 .delete()
@@ -551,6 +605,32 @@ async function handleProductSubmit(e) {
                     .insert(imagesToInsert);
 
                 if (insertError) throw insertError;
+            }
+
+            // 2. Save Collections
+            const selectedCollections = Array.from(productForm.querySelectorAll('input[name="collections"]:checked'))
+                .map(input => input.value);
+
+            // Delete existing associations
+            const { error: deleteAssocError } = await window.supabase
+                .from('collection_products')
+                .delete()
+                .eq('product_id', productId);
+
+            if (deleteAssocError) throw deleteAssocError;
+
+            // Insert new associations
+            if (selectedCollections.length > 0) {
+                const associations = selectedCollections.map(collectionId => ({
+                    product_id: productId,
+                    collection_id: collectionId
+                }));
+
+                const { error: insertAssocError } = await window.supabase
+                    .from('collection_products')
+                    .insert(associations);
+
+                if (insertAssocError) throw insertAssocError;
             }
         }
 
