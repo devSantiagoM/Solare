@@ -41,6 +41,12 @@
     }
 
     try {
+      // Validate inputs
+      if (!orderData.email) {
+        console.error('Missing email in orderData:', orderData);
+        throw new Error('El email del cliente es requerido');
+      }
+
       // Send to Client
       const clientParams = {
         to_email: orderData.email,
@@ -48,12 +54,13 @@
         order_number: orderData.order_number,
         order_total: orderData.total,
         order_items: formatOrderItems(orderData.items),
-        // Add other template params as needed
       };
+
+      console.log('Sending client email with params:', clientParams);
 
       // Send to Provider (Admin)
       const providerParams = {
-        to_email: 'vera27351@gmail.com', // Replace with actual admin email
+        to_email: 'vera27351@gmail.com',
         client_name: `${orderData.first_name} ${orderData.last_name}`,
         client_email: orderData.email,
         client_phone: orderData.phone,
@@ -62,12 +69,16 @@
         order_items: formatOrderItems(orderData.items),
       };
 
-      // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with actual values
-      // You might want separate templates for client and provider
-      await window.emailjs.send('service_rkhzjpw', 'template_4afqq84', clientParams);
-      await window.emailjs.send('service_esxi5pn', 'template_j6qb7vv', providerParams);
+      console.log('Sending provider email with params:', providerParams);
 
-      console.log('Emails sent successfully (simulated)', clientParams, providerParams);
+      // Send emails
+      // Note: Ensure 'To Email' field in EmailJS template settings is set to {{to_email}}
+      const clientPromise = window.emailjs.send('service_rkhzjpw', 'template_4afqq84', clientParams);
+      const providerPromise = window.emailjs.send('service_esxi5pn', 'template_j6qb7vv', providerParams);
+
+      await Promise.all([clientPromise, providerPromise]);
+
+      console.log('Emails sent successfully');
       return { success: true };
 
     } catch (error) {
