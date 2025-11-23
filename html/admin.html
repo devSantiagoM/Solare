@@ -717,57 +717,6 @@
                     <p class="admin-loading">Cargando...</p>
                   </div>
                 </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- FAQ Modal -->
-          <div id="faq-modal" class="admin-modal" hidden>
-            <div class="admin-modal-content">
-              <div class="admin-modal-header">
-                <h3 id="faq-modal-title">Nueva Pregunta</h3>
-                <button id="btn-close-faq-modal" class="admin-modal-close" aria-label="Cerrar">
-                  &times;
-                </button>
-              </div>
-              <form id="faq-form" class="admin-form">
-                <div class="admin-form-group">
-                  <label for="faq-category" class="admin-label">Categoría</label>
-                  <select id="faq-category" name="category_id" class="admin-input">
-                    <option value="">Sin categoría</option>
-                  </select>
-                </div>
-                <div class="admin-form-group">
-                  <label for="faq-question" class="admin-label">Pregunta *</label>
-                  <input id="faq-question" name="question" type="text" class="admin-input" required />
-                </div>
-                <div class="admin-form-group">
-                  <label for="faq-answer" class="admin-label">Respuesta *</label>
-                  <textarea id="faq-answer" name="answer" rows="5" class="admin-input" required></textarea>
-                </div>
-                <div class="admin-form-group">
-                  <label class="admin-checkbox-label">
-                    <input type="checkbox" id="faq-is-active" name="is_active" checked />
-                    <span class="admin-checkmark"></span>
-                    Activa
-                  </label>
-                </div>
-                <div class="admin-form-actions">
-                  <button type="submit" class="admin-btn admin-btn-primary">
-                    Guardar
-                  </button>
-                  <button type="button" id="btn-cancel-faq" class="admin-btn admin-btn-ghost">
-                    Cancelar
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <!-- Messages -->
-          <section data-admin-section="messages" class="admin-section" hidden>
-            <header class="admin-section-header">
-              <div>
                 <p class="admin-section-kicker">Soporte</p>
                 <h2 class="admin-section-title">Mensajes de Contacto</h2>
               </div>
@@ -783,36 +732,36 @@
                   <option value="closed">Cerrados</option>
                 </select>
               </div>
-            </header>
+              </header>
 
-            <div class="admin-table-card">
-              <div class="admin-table-header">
-                <p class="admin-table-title">Lista de Mensajes</p>
-                <span id="messages-count" class="admin-table-meta">0 mensajes</span>
+              <div class="admin-table-card">
+                <div class="admin-table-header">
+                  <p class="admin-table-title">Lista de Mensajes</p>
+                  <span id="messages-count" class="admin-table-meta">0 mensajes</span>
+                </div>
+                <div class="admin-table-scroll">
+                  <table class="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Fecha</th>
+                        <th>Remitente</th>
+                        <th>Asunto</th>
+                        <th>Categoría</th>
+                        <th>Estado</th>
+                        <th>Prioridad</th>
+                        <th class="admin-th-actions">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="messages-table-body">
+                      <tr>
+                        <td colspan="7" class="admin-table-empty">
+                          <p>Cargando mensajes...</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div class="admin-table-scroll">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Fecha</th>
-                      <th>Remitente</th>
-                      <th>Asunto</th>
-                      <th>Categoría</th>
-                      <th>Estado</th>
-                      <th>Prioridad</th>
-                      <th class="admin-th-actions">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody id="messages-table-body">
-                    <tr>
-                      <td colspan="7" class="admin-table-empty">
-                        <p>Cargando mensajes...</p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </section>
 
           <!-- Message Modal -->
