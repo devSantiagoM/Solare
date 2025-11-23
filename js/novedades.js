@@ -20,6 +20,7 @@ async function init() {
     // Cache DOM elements
     elements = {
         newsGrid: el('#newsGrid'),
+        featuredGrid: el('.featured-grid'),
         categoryFilters: els('.category-filter'),
         loadMoreBtn: el('#loadMoreBtn'),
         newsletterForm: el('#newsletterForm'),
@@ -33,6 +34,7 @@ async function init() {
 
     // Fetch and render
     await fetchNews();
+    renderFeaturedNews();
     renderSocialPosts();
 
     // Initialize animations
@@ -77,6 +79,38 @@ async function fetchNews() {
         console.error('Error fetching news:', error);
         elements.newsGrid.innerHTML = '<p style="text-align:center; padding: 20px;">No se pudieron cargar las novedades en este momento.</p>';
     }
+}
+
+// Render featured news
+function renderFeaturedNews() {
+    if (!elements.featuredGrid || allNews.length === 0) return;
+
+    const featuredPosts = allNews.slice(0, 3);
+    elements.featuredGrid.innerHTML = '';
+
+    featuredPosts.forEach((post, index) => {
+        const isMain = index === 0;
+        const article = document.createElement('article');
+        article.className = `featured-article ${isMain ? 'main-feature' : ''}`;
+
+        article.innerHTML = `
+            <div class="article-image">
+                <img src="${post.image}" alt="${post.title}" loading="lazy">
+                ${isMain && post.badge ? `<div class="article-badge">${post.badge}</div>` : ''}
+            </div>
+            <div class="article-content">
+                <div class="article-meta">
+                    <span class="article-category">${getCategoryName(post.category)}</span>
+                    <time class="article-date" datetime="${post.date}">${formatDate(post.date)}</time>
+                </div>
+                <h3 class="article-title">${post.title}</h3>
+                <p class="article-excerpt">${post.excerpt}</p>
+                <a href="post.html?id=${post.id}" class="article-link">Leer más</a>
+            </div>
+        `;
+
+        elements.featuredGrid.appendChild(article);
+    });
 }
 
 function isNew(dateString) {
