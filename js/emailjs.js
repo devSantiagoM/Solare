@@ -53,7 +53,7 @@
 
       // Send to Provider (Admin)
       const providerParams = {
-        to_email: 'lucassosavega@gmail.com', // Replace with actual admin email
+        to_email: 'vera27351@gmail.com', // Replace with actual admin email
         client_name: `${orderData.first_name} ${orderData.last_name}`,
         client_email: orderData.email,
         client_phone: orderData.phone,
