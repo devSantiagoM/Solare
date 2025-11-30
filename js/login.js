@@ -1,5 +1,5 @@
 // Auth functionality - Login and Signup
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Get elements
     const loginToggle = document.getElementById('loginToggle');
     const signupToggle = document.getElementById('signupToggle');
@@ -32,22 +32,22 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 const { data: { session }, error } = await window.supabase.auth.getSession()
                 if (error) throw error
-                
+
                 this.session = session
                 this.user = session?.user || null
-                
+
                 // Si hay una sesión activa, actualizar el estado en la navbar
                 if (this.session && this.user) {
                     this.updateNavbarAuthState(this.user)
                 }
-                
+
                 // Escuchar cambios en el estado de autenticación
                 window.supabase.auth.onAuthStateChange((event, session) => {
                     console.log('Auth state changed:', event)
                     this.session = session
                     this.user = session?.user || null
                     this.handleAuthStateChange(event, session)
-                    
+
                     // Actualizar navbar cuando cambia el estado
                     if (this.user) {
                         this.updateNavbarAuthState(this.user)
@@ -55,12 +55,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         this.updateNavbarAuthState(null)
                     }
                 })
-                
+
             } catch (error) {
                 console.error('Error initializing auth:', error)
             }
         },
-        
+
         // Actualizar el estado de autenticación en la navbar
         updateNavbarAuthState(user) {
             // Usar el módulo global de autenticación si está disponible
@@ -144,14 +144,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Si el email no está confirmado, mostrar mensaje de confirmación
                 const needsConfirmation = !data.user?.email_confirmed_at;
-                
+
                 return {
                     success: true,
                     user: data.user,
                     session: data.session,
                     needsConfirmation: needsConfirmation,
-                    message: needsConfirmation ? 
-                        'Revisa tu email para confirmar tu cuenta' : 
+                    message: needsConfirmation ?
+                        'Revisa tu email para confirmar tu cuenta' :
                         'Cuenta creada exitosamente'
                 }
             } catch (error) {
@@ -273,12 +273,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (role === 'admin') {
                 // Si el usuario es admin, lo llevamos al panel de administración
+                console.log('Redirecting admin to admin panel...')
                 window.location.href = 'admin.html'
                 return
             }
 
+            // Verificar si estamos en la página de login
+            const currentPath = window.location.pathname
+            const isLoginPage = currentPath.includes('login') || currentPath === '/' || currentPath === '/html/login'
+
+            console.log('Current path:', currentPath, 'Is login page:', isLoginPage)
+
             // Resto de usuarios van a la página de inicio
-            if (window.location.pathname.includes('login.html')) {
+            if (isLoginPage) {
+                console.log('Redirecting to index.html...')
                 window.location.href = 'index.html'
             }
         },
@@ -287,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
         redirectAfterLogout() {
             const protectedPages = ['dashboard.html', 'profile.html']
             const currentPage = window.location.pathname.split('/').pop()
-            
+
             if (protectedPages.includes(currentPage)) {
                 window.location.href = 'login.html'
             }
@@ -344,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
         element.textContent = text;
         element.className = `message ${type}`;
         element.style.display = 'block';
-        
+
         // Auto-hide after 5 seconds
         setTimeout(() => {
             element.style.display = 'none';
@@ -369,14 +377,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Login form handler
-    loginFormElement.addEventListener('submit', async function(e) {
+    loginFormElement.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
+
         if (!supabaseReady) {
             showMessage(loginMessage, 'Sistema de autenticación cargando...');
             return;
         }
-        
+
         const formData = new FormData(loginFormElement);
         const email = formData.get('email');
         const password = formData.get('password');
@@ -397,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const result = await auth.signIn(email, password);
-            
+
             if (result.success) {
                 showMessage(loginMessage, result.message, 'success');
                 // Actualizar estado de navbar
@@ -415,14 +423,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Signup form handler
-    signupFormElement.addEventListener('submit', async function(e) {
+    signupFormElement.addEventListener('submit', async function (e) {
         e.preventDefault();
-        
+
         if (!supabaseReady) {
             showMessage(signupMessage, 'Sistema de autenticación cargando...');
             return;
         }
-        
+
         const formData = new FormData(signupFormElement);
         const firstname = formData.get('firstname');
         const lastname = formData.get('lastname');
@@ -459,17 +467,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 firstName: firstname,
                 lastName: lastname
             };
-            
+
             const result = await auth.signUp(email, password, userData);
-            
+
             if (result.success) {
                 showMessage(signupMessage, result.message, 'success');
-                
+
                 // Mostrar toast de confirmación de email si es necesario
                 if (result.needsConfirmation && window.SolareToast) {
                     window.SolareToast.info('Se envió un correo al email, esperando confirmación', 6000);
                 }
-                
+
                 // Switch to login form after successful registration
                 setTimeout(() => {
                     showLogin();
@@ -506,16 +514,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Social button handlers
     const socialButtons = document.querySelectorAll('.btn-social');
     socialButtons.forEach(button => {
-        button.addEventListener('click', async function(e) {
+        button.addEventListener('click', async function (e) {
             e.preventDefault();
-            
+
             if (!supabaseReady) {
                 alert('Sistema de autenticación cargando...');
                 return;
             }
-            
+
             const provider = this.textContent.trim().toLowerCase();
-            
+
             try {
                 let result;
                 if (provider === 'google') {
@@ -523,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (provider === 'facebook') {
                     result = await auth.signInWithFacebook();
                 }
-                
+
                 if (result && !result.success) {
                     showMessage(loginMessage, result.message);
                 }
@@ -536,14 +544,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Password visibility toggle functionality
     const passwordToggles = document.querySelectorAll('.password-toggle');
-    
+
     passwordToggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
+        toggle.addEventListener('click', function () {
             const targetId = this.getAttribute('data-target');
             const passwordInput = document.getElementById(targetId);
             const eyeIcon = this.querySelector('.eye-icon');
             const eyeOffIcon = this.querySelector('.eye-off-icon');
-            
+
             if (passwordInput.type === 'password') {
                 // Show password
                 passwordInput.type = 'text';
