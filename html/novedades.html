@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../css/novedades.css" />
     <script src="../js/navbar.js" defer></script>
     <script src="../js/layout.js" defer></script>
-    <script src="../js/novedades.js" defer></script>
+    <script type="module" src="../js/novedades.js"></script>
 </head>
 
 <body class="novedades">
@@ -230,17 +230,15 @@
             <div class="container">
                 <div class="newsletter-content">
                     <div class="newsletter-text">
-                        <h2 class="newsletter-title">Mantente al Día</h2>
-                        <p class="newsletter-subtitle">Suscríbete a nuestro newsletter y recibe las últimas novedades,
-                            tendencias y ofertas exclusivas directamente en tu email.</p>
+                        <h2 class="newsletter-title">Quieres mas?</h2>
+                        <p class="newsletter-subtitle">Amplía tu experiencia: revisa nuestra selección completa y encuentra lo último en productos, estilos y novedades</p>
                     </div>
                     <form class="newsletter-form" id="newsletterForm">
                         <div class="form-group">
-                            <input type="email" id="email" placeholder="Tu email" required class="newsletter-input">
-                            <button type="submit" class="btn-newsletter">Suscribirse</button>
+                            <!--<input type="email" id="email" placeholder="Tu email" required class="newsletter-input">-->
+                            <a type="submit" href="/html/productos.html" class="btn-newsletter">Ver Productos</a>
                         </div>
-                        <p class="newsletter-disclaimer">Al suscribirte, aceptas recibir emails promocionales. Puedes
-                            darte de baja en cualquier momento.</p>
+                        <p class="newsletter-disclaimer">Al hacer clic para ver más productos, podrás descubrir opciones y tendencias adicionales. Eres libre de salir en cualquier momento.</p>
                     </form>
                 </div>
             </div>
