@@ -71,10 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const accountLinks = document.querySelectorAll('.account-icon-desktop, .login-icon-mobile')
                 accountLinks.forEach(link => {
                     if (user) {
-                        // Cambiar el href a perfil o dashboard si existe
-                        link.href = link.href.replace('login.html', 'perfil.html') || 'perfil.html'
+                        // User is logged in - point to profile
+                        link.href = 'perfil.html'
                         link.title = 'Mi Cuenta'
                     } else {
+                        // User is not logged in - point to login
                         link.href = 'login.html'
                         link.title = 'Iniciar Sesión'
                     }

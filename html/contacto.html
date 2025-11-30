@@ -1,487 +1,342 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Solare - Contacto" />
-    <title>Solare | Contacto</title>
-    <link rel="stylesheet" href="../css/global.css" />
-    <link rel="stylesheet" href="../css/navbar.css" />
-    <link rel="stylesheet" href="../css/footer.css" />
-    <link rel="stylesheet" href="../css/contacto.css" />
-    <!-- Better typography for Contact page -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script src="../js/navbar.js" defer></script>
-    <script src="../js/layout.js" defer></script>
-    <script src="../js/contacto.js" defer></script>
-  </head>
-  <body class="contacto">
-    <nav class="navbar">
-      <div class="navbar-container">
-        <div class="navbar-left">
-          <div class="hamburger-menu">
-            <button
-              class="hamburger-btn"
-              id="hamburgerBtn"
-              aria-label="Abrir menú"
-            >
-              <span class="hamburger-line"></span
-              ><span class="hamburger-line"></span
-              ><span class="hamburger-line"></span>
-            </button>
-          </div>
-          <a
-            href="login.html"
-            class="icon-link login-icon-mobile"
-            title="Mi Cuenta"
-            ><svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle></svg
-          ></a>
-        </div>
-        <div class="navbar-brand">
-          <a href="index.html" class="brand-link"
-            ><span class="brand-text">SOLARE</span></a
-          >
-        </div>
-        <div class="navbar-menu">
-          <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-              <a href="productos.html?cat=mujer" class="nav-link">MUJER</a>
-              <div class="dropdown-content">
-                <a href="productos.html?cat=mujer#nuevos-llegados"
-                  >Nuevos Llegados</a
-                ><a href="productos.html?cat=mujer#invierno-otono"
-                  >Invierno-Otoño</a
-                ><a href="productos.html?cat=mujer#primavera-verano"
-                  >Primavera-Verano</a
-                ><a href="productos.html?cat=mujer">Ver Todo</a>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="productos.html?cat=hombre" class="nav-link">HOMBRE</a>
-              <div class="dropdown-content">
-                <a href="productos.html?cat=hombre#nuevos-llegados"
-                  >Nuevos Llegados</a
-                ><a href="productos.html?cat=hombre#invierno-otono"
-                  >Invierno-Otoño</a
-                ><a href="productos.html?cat=hombre#primavera-verano"
-                  >Primavera-Verano</a
-                ><a href="productos.html?cat=hombre">Ver Todo</a>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="productos.html" class="nav-link">COLECCIONES</a>
-              <div class="dropdown-content">
-                <a href="productos.html#nuevos-llegados">Nuevos Llegados</a
-                ><a href="productos.html#invierno-otono">Invierno-Otoño</a
-                ><a href="productos.html#primavera-verano">Primavera-Verano</a
-                ><a href="productos.html#otros">Otros</a>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a href="productos.html" class="nav-link">PRODUCTOS</a>
-            </li>
-            <li class="nav-item">
-              <a href="novedades.html" class="nav-link">NOVEDADES</a>
-            </li>
-            <li class="nav-item">
-              <a href="faq.html" class="nav-link">FAQ</a>
-            </li>
-            <li class="nav-item">
-              <a href="nosotros.html" class="nav-link">NOSOTROS</a>
-            </li>
-            <li class="nav-item">
-              <a href="contacto.html" class="nav-link">CONTACTO</a>
-            </li>
-          </ul>
-        </div>
-        <div class="navbar-icons">
-          <a href="favoritos.html" class="icon-link fav-icon" title="Favoritos"
-            ><svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z"
-              ></path></svg
-            ><span class="fav-count" id="favCount">0</span></a
-          ><a href="carrito.html" class="icon-link cart-icon" title="Carrito"
-            ><svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"
-              ></path>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <path d="M16 10a4 4 0 0 1-8 0"></path></svg
-            ><span class="cart-count" id="cartCount">0</span></a
-          ><a
-            href="login.html"
-            class="icon-link account-icon-desktop"
-            title="Mi Cuenta"
-            ><svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle></svg
-          ></a>
-        </div>
-      </div>
-      <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-        <div class="mobile-menu-content">
-          <div class="mobile-menu-header">
-            <span class="mobile-brand">SOLARE</span
-            ><button class="close-btn" id="closeBtn">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-          <nav class="mobile-nav">
-            <div class="mobile-nav-item">
-              <a
-                href="productos.html?cat=mujer"
-                class="mobile-nav-link main-link"
-                >MUJER</a
-              >
-              <div class="mobile-submenu">
-                <a
-                  href="productos.html?cat=mujer#nuevos-llegados"
-                  class="mobile-submenu-link"
-                  >Nuevos Llegados</a
-                ><a
-                  href="productos.html?cat=mujer#invierno-otono"
-                  class="mobile-submenu-link"
-                  >Invierno-Otoño</a
-                ><a
-                  href="productos.html?cat=mujer#primavera-verano"
-                  class="mobile-submenu-link"
-                  >Primavera-Verano</a
-                ><a href="productos.html?cat=mujer" class="mobile-submenu-link"
-                  >Ver Todo</a
-                >
-              </div>
-            </div>
-            <div class="mobile-nav-item">
-              <a
-                href="productos.html?cat=hombre"
-                class="mobile-nav-link main-link"
-                >HOMBRE</a
-              >
-              <div class="mobile-submenu">
-                <a
-                  href="productos.html?cat=hombre#nuevos-llegados"
-                  class="mobile-submenu-link"
-                  >Nuevos Llegados</a
-                ><a
-                  href="productos.html?cat=hombre#invierno-otono"
-                  class="mobile-submenu-link"
-                  >Invierno-Otoño</a
-                ><a
-                  href="productos.html?cat=hombre#primavera-verano"
-                  class="mobile-submenu-link"
-                  >Primavera-Verano</a
-                ><a href="productos.html?cat=hombre" class="mobile-submenu-link"
-                  >Ver Todo</a
-                >
-              </div>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="productos.html" class="mobile-nav-link main-link"
-                >COLECCIONES</a
-              >
-              <div class="mobile-submenu">
-                <a
-                  href="productos.html#nuevos-llegados"
-                  class="mobile-submenu-link"
-                  >Nuevos Llegados</a
-                ><a
-                  href="productos.html#invierno-otono"
-                  class="mobile-submenu-link"
-                  >Invierno-Otoño</a
-                ><a
-                  href="productos.html#primavera-verano"
-                  class="mobile-submenu-link"
-                  >Primavera-Verano</a
-                ><a href="productos.html#otros" class="mobile-submenu-link"
-                  >Otros</a
-                >
-              </div>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="productos.html" class="mobile-nav-link">PRODUCTOS</a>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="novedades.html" class="mobile-nav-link">NOVEDADES</a>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="faq.html" class="mobile-nav-link">FAQ</a>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="nosotros.html" class="mobile-nav-link">NOSOTROS</a>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="contacto.html" class="mobile-nav-link">CONTACTO</a>
-            </div>
-          </nav>
-        </div>
-      </div>
-    </nav>
-    <main id="main-content" class="contacto-main" tabindex="-1">
-      <!-- Hero -->
-      <section class="contacto-hero" aria-label="Cabecera de contacto">
-        <div class="container">
-          <div class="hero-inner">
-            <span class="hero-kicker">Atención personalizada</span>
-            <h1 class="hero-title">Estamos para ayudarte</h1>
-            <p class="hero-subtitle">
-              Envíanos tu consulta y te responderemos a la brevedad
-            </p>
-          </div>
-        </div>
-      </section>
 
-      <!-- Info + Form layout -->
-      <section class="contacto-content">
-        <div class="container">
-          <div class="contacto-grid">
-            <!-- Contact details -->
-            <aside class="contacto-info" aria-label="Información de contacto">
-              <div class="info-card">
-                <div class="info-icon" aria-hidden="true">📧</div>
-                <div class="info-text">
-                  <h3>Email</h3>
-                  <p>contacto@solare.com</p>
-                </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Solare - Contacto" />
+  <title>Solare | Contacto</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
+  <link rel="stylesheet" href="../css/contacto.css" />
+  <!-- Better typography for Contact page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script type="module" src="../js/supabase.js"></script>
+  <script src="../js/state-manager.js" defer></script>
+  <script src="../js/state-compat.js" defer></script>
+  <script src="../js/auth-state.js" defer></script>
+  <script src="../js/navbar.js" defer></script>
+  <script src="../js/layout.js" defer></script>
+  <script src="../js/contacto.js" defer></script>
+</head>
+
+<body class="contacto">
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <div class="hamburger-menu">
+          <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
+            <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
+          </button>
+        </div>
+        <a href="login.html" class="icon-link login-icon-mobile" title="Mi Cuenta"><svg width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg></a>
+      </div>
+      <div class="navbar-brand">
+        <a href="index.html" class="brand-link"><span class="brand-text">SOLARE</span></a>
+      </div>
+      <div class="navbar-menu">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a href="productos.html?cat=mujer" class="nav-link">MUJER</a>
+            <div class="dropdown-content">
+              <a href="productos.html?cat=mujer#nuevos-llegados">Nuevos Llegados</a><a
+                href="productos.html?cat=mujer#invierno-otono">Invierno-Otoño</a><a
+                href="productos.html?cat=mujer#primavera-verano">Primavera-Verano</a><a
+                href="productos.html?cat=mujer">Ver Todo</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="productos.html?cat=hombre" class="nav-link">HOMBRE</a>
+            <div class="dropdown-content">
+              <a href="productos.html?cat=hombre#nuevos-llegados">Nuevos Llegados</a><a
+                href="productos.html?cat=hombre#invierno-otono">Invierno-Otoño</a><a
+                href="productos.html?cat=hombre#primavera-verano">Primavera-Verano</a><a
+                href="productos.html?cat=hombre">Ver Todo</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="productos.html" class="nav-link">COLECCIONES</a>
+            <div class="dropdown-content">
+              <a href="productos.html#nuevos-llegados">Nuevos Llegados</a><a
+                href="productos.html#invierno-otono">Invierno-Otoño</a><a
+                href="productos.html#primavera-verano">Primavera-Verano</a><a href="productos.html#otros">Otros</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="productos.html" class="nav-link">PRODUCTOS</a>
+          </li>
+          <li class="nav-item">
+            <a href="novedades.html" class="nav-link">NOVEDADES</a>
+          </li>
+          <li class="nav-item">
+            <a href="faq.html" class="nav-link">FAQ</a>
+          </li>
+          <li class="nav-item">
+            <a href="nosotros.html" class="nav-link">NOSOTROS</a>
+          </li>
+          <li class="nav-item">
+            <a href="contacto.html" class="nav-link">CONTACTO</a>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar-icons">
+        <a href="favoritos.html" class="icon-link fav-icon" title="Favoritos"><svg width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z">
+            </path>
+          </svg><span class="fav-count" id="favCount">0</span></a><a href="carrito.html" class="icon-link cart-icon"
+          title="Carrito"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg><span class="cart-count" id="cartCount">0</span></a><a href="login.html"
+          class="icon-link account-icon-desktop" title="Mi Cuenta"><svg width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg></a>
+      </div>
+    </div>
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+      <div class="mobile-menu-content">
+        <div class="mobile-menu-header">
+          <span class="mobile-brand">SOLARE</span><button class="close-btn" id="closeBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <nav class="mobile-nav">
+          <div class="mobile-nav-item">
+            <a href="productos.html?cat=mujer" class="mobile-nav-link main-link">MUJER</a>
+            <div class="mobile-submenu">
+              <a href="productos.html?cat=mujer#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a><a
+                href="productos.html?cat=mujer#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a
+                href="productos.html?cat=mujer#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a
+                href="productos.html?cat=mujer" class="mobile-submenu-link">Ver Todo</a>
+            </div>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="productos.html?cat=hombre" class="mobile-nav-link main-link">HOMBRE</a>
+            <div class="mobile-submenu">
+              <a href="productos.html?cat=hombre#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a><a
+                href="productos.html?cat=hombre#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a
+                href="productos.html?cat=hombre#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a
+                href="productos.html?cat=hombre" class="mobile-submenu-link">Ver Todo</a>
+            </div>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="productos.html" class="mobile-nav-link main-link">COLECCIONES</a>
+            <div class="mobile-submenu">
+              <a href="productos.html#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a><a
+                href="productos.html#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a
+                href="productos.html#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a
+                href="productos.html#otros" class="mobile-submenu-link">Otros</a>
+            </div>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="productos.html" class="mobile-nav-link">PRODUCTOS</a>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="novedades.html" class="mobile-nav-link">NOVEDADES</a>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="faq.html" class="mobile-nav-link">FAQ</a>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="nosotros.html" class="mobile-nav-link">NOSOTROS</a>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="contacto.html" class="mobile-nav-link">CONTACTO</a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </nav>
+  <main id="main-content" class="contacto-main" tabindex="-1">
+    <!-- Hero -->
+    <section class="contacto-hero" aria-label="Cabecera de contacto">
+      <div class="container">
+        <div class="hero-inner">
+          <span class="hero-kicker">Atención personalizada</span>
+          <h1 class="hero-title">Estamos para ayudarte</h1>
+          <p class="hero-subtitle">
+            Envíanos tu consulta y te responderemos a la brevedad
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info + Form layout -->
+    <section class="contacto-content">
+      <div class="container">
+        <div class="contacto-grid">
+          <!-- Contact details -->
+          <aside class="contacto-info" aria-label="Información de contacto">
+            <div class="info-card">
+              <div class="info-icon" aria-hidden="true">📧</div>
+              <div class="info-text">
+                <h3>Email</h3>
+                <p>contacto@solare.com</p>
               </div>
-              <div class="info-card">
-                <div class="info-icon" aria-hidden="true">📞</div>
-                <div class="info-text">
-                  <h3>Teléfono</h3>
-                  <p>+595 0983 774417</p>
-                </div>
+            </div>
+            <div class="info-card">
+              <div class="info-icon" aria-hidden="true">📞</div>
+              <div class="info-text">
+                <h3>Teléfono</h3>
+                <p>+595 0983 774417</p>
               </div>
-              <div class="info-card">
-                <div class="info-icon" aria-hidden="true">📍</div>
-                <div class="info-text">
-                  <h3>Dirección</h3>
-                  <p>Av Silvio Pettirossi 556 c/ Av Perú, Asunción, Paraguay</p>
-                </div>
+            </div>
+            <div class="info-card">
+              <div class="info-icon" aria-hidden="true">📍</div>
+              <div class="info-text">
+                <h3>Dirección</h3>
+                <p>Av Silvio Pettirossi 556 c/ Av Perú, Asunción, Paraguay</p>
               </div>
-              <div class="info-note">
-                Horario de atención: Lunes a Viernes de 9 a 18 hs (GMT-3)
-              </div>
-              <div class="social-links" aria-label="Redes sociales">
-                <!--
+            </div>
+            <div class="info-note">
+              Horario de atención: Lunes a Viernes de 9 a 18 hs (GMT-3)
+            </div>
+            <div class="social-links" aria-label="Redes sociales">
+              <!--
                 <a href="#" aria-label="Instagram">Instagram</a>
                 <a href="#" aria-label="Facebook">Facebook</a>
                 -->
-                <a href="https://wa.me/595981123456" target="_blank" class="btn-whatsapp" aria-label="Contactar por WhatsApp">
-                  <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
-                  </svg>
-                  WhatsApp
-                </a>
+              <a href="https://wa.me/595981123456" target="_blank" class="btn-whatsapp"
+                aria-label="Contactar por WhatsApp">
+                <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
+                </svg>
+                WhatsApp
+              </a>
+            </div>
+          </aside>
+
+          <!-- Contact form -->
+          <section class="contacto-form-section" aria-label="Formulario de contacto">
+            <form id="contactForm" novalidate>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="name">Nombre
+                    <span class="req" aria-hidden="true">*</span></label>
+                  <input id="name" name="name" type="text" placeholder="Tu nombre" required />
+                  <small class="error-msg" id="error-name"></small>
+                </div>
+                <div class="form-field">
+                  <label for="email">Email
+                    <span class="req" aria-hidden="true">*</span></label>
+                  <input id="email" name="email" type="email" placeholder="tu@email.com" required />
+                  <small class="error-msg" id="error-email"></small>
+                </div>
               </div>
-            </aside>
 
-            <!-- Contact form -->
-            <section
-              class="contacto-form-section"
-              aria-label="Formulario de contacto"
-            >
-              <form id="contactForm" novalidate>
-                <div class="form-row">
-                  <div class="form-field">
-                    <label for="name"
-                      >Nombre
-                      <span class="req" aria-hidden="true">*</span></label
-                    >
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      placeholder="Tu nombre"
-                      required
-                    />
-                    <small class="error-msg" id="error-name"></small>
-                  </div>
-                  <div class="form-field">
-                    <label for="email"
-                      >Email
-                      <span class="req" aria-hidden="true">*</span></label
-                    >
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="tu@email.com"
-                      required
-                    />
-                    <small class="error-msg" id="error-email"></small>
-                  </div>
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="topic">Motivo
+                    <span class="req" aria-hidden="true">*</span></label>
+                  <select id="topic" name="topic" required>
+                    <option value="" selected disabled>
+                      Selecciona un motivo
+                    </option>
+                    <option value="orden">Consulta sobre un pedido</option>
+                    <option value="producto">Información de producto</option>
+                    <option value="cambios">Cambios y devoluciones</option>
+                    <option value="otros">Otros</option>
+                  </select>
+                  <small class="error-msg" id="error-topic"></small>
                 </div>
-
-                <div class="form-row">
-                  <div class="form-field">
-                    <label for="topic"
-                      >Motivo
-                      <span class="req" aria-hidden="true">*</span></label
-                    >
-                    <select id="topic" name="topic" required>
-                      <option value="" selected disabled>
-                        Selecciona un motivo
-                      </option>
-                      <option value="orden">Consulta sobre un pedido</option>
-                      <option value="producto">Información de producto</option>
-                      <option value="cambios">Cambios y devoluciones</option>
-                      <option value="otros">Otros</option>
-                    </select>
-                    <small class="error-msg" id="error-topic"></small>
-                  </div>
-                  <div class="form-field">
-                    <label for="order">N° de Orden (opcional)</label>
-                    <input
-                      id="order"
-                      name="order"
-                      type="text"
-                      placeholder="Ej: SO-12345"
-                    />
-                  </div>
+                <div class="form-field">
+                  <label for="order">N° de Orden (opcional)</label>
+                  <input id="order" name="order" type="text" placeholder="Ej: SO-12345" />
                 </div>
+              </div>
 
-                <div class="form-row">
-                  <div class="form-field full">
-                    <label for="message"
-                      >Mensaje
-                      <span class="req" aria-hidden="true">*</span></label
-                    >
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows="6"
-                      placeholder="Escribe tu mensaje"
-                      required
-                      maxlength="1000"
-                    ></textarea>
-                    <span class="char-counter" id="messageCounter">0/1000</span>
-                    <small class="error-msg" id="error-message"></small>
-                  </div>
+              <div class="form-row">
+                <div class="form-field full">
+                  <label for="message">Mensaje
+                    <span class="req" aria-hidden="true">*</span></label>
+                  <textarea id="message" name="message" rows="6" placeholder="Escribe tu mensaje" required
+                    maxlength="1000"></textarea>
+                  <span class="char-counter" id="messageCounter">0/1000</span>
+                  <small class="error-msg" id="error-message"></small>
                 </div>
+              </div>
 
-                <div class="form-actions">
-                  <label class="checkbox">
-                    <input type="checkbox" id="privacy" required />
-                    <span
-                      >Acepto la política de privacidad
-                      <span class="req" aria-hidden="true">*</span></span
-                    >
-                  </label>
-                  <button type="submit" class="btn-submit">
-                    Enviar Mensaje
-                  </button>
-                </div>
+              <div class="form-actions">
+                <label class="checkbox">
+                  <input type="checkbox" id="privacy" required />
+                  <span>Acepto la política de privacidad
+                    <span class="req" aria-hidden="true">*</span></span>
+                </label>
+                <button type="submit" class="btn-submit">
+                  Enviar Mensaje
+                </button>
+              </div>
 
-                <div
-                  class="form-feedback"
-                  id="formFeedback"
-                  role="status"
-                  aria-live="polite"
-                  hidden
-                ></div>
-              </form>
-            </section>
-          </div>
+              <div class="form-feedback" id="formFeedback" role="status" aria-live="polite" hidden></div>
+            </form>
+          </section>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Map placeholder -->
-      <section class="contacto-map" aria-label="Ubicación">
-        <div class="container">
-          <div class="map-embed" aria-hidden="true">
-            <!-- Placeholder image; replace with real map embed if desired -->
-            <iframe
-              src="https://maps.google.com/maps?q=Silvio+Pettirossi+556%2C+Asunci%C3%B3n&t=&z=17&ie=UTF8&iwloc=&output=embed"
-              width="100%"
-              height="500"
-              style="border:0;"
-              allowfullscreen=""
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              title="Ubicación de Solare"
-            ></iframe>
-          </div>
+    <!-- Map placeholder -->
+    <section class="contacto-map" aria-label="Ubicación">
+      <div class="container">
+        <div class="map-embed" aria-hidden="true">
+          <!-- Placeholder image; replace with real map embed if desired -->
+          <iframe
+            src="https://maps.google.com/maps?q=Silvio+Pettirossi+556%2C+Asunci%C3%B3n&t=&z=17&ie=UTF8&iwloc=&output=embed"
+            width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade" title="Ubicación de Solare"></iframe>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- FAQ -->
-      <section class="contacto-faq" aria-label="Preguntas frecuentes">
-        <div class="container">
-          <h2 class="section-title">Preguntas frecuentes</h2>
-          <div class="faq-list" id="faqList">
-            <details>
-              <summary>¿Cuánto demora el envío?</summary>
-              <p>
-                Envíos dentro de central entre 24 y 48 hs. Interior del país
-                entre 3 a 7 días hábiles.
-              </p>
-            </details>
-            <details>
-              <summary>¿Cómo realizo un cambio o devolución?</summary>
-              <p>
-                Podés solicitarlo dentro de los 30 días de tu compra. Te
-                enviaremos una etiqueta de envío.
-              </p>
-            </details>
-            <details>
-              <summary>¿Qué medios de pago aceptan?</summary>
-              <p>
-                Aceptamos tarjetas de crédito/débito, transferencia y
-                plataformas de pago locales.
-              </p>
-            </details>
-          </div>
+    <!-- FAQ -->
+    <section class="contacto-faq" aria-label="Preguntas frecuentes">
+      <div class="container">
+        <h2 class="section-title">Preguntas frecuentes</h2>
+        <div class="faq-list" id="faqList">
+          <details>
+            <summary>¿Cuánto demora el envío?</summary>
+            <p>
+              Envíos dentro de central entre 24 y 48 hs. Interior del país
+              entre 3 a 7 días hábiles.
+            </p>
+          </details>
+          <details>
+            <summary>¿Cómo realizo un cambio o devolución?</summary>
+            <p>
+              Podés solicitarlo dentro de los 30 días de tu compra. Te
+              enviaremos una etiqueta de envío.
+            </p>
+          </details>
+          <details>
+            <summary>¿Qué medios de pago aceptan?</summary>
+            <p>
+              Aceptamos tarjetas de crédito/débito, transferencia y
+              plataformas de pago locales.
+            </p>
+          </details>
         </div>
-      </section>
-    </main>
-    <footer id="footer"></footer>
-  </body>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+</body>
+
 </html>

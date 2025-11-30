@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/footer.css" />
     <link rel="stylesheet" href="../css/novedades.css" />
+    <script type="module" src="../js/supabase.js"></script>
+    <script src="../js/state-manager.js" defer></script>
+    <script src="../js/state-compat.js" defer></script>
+    <script src="../js/auth-state.js" defer></script>
     <script src="../js/navbar.js" defer></script>
     <script src="../js/layout.js" defer></script>
     <script type="module" src="../js/novedades.js"></script>
@@ -231,14 +235,16 @@
                 <div class="newsletter-content">
                     <div class="newsletter-text">
                         <h2 class="newsletter-title">Quieres mas?</h2>
-                        <p class="newsletter-subtitle">Amplía tu experiencia: revisa nuestra selección completa y encuentra lo último en productos, estilos y novedades</p>
+                        <p class="newsletter-subtitle">Amplía tu experiencia: revisa nuestra selección completa y
+                            encuentra lo último en productos, estilos y novedades</p>
                     </div>
                     <form class="newsletter-form" id="newsletterForm">
                         <div class="form-group">
                             <!--<input type="email" id="email" placeholder="Tu email" required class="newsletter-input">-->
                             <a type="submit" href="/html/productos.html" class="btn-newsletter">Ver Productos</a>
                         </div>
-                        <p class="newsletter-disclaimer">Al hacer clic para ver más productos, podrás descubrir opciones y tendencias adicionales. Eres libre de salir en cualquier momento.</p>
+                        <p class="newsletter-disclaimer">Al hacer clic para ver más productos, podrás descubrir opciones
+                            y tendencias adicionales. Eres libre de salir en cualquier momento.</p>
                     </form>
                 </div>
             </div>

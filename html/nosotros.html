@@ -1,452 +1,331 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Solare - Nosotros" />
-    <title>Solare | Nosotros</title>
-    <link rel="stylesheet" href="../css/global.css" />
-    <link rel="stylesheet" href="../css/navbar.css" />
-    <link rel="stylesheet" href="../css/footer.css" />
-    <link rel="stylesheet" href="../css/nosotros.css" />
-    <script src="../js/navbar.js" defer></script>
-    <script src="../js/layout.js" defer></script>
-    <script src="../js/nosotros.js" defer></script>
-  </head>
-  <body>
-    <nav class="navbar">
-      <div class="navbar-container">
-        <div class="navbar-left">
-          <div class="hamburger-menu">
-            <button
-              class="hamburger-btn"
-              id="hamburgerBtn"
-              aria-label="Abrir menú"
-            >
-              <span class="hamburger-line"></span
-              ><span class="hamburger-line"></span
-              ><span class="hamburger-line"></span>
-            </button>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Solare - Nosotros" />
+  <title>Solare | Nosotros</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/footer.css" />
+  <link rel="stylesheet" href="../css/nosotros.css" />
+  <script type="module" src="../js/supabase.js"></script>
+  <script src="../js/state-manager.js" defer></script>
+  <script src="../js/state-compat.js" defer></script>
+  <script src="../js/auth-state.js" defer></script>
+  <script src="../js/navbar.js" defer></script>
+  <script src="../js/layout.js" defer></script>
+  <script src="../js/nosotros.js" defer></script>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <div class="hamburger-menu">
+          <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
+            <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
+          </button>
+        </div>
+        <a href="login.html" class="icon-link login-icon-mobile" title="Mi Cuenta"><svg width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg></a>
+      </div>
+      <div class="navbar-brand">
+        <a href="index.html" class="brand-link"><span class="brand-text">SOLARE</span></a>
+      </div>
+      <div class="navbar-menu">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a href="productos.html?cat=mujer" class="nav-link">MUJER</a>
+            <div class="dropdown-content">
+              <a href="productos.html?cat=mujer#nuevos-llegados">Nuevos Llegados</a><a
+                href="productos.html?cat=mujer#invierno-otono">Invierno-Otoño</a><a
+                href="productos.html?cat=mujer#primavera-verano">Primavera-Verano</a><a
+                href="productos.html?cat=mujer">Ver Todo</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="productos.html?cat=hombre" class="nav-link">HOMBRE</a>
+            <div class="dropdown-content">
+              <a href="productos.html?cat=hombre#nuevos-llegados">Nuevos Llegados</a><a
+                href="productos.html?cat=hombre#invierno-otono">Invierno-Otoño</a><a
+                href="productos.html?cat=hombre#primavera-verano">Primavera-Verano</a><a
+                href="productos.html?cat=hombre">Ver Todo</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="productos.html" class="nav-link">COLECCIONES</a>
+            <div class="dropdown-content">
+              <a href="productos.html#nuevos-llegados">Nuevos Llegados</a><a
+                href="productos.html#invierno-otono">Invierno-Otoño</a><a
+                href="productos.html#primavera-verano">Primavera-Verano</a><a href="productos.html#otros">Otros</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="productos.html" class="nav-link">PRODUCTOS</a>
+          </li>
+          <li class="nav-item">
+            <a href="novedades.html" class="nav-link">NOVEDADES</a>
+          </li>
+          <li class="nav-item">
+            <a href="faq.html" class="nav-link">FAQ</a>
+          </li>
+          <li class="nav-item">
+            <a href="nosotros.html" class="nav-link">NOSOTROS</a>
+          </li>
+          <li class="nav-item">
+            <a href="contacto.html" class="nav-link">CONTACTO</a>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar-icons">
+        <a href="favoritos.html" class="icon-link fav-icon" title="Favoritos"><svg width="20" height="20"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z">
+            </path>
+          </svg><span class="fav-count" id="favCount">0</span></a><a href="carrito.html" class="icon-link cart-icon"
+          title="Carrito"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg><span class="cart-count" id="cartCount">0</span></a><a href="login.html"
+          class="icon-link account-icon-desktop" title="Mi Cuenta"><svg width="20" height="20" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg></a>
+      </div>
+    </div>
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+      <div class="mobile-menu-content">
+        <div class="mobile-menu-header">
+          <span class="mobile-brand">SOLARE</span><button class="close-btn" id="closeBtn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <nav class="mobile-nav">
+          <div class="mobile-nav-item">
+            <a href="productos.html?cat=mujer" class="mobile-nav-link main-link">MUJER</a>
+            <div class="mobile-submenu">
+              <a href="productos.html?cat=mujer#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a><a
+                href="productos.html?cat=mujer#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a
+                href="productos.html?cat=mujer#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a
+                href="productos.html?cat=mujer" class="mobile-submenu-link">Ver Todo</a>
+            </div>
           </div>
-          <a
-            href="login.html"
-            class="icon-link login-icon-mobile"
-            title="Mi Cuenta"
-            ><svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle></svg
-          ></a>
-        </div>
-        <div class="navbar-brand">
-          <a href="index.html" class="brand-link"
-            ><span class="brand-text">SOLARE</span></a
-          >
-        </div>
-        <div class="navbar-menu">
-          <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-              <a href="productos.html?cat=mujer" class="nav-link">MUJER</a>
-              <div class="dropdown-content">
-                <a href="productos.html?cat=mujer#nuevos-llegados"
-                  >Nuevos Llegados</a
-                ><a href="productos.html?cat=mujer#invierno-otono"
-                  >Invierno-Otoño</a
-                ><a href="productos.html?cat=mujer#primavera-verano"
-                  >Primavera-Verano</a
-                ><a href="productos.html?cat=mujer">Ver Todo</a>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="productos.html?cat=hombre" class="nav-link">HOMBRE</a>
-              <div class="dropdown-content">
-                <a href="productos.html?cat=hombre#nuevos-llegados"
-                  >Nuevos Llegados</a
-                ><a href="productos.html?cat=hombre#invierno-otono"
-                  >Invierno-Otoño</a
-                ><a href="productos.html?cat=hombre#primavera-verano"
-                  >Primavera-Verano</a
-                ><a href="productos.html?cat=hombre">Ver Todo</a>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="productos.html" class="nav-link">COLECCIONES</a>
-              <div class="dropdown-content">
-                <a href="productos.html#nuevos-llegados">Nuevos Llegados</a
-                ><a href="productos.html#invierno-otono">Invierno-Otoño</a
-                ><a href="productos.html#primavera-verano">Primavera-Verano</a
-                ><a href="productos.html#otros">Otros</a>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a href="productos.html" class="nav-link">PRODUCTOS</a>
-            </li>
-            <li class="nav-item">
-              <a href="novedades.html" class="nav-link">NOVEDADES</a>
-            </li>
-            <li class="nav-item">
-              <a href="faq.html" class="nav-link">FAQ</a>
-            </li>
-            <li class="nav-item">
-              <a href="nosotros.html" class="nav-link">NOSOTROS</a>
-            </li>
-            <li class="nav-item">
-              <a href="contacto.html" class="nav-link">CONTACTO</a>
-            </li>
-          </ul>
-        </div>
-        <div class="navbar-icons">
-          <a href="favoritos.html" class="icon-link fav-icon" title="Favoritos"
-            ><svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M12 21s-6.5-4.4-9-7.9C1.5 10 2.4 6.5 5.1 5.1c2-1.1 4.5-.3 5.9 1.3 1.4-1.6 3.9-2.4 5.9-1.3 2.7 1.4 3.6 4.9 2.1 8-2.5 3.5-9 7.9-9 7.9z"
-              ></path></svg
-            ><span class="fav-count" id="favCount">0</span></a
-          ><a href="carrito.html" class="icon-link cart-icon" title="Carrito"
-            ><svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"
-              ></path>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <path d="M16 10a4 4 0 0 1-8 0"></path></svg
-            ><span class="cart-count" id="cartCount">0</span></a
-          ><a
-            href="login.html"
-            class="icon-link account-icon-desktop"
-            title="Mi Cuenta"
-            ><svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle></svg
-          ></a>
+          <div class="mobile-nav-item">
+            <a href="productos.html?cat=hombre" class="mobile-nav-link main-link">HOMBRE</a>
+            <div class="mobile-submenu">
+              <a href="productos.html?cat=hombre#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a><a
+                href="productos.html?cat=hombre#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a
+                href="productos.html?cat=hombre#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a
+                href="productos.html?cat=hombre" class="mobile-submenu-link">Ver Todo</a>
+            </div>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="productos.html" class="mobile-nav-link main-link">COLECCIONES</a>
+            <div class="mobile-submenu">
+              <a href="productos.html#nuevos-llegados" class="mobile-submenu-link">Nuevos Llegados</a><a
+                href="productos.html#invierno-otono" class="mobile-submenu-link">Invierno-Otoño</a><a
+                href="productos.html#primavera-verano" class="mobile-submenu-link">Primavera-Verano</a><a
+                href="productos.html#otros" class="mobile-submenu-link">Otros</a>
+            </div>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="productos.html" class="mobile-nav-link">PRODUCTOS</a>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="novedades.html" class="mobile-nav-link">NOVEDADES</a>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="faq.html" class="mobile-nav-link">FAQ</a>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="nosotros.html" class="mobile-nav-link">NOSOTROS</a>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="contacto.html" class="mobile-nav-link">CONTACTO</a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </nav>
+  <main id="main-content" tabindex="-1">
+    <!-- Hero Section -->
+    <section class="hero-about" aria-label="Hero Nosotros">
+      <div class="hero-content">
+        <div class="hero-text reveal">
+          <h1>Nuestra Historia</h1>
+          <p>
+            Desde 2020, Solare ha redefinido la moda contemporánea con un
+            enfoque en la elegancia atemporal y la calidad excepcional.
+          </p>
         </div>
       </div>
-      <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-        <div class="mobile-menu-content">
-          <div class="mobile-menu-header">
-            <span class="mobile-brand">SOLARE</span
-            ><button class="close-btn" id="closeBtn">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-          <nav class="mobile-nav">
-            <div class="mobile-nav-item">
-              <a
-                href="productos.html?cat=mujer"
-                class="mobile-nav-link main-link"
-                >MUJER</a
-              >
-              <div class="mobile-submenu">
-                <a
-                  href="productos.html?cat=mujer#nuevos-llegados"
-                  class="mobile-submenu-link"
-                  >Nuevos Llegados</a
-                ><a
-                  href="productos.html?cat=mujer#invierno-otono"
-                  class="mobile-submenu-link"
-                  >Invierno-Otoño</a
-                ><a
-                  href="productos.html?cat=mujer#primavera-verano"
-                  class="mobile-submenu-link"
-                  >Primavera-Verano</a
-                ><a href="productos.html?cat=mujer" class="mobile-submenu-link"
-                  >Ver Todo</a
-                >
-              </div>
-            </div>
-            <div class="mobile-nav-item">
-              <a
-                href="productos.html?cat=hombre"
-                class="mobile-nav-link main-link"
-                >HOMBRE</a
-              >
-              <div class="mobile-submenu">
-                <a
-                  href="productos.html?cat=hombre#nuevos-llegados"
-                  class="mobile-submenu-link"
-                  >Nuevos Llegados</a
-                ><a
-                  href="productos.html?cat=hombre#invierno-otono"
-                  class="mobile-submenu-link"
-                  >Invierno-Otoño</a
-                ><a
-                  href="productos.html?cat=hombre#primavera-verano"
-                  class="mobile-submenu-link"
-                  >Primavera-Verano</a
-                ><a href="productos.html?cat=hombre" class="mobile-submenu-link"
-                  >Ver Todo</a
-                >
-              </div>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="productos.html" class="mobile-nav-link main-link"
-                >COLECCIONES</a
-              >
-              <div class="mobile-submenu">
-                <a
-                  href="productos.html#nuevos-llegados"
-                  class="mobile-submenu-link"
-                  >Nuevos Llegados</a
-                ><a
-                  href="productos.html#invierno-otono"
-                  class="mobile-submenu-link"
-                  >Invierno-Otoño</a
-                ><a
-                  href="productos.html#primavera-verano"
-                  class="mobile-submenu-link"
-                  >Primavera-Verano</a
-                ><a href="productos.html#otros" class="mobile-submenu-link"
-                  >Otros</a
-                >
-              </div>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="productos.html" class="mobile-nav-link">PRODUCTOS</a>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="novedades.html" class="mobile-nav-link">NOVEDADES</a>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="faq.html" class="mobile-nav-link">FAQ</a>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="nosotros.html" class="mobile-nav-link">NOSOTROS</a>
-            </div>
-            <div class="mobile-nav-item">
-              <a href="contacto.html" class="mobile-nav-link">CONTACTO</a>
-            </div>
-          </nav>
-        </div>
-      </div>
-    </nav>
-    <main id="main-content" tabindex="-1">
-      <!-- Hero Section -->
-      <section class="hero-about" aria-label="Hero Nosotros">
-        <div class="hero-content">
-          <div class="hero-text reveal">
-            <h1>Nuestra Historia</h1>
+    </section>
+
+    <!-- Story Section -->
+    <section class="story-section" aria-labelledby="story-title">
+      <div class="container">
+        <div class="story-grid">
+          <div class="story-text reveal">
+            <h2 id="story-title">La Visión Solare</h2>
             <p>
-              Desde 2020, Solare ha redefinido la moda contemporánea con un
-              enfoque en la elegancia atemporal y la calidad excepcional.
+              Nació de la pasión por crear piezas que trascienden las
+              tendencias pasajeras. Creemos que la verdadera elegancia reside
+              en la simplicidad sofisticada y en la atención meticulosa a cada
+              detalle.
+            </p>
+            <p>
+              Cada colección cuenta una historia única, inspirada en la
+              arquitectura moderna, el arte contemporáneo y la belleza natural
+              que nos rodea. Nuestro compromiso es ofrecer prendas que no solo
+              vistan el cuerpo, sino que expresen la personalidad auténtica de
+              quien las lleva.
+            </p>
+            <div class="story-stats">
+              <div class="stat-item">
+                <span class="stat-number">4+</span>
+                <span class="stat-label">Años de experiencia</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">50k+</span>
+                <span class="stat-label">Clientes satisfechos</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">200+</span>
+                <span class="stat-label">Diseños únicos</span>
+              </div>
+            </div>
+          </div>
+          <div class="story-image reveal">
+            <img
+              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Solare atelier" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section" aria-labelledby="values-title">
+      <div class="container">
+        <h2 id="values-title" class="section-title reveal">
+          Nuestros Valores
+        </h2>
+        <div class="values-grid">
+          <div class="value-card reveal">
+            <div class="value-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            </div>
+            <h3>Calidad Excepcional</h3>
+            <p>
+              Seleccionamos cuidadosamente los mejores materiales y trabajamos
+              con artesanos expertos para garantizar la máxima calidad en cada
+              pieza.
+            </p>
+          </div>
+          <div class="value-card reveal">
+            <div class="value-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+            </div>
+            <h3>Diseño Atemporal</h3>
+            <p>
+              Creamos piezas que trascienden las modas pasajeras, diseñadas
+              para acompañarte durante años sin perder su relevancia y
+              elegancia.
+            </p>
+          </div>
+          <div class="value-card reveal">
+            <div class="value-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22,4 12,14.01 9,11.01" />
+              </svg>
+            </div>
+            <h3>Sostenibilidad</h3>
+            <p>
+              Nos comprometemos con prácticas responsables, desde la selección
+              de materiales hasta procesos de producción que respetan el medio
+              ambiente.
             </p>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Story Section -->
-      <section class="story-section" aria-labelledby="story-title">
-        <div class="container">
-          <div class="story-grid">
-            <div class="story-text reveal">
-              <h2 id="story-title">La Visión Solare</h2>
-              <p>
-                Nació de la pasión por crear piezas que trascienden las
-                tendencias pasajeras. Creemos que la verdadera elegancia reside
-                en la simplicidad sofisticada y en la atención meticulosa a cada
-                detalle.
-              </p>
-              <p>
-                Cada colección cuenta una historia única, inspirada en la
-                arquitectura moderna, el arte contemporáneo y la belleza natural
-                que nos rodea. Nuestro compromiso es ofrecer prendas que no solo
-                vistan el cuerpo, sino que expresen la personalidad auténtica de
-                quien las lleva.
-              </p>
-              <div class="story-stats">
-                <div class="stat-item">
-                  <span class="stat-number">4+</span>
-                  <span class="stat-label">Años de experiencia</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">50k+</span>
-                  <span class="stat-label">Clientes satisfechos</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-number">200+</span>
-                  <span class="stat-label">Diseños únicos</span>
-                </div>
-              </div>
+    <!-- Team Section -->
+    <section class="team-section" aria-labelledby="team-title">
+      <div class="container">
+        <h2 id="team-title" class="section-title reveal">Nuestro Equipo</h2>
+        <div class="team-grid">
+          <div class="team-member reveal">
+            <div class="member-image">
+              <img src="/assets/soledad1.jpg" alt="Soledad Ortega" />
             </div>
-            <div class="story-image reveal">
-              <img
-                src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="Solare atelier"
-              />
+            <div class="member-info">
+              <h3>Soledad Ortega</h3>
+              <p class="member-role">Fundadora</p>
+              <p class="member-bio">
+                Con más de 3 años de experiencia en moda internacional,
+                Soledad lidera la visión creativa de Solare con una
+                perspectiva única y vanguardista.
+              </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      <!-- Values Section -->
-      <section class="values-section" aria-labelledby="values-title">
-        <div class="container">
-          <h2 id="values-title" class="section-title reveal">
-            Nuestros Valores
-          </h2>
-          <div class="values-grid">
-            <div class="value-card reveal">
-              <div class="value-icon">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                >
-                  <path
-                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                  />
-                </svg>
-              </div>
-              <h3>Calidad Excepcional</h3>
-              <p>
-                Seleccionamos cuidadosamente los mejores materiales y trabajamos
-                con artesanos expertos para garantizar la máxima calidad en cada
-                pieza.
-              </p>
+          <div class="team-member reveal">
+            <div class="member-image">
+              <img src="/assets/elizabeth1.jpg" alt="Elizabeth Lopez" />
             </div>
-            <div class="value-card reveal">
-              <div class="value-icon">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 6v6l4 2" />
-                </svg>
-              </div>
-              <h3>Diseño Atemporal</h3>
-              <p>
-                Creamos piezas que trascienden las modas pasajeras, diseñadas
-                para acompañarte durante años sin perder su relevancia y
-                elegancia.
-              </p>
-            </div>
-            <div class="value-card reveal">
-              <div class="value-icon">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                >
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                  <polyline points="22,4 12,14.01 9,11.01" />
-                </svg>
-              </div>
-              <h3>Sostenibilidad</h3>
-              <p>
-                Nos comprometemos con prácticas responsables, desde la selección
-                de materiales hasta procesos de producción que respetan el medio
-                ambiente.
+            <div class="member-info">
+              <h3>Elizabeth Lopez</h3>
+              <p class="member-role">Co-fundadora</p>
+              <p class="member-bio">
+                Especialista en diseño de producto y experiencia de usuario,
+                Elizabeth asegura que cada pieza no solo sea bella, sino
+                también funcional.
               </p>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Team Section -->
-      <section class="team-section" aria-labelledby="team-title">
-        <div class="container">
-          <h2 id="team-title" class="section-title reveal">Nuestro Equipo</h2>
-          <div class="team-grid">
-            <div class="team-member reveal">
-              <div class="member-image">
-                <img src="/assets/soledad1.jpg" alt="Soledad Ortega" />
-              </div>
-              <div class="member-info">
-                <h3>Soledad Ortega</h3>
-                <p class="member-role">Fundadora</p>
-                <p class="member-bio">
-                  Con más de 3 años de experiencia en moda internacional,
-                  Soledad lidera la visión creativa de Solare con una
-                  perspectiva única y vanguardista.
-                </p>
-              </div>
-            </div>
-            <div class="team-member reveal">
-              <div class="member-image">
-                <img src="/assets/elizabeth1.jpg" alt="Elizabeth Lopez" />
-              </div>
-              <div class="member-info">
-                <h3>Elizabeth Lopez</h3>
-                <p class="member-role">Co-fundadora</p>
-                <p class="member-bio">
-                  Especialista en diseño de producto y experiencia de usuario,
-                  Elizabeth asegura que cada pieza no solo sea bella, sino
-                  también funcional.
-                </p>
-              </div>
-            </div>
+    <!-- Mission Section -->
+    <section class="mission-section" aria-labelledby="mission-title">
+      <div class="container">
+        <div class="mission-content reveal">
+          <h2 id="mission-title">Nuestra Misión</h2>
+          <p class="mission-text">
+            Democratizar la elegancia y hacer que la moda de alta calidad sea
+            accesible para todos. Creemos que cada persona merece sentirse
+            confiada y auténtica a través de lo que viste.
+          </p>
+          <div class="mission-cta">
+            <a href="productos.html" class="btn-primary">Explorar Colecciones</a>
+            <a href="contacto.html" class="btn-ghost">Contactar</a>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  </main>
+  <footer id="footer"></footer>
+</body>
 
-      <!-- Mission Section -->
-      <section class="mission-section" aria-labelledby="mission-title">
-        <div class="container">
-          <div class="mission-content reveal">
-            <h2 id="mission-title">Nuestra Misión</h2>
-            <p class="mission-text">
-              Democratizar la elegancia y hacer que la moda de alta calidad sea
-              accesible para todos. Creemos que cada persona merece sentirse
-              confiada y auténtica a través de lo que viste.
-            </p>
-            <div class="mission-cta">
-              <a href="productos.html" class="btn-primary"
-                >Explorar Colecciones</a
-              >
-              <a href="contacto.html" class="btn-ghost">Contactar</a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-    <footer id="footer"></footer>
-  </body>
 </html>
