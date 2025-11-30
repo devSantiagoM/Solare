@@ -1,0 +1,121 @@
+# Netlify Configuration for Solare Project
+
+[build]
+  # Publish from root so ../css/ and ../js/ paths work correctly
+  publish = "."
+  command = "echo 'No build command needed for static site'"
+
+# Redirect root to index.html in html folder
+[[redirects]]
+  from = "/"
+  to = "/html/index.html"
+  status = 200
+
+# Handle all HTML pages in the html folder
+[[redirects]]
+  from = "/index.html"
+  to = "/html/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/productos.html"
+  to = "/html/productos.html"
+  status = 200
+
+[[redirects]]
+  from = "/carrito.html"
+  to = "/html/carrito.html"
+  status = 200
+
+[[redirects]]
+  from = "/login.html"
+  to = "/html/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/perfil.html"
+  to = "/html/perfil.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin.html"
+  to = "/html/admin.html"
+  status = 200
+
+[[redirects]]
+  from = "/favoritos.html"
+  to = "/html/favoritos.html"
+  status = 200
+
+[[redirects]]
+  from = "/contacto.html"
+  to = "/html/contacto.html"
+  status = 200
+
+[[redirects]]
+  from = "/nosotros.html"
+  to = "/html/nosotros.html"
+  status = 200
+
+[[redirects]]
+  from = "/novedades.html"
+  to = "/html/novedades.html"
+  status = 200
+
+[[redirects]]
+  from = "/faq.html"
+  to = "/html/faq.html"
+  status = 200
+
+[[redirects]]
+  from = "/post.html"
+  to = "/html/post.html"
+  status = 200
+
+# Fallback for any other routes - redirect to index
+[[redirects]]
+  from = "/*"
+  to = "/html/index.html"
+  status = 200
+  force = false
+  
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Allow Supabase connections
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://esm.sh https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:;"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, must-revalidate"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
